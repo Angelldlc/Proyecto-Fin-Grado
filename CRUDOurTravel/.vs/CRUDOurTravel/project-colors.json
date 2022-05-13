@@ -1,0 +1,31 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "2d48dcd1-ccc3-46ed-a8b3-1bafd8c5bcd6": {
+      "ProjectGuid": "2d48dcd1-ccc3-46ed-a8b3-1bafd8c5bcd6",
+      "DisplayName": "CRUDOurTravel_DAL",
+      "ColorIndex": 0
+    },
+    "77b134a6-7c3b-44a3-ba3f-66dce63a9e0a": {
+      "ProjectGuid": "77b134a6-7c3b-44a3-ba3f-66dce63a9e0a",
+      "DisplayName": "CRUDOurTravel_Entities",
+      "ColorIndex": 1
+    },
+    "dbb3242e-6ea9-49f9-8fa0-f0679ae2b5da": {
+      "ProjectGuid": "dbb3242e-6ea9-49f9-8fa0-f0679ae2b5da",
+      "DisplayName": "CRUDOurTravel_DAL",
+      "ColorIndex": 2
+    },
+    "4906e617-0e77-4abb-93dc-700414fc8e5d": {
+      "ProjectGuid": "4906e617-0e77-4abb-93dc-700414fc8e5d",
+      "DisplayName": "CRUDOurTravel_API",
+      "ColorIndex": 3
+    },
+    "9f8cf74d-497d-40f8-aaee-514a2912b12f": {
+      "ProjectGuid": "9f8cf74d-497d-40f8-aaee-514a2912b12f",
+      "DisplayName": "CRUDOurTravel_API",
+      "ColorIndex": 4
+    }
+  },
+  "NextColorIndex": 5
+}
