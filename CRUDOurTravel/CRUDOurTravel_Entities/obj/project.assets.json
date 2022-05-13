@@ -180,25 +180,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\aaald\\.nuget\\packages\\": {},
-    "D:\\Programas\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\alopez\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Repositorios\\Proyecto Fin Grado\\CRUDOurTravel\\CRUDOurTravel_Entities\\CRUDOurTravel_Entities.csproj",
+      "projectUniqueName": "C:\\Repositorios\\Proyecto-Fin-Grado\\CRUDOurTravel\\CRUDOurTravel_Entities\\CRUDOurTravel_Entities.csproj",
       "projectName": "CRUDOurTravel_Entities",
-      "projectPath": "D:\\Repositorios\\Proyecto Fin Grado\\CRUDOurTravel\\CRUDOurTravel_Entities\\CRUDOurTravel_Entities.csproj",
-      "packagesPath": "C:\\Users\\aaald\\.nuget\\packages\\",
-      "outputPath": "D:\\Repositorios\\Proyecto Fin Grado\\CRUDOurTravel\\CRUDOurTravel_Entities\\obj\\",
+      "projectPath": "C:\\Repositorios\\Proyecto-Fin-Grado\\CRUDOurTravel\\CRUDOurTravel_Entities\\CRUDOurTravel_Entities.csproj",
+      "packagesPath": "C:\\Users\\alopez\\.nuget\\packages\\",
+      "outputPath": "C:\\Repositorios\\Proyecto-Fin-Grado\\CRUDOurTravel\\CRUDOurTravel_Entities\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Programas\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\aaald\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\alopez\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
@@ -240,7 +243,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.105\\RuntimeIdentifierGraph.json"
       }
     }
   }

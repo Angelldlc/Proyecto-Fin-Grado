@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "33HNtIhZnIPQeXeI9T+ldkzmfNdlbLBaVPodpf9BF1wd8X7nr+spFnfJstBWnoL4JbdMrmGFcViiV0urWGCkqA==",
+  "dgSpecHash": "VUFhW2zKT2QNP2r5ZsevoIAOTYWBNLzhRw4LA2m+2xAYSOtlYc2soPnPT8exp0o3sJAHcxvFNe/hbpadGN8qUA==",
   "success": true,
-  "projectFilePath": "D:\\Repositorios\\Proyecto Fin Grado\\CRUDOurTravel\\CRUDOurTravel_Entities\\CRUDOurTravel_Entities.csproj",
+  "projectFilePath": "C:\\Repositorios\\Proyecto-Fin-Grado\\CRUDOurTravel\\CRUDOurTravel_Entities\\CRUDOurTravel_Entities.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\aaald\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "C:\\Users\\aaald\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+    "C:\\Users\\alopez\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\alopez\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
   ],
   "logs": []
 }
