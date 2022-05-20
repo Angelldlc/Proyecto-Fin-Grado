@@ -15,7 +15,7 @@ namespace CRUDOurTravel_DAL.Listados
         /// Method that brings back a <typeparamref name="clsTripPlanning"/> list from a database. 
         /// </summary>
         /// <returns>List (<typeparamref name="clsTripPlannig"/>)</returns>
-        public static List<clsTripPlanning> getCompleteTripPlanningsListDAL()
+        public List<clsTripPlanning> getCompleteTripPlanningsListDAL()
         {
             List<clsTripPlanning> tripPlanningsList = new List<clsTripPlanning>();
             clsTripPlanning tripPlanning;
@@ -49,11 +49,11 @@ namespace CRUDOurTravel_DAL.Listados
         /// <summary>
         /// Method that brings back a <typeparamref name="clsTripPlanning"/> searched by ID. 
         /// <br></br>
-        /// <paramref name="tripPlanningId"/> must be higher than 0.
+        /// <paramref name="tripPlanningId"/> must not be "".
         /// </summary>
         /// <param name="tripPlanningId"></param>
         /// <returns><typeparamref name="clsTripPlanning"/></returns>
-        public static clsTripPlanning getTripPlanningDAL(string tripPlanningId)
+        public clsTripPlanning getTripPlanningDAL(string tripPlanningId)
         {
             clsTripPlanning tripPlanning = null;
             SqlDataReader reader;
@@ -87,7 +87,7 @@ namespace CRUDOurTravel_DAL.Listados
         /// </summary>
         /// <param name="reader"></param>
         /// <returns><typeparamref name="clsTripPlanning"/></returns>
-        private static clsTripPlanning constructTripPlanning(SqlDataReader reader)
+        private clsTripPlanning constructTripPlanning(SqlDataReader reader)
         {
             clsTripPlanning constructedTripPlanning = new clsTripPlanning();
 

@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDOurTravel_Entities", "CRUDOurTravel_Entities\CRUDOurTravel_Entities.csproj", "{77B134A6-7C3B-44A3-BA3F-66DCE63A9E0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDOurTravel_DAL", "CRUDOurTravel_DAL\CRUDOurTravel_DAL.csproj", "{DBB3242E-6EA9-49F9-8FA0-F0679AE2B5DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDOurTravel_DAL", "CRUDOurTravel_DAL\CRUDOurTravel_DAL.csproj", "{DBB3242E-6EA9-49F9-8FA0-F0679AE2B5DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDOurTravel__API", "CRUDOurTravel__API\CRUDOurTravel__API.csproj", "{BDE2B5E1-2BA0-4D41-B2BE-A4E925CFD5F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DBB3242E-6EA9-49F9-8FA0-F0679AE2B5DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBB3242E-6EA9-49F9-8FA0-F0679AE2B5DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBB3242E-6EA9-49F9-8FA0-F0679AE2B5DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDE2B5E1-2BA0-4D41-B2BE-A4E925CFD5F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDE2B5E1-2BA0-4D41-B2BE-A4E925CFD5F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDE2B5E1-2BA0-4D41-B2BE-A4E925CFD5F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDE2B5E1-2BA0-4D41-B2BE-A4E925CFD5F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

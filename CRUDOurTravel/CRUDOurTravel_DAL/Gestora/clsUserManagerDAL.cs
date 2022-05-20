@@ -94,7 +94,7 @@ namespace CRUDOurTravel_DAL.Gestora
         /// </summary>
         /// <param name="idUserToDelete"></param>
         /// <returns>Number of rows affected in the database.</returns>
-        public static int deleteUser(int idUserToDelete)
+        public int deleteUser(int idUserToDelete)
         {
             int rowsAffected;
             SqlCommand command = new SqlCommand("DELETE FROM OTD_Users WHERE UserId = @idUserToDelete");

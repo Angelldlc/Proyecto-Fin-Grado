@@ -15,7 +15,7 @@ namespace CRUDOurTravel_DAL.Listados
         /// Method that brings back a <typeparamref name="clsUser"/> list from a database. 
         /// </summary>
         /// <returns>List (<typeparamref name="clsUser"/>)</returns>
-        public static List<clsUser> getCompleteUsersListDAL()
+        public List<clsUser> getCompleteUsersListDAL()
         {
             List<clsUser> usersList = new List<clsUser>();
             clsUser user;
@@ -49,11 +49,11 @@ namespace CRUDOurTravel_DAL.Listados
         /// <summary>
         /// Method that brings back a <typeparamref name="clsUser"/> searched by ID. 
         /// <br></br>
-        /// <paramref name="userId"/> must be higher than 0.
+        /// <paramref name="userId"/> must not be "".
         /// </summary>
         /// <param name="userId"></param>
         /// <returns><typeparamref name="clsUser"/></returns>
-        public static clsUser getUserDAL(string userId)
+        public clsUser getUserDAL(string userId)
         {
             clsUser user = null;
             SqlDataReader reader;
@@ -87,7 +87,7 @@ namespace CRUDOurTravel_DAL.Listados
         /// </summary>
         /// <param name="reader"></param>
         /// <returns><typeparamref name="clsUser"/></returns>
-        private static clsUser constructUser(SqlDataReader reader)
+        private clsUser constructUser(SqlDataReader reader)
         {
             clsUser constructedUser = new clsUser();
 

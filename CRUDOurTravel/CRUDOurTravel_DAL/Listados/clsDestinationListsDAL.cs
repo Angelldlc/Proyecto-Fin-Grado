@@ -15,7 +15,7 @@ namespace CRUDOurTravel_DAL.Listados
         /// Method that brings back a <typeparamref name="clsDestination"/> list from a database. 
         /// </summary>
         /// <returns>List (<typeparamref name="clsDestination"/>)</returns>
-        public static List<clsDestination> getCompleteDestinationsListDAL()
+        public List<clsDestination> getCompleteDestinationsListDAL()
         {
             List<clsDestination> destinationsList = new List<clsDestination>();
             clsDestination destination;
@@ -49,16 +49,19 @@ namespace CRUDOurTravel_DAL.Listados
         /// <summary>
         /// Method that brings back a <typeparamref name="clsDestination"/> searched by ID. 
         /// <br></br>
-        /// <paramref name="userId"/> must be higher than 0.
+        /// <paramref name="tripPlanningId"/> must not be "".
+        /// <paramref name="cityName"/> must not be "".
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="tripPlanningId"></param>
+        /// <param name="cityName"></param>
         /// <returns><typeparamref name="clsDestination"/></returns>
-        public static clsDestination getDestinationDAL(string destinationId)//TODO TripPlanningId
+        public clsDestination getDestinationDAL(string tripPlanningId, string cityName)//TODO TripPlanningId
         {
             clsDestination destination = null;
             SqlDataReader reader;
-            SqlCommand command = new SqlCommand("SELECT * FROM OTD_Destinations WHERE UserId = @userId");//TODO lo mismo que arriba
-            command.Parameters.AddWithValue("@userId", userId);
+            SqlCommand command = new SqlCommand("SELECT * FROM OTD_Destinations WHERE TripPlanningId = @tripPlanningId AND CityName = @cityName");//TODO lo mismo que arriba
+            command.Parameters.AddWithValue("@tripPlanningId", tripPlanningId);
+            command.Parameters.AddWithValue("@cityName", cityName);
             try
             {
                 myConnection.openConnection();
@@ -87,7 +90,7 @@ namespace CRUDOurTravel_DAL.Listados
         /// </summary>
         /// <param name="reader"></param>
         /// <returns><typeparamref name="clsDestination"/></returns>
-        private static clsDestination constructDestination(SqlDataReader reader)
+        private clsDestination constructDestination(SqlDataReader reader)
         {
             clsDestination constructedDestination = new clsDestination();
 

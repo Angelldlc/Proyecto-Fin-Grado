@@ -25,7 +25,17 @@
       "ProjectGuid": "9f8cf74d-497d-40f8-aaee-514a2912b12f",
       "DisplayName": "CRUDOurTravel_API",
       "ColorIndex": 4
+    },
+    "50fd43f3-1d12-4fc2-9b74-00adf69e9356": {
+      "ProjectGuid": "50fd43f3-1d12-4fc2-9b74-00adf69e9356",
+      "DisplayName": "CRUDOurTravel_API",
+      "ColorIndex": 5
+    },
+    "bde2b5e1-2ba0-4d41-b2be-a4e925cfd5f4": {
+      "ProjectGuid": "bde2b5e1-2ba0-4d41-b2be-a4e925cfd5f4",
+      "DisplayName": "CRUDOurTravel__API",
+      "ColorIndex": 6
     }
   },
-  "NextColorIndex": 5
+  "NextColorIndex": 7
 }

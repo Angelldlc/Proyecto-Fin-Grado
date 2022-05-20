@@ -100,7 +100,7 @@ namespace CRUDOurTravel_DAL.Gestora
         /// </summary>
         /// <param name="idTripToDelete"></param>
         /// <returns>Number of rows affected in the database.</returns>
-        public static int deleteTripPlanning(int idTripToDelete)
+        public int deleteTripPlanning(int idTripToDelete)
         {
             int rowsAffected;
             SqlCommand command = new SqlCommand("DELETE FROM OTD_TripPlannings WHERE TripPlanningId = @idTripToDelete");

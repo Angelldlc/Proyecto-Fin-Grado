@@ -118,7 +118,7 @@ namespace CRUDOurTravel_DAL.Gestora
         /// </summary>
         /// <param name="idDestinationToDelete"></param>
         /// <returns>Number of rows affected in the database.</returns>
-        public static int deleteDestination(int idDestinationToDelete)
+        public int deleteDestination(int idDestinationToDelete)
         {
             int rowsAffected;
             SqlCommand command = new SqlCommand("DELETE FROM OTD_Destinations WHERE TripPlanningId = @idTripToDelete");//TODO Ver si evaluar el id del viaje y del destino

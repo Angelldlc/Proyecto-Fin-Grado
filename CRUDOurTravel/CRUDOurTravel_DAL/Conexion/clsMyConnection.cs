@@ -36,10 +36,14 @@ namespace CRUDOurTravel_DAL.Conexion
         public clsMyConnection()
         {
             
-            this.server = "angelldlc.database.windows.net";
-            this.dataBase = "BBDDUnica";
-            this.user = "saboresdelastierra";            
-            this.pass = "#Mitesoro";
+            //this.server = "angelldlc.database.windows.net";
+            this.server = "DESKTOP-BVJ3FMI";
+            //this.dataBase = "BBDDUnica";
+            this.dataBase = "OurTravelDatabase";
+            //this.user = "saboresdelastierra";            
+            this.user = "prueba";            
+            //this.pass = "#Mitesoro";
+            this.pass = "123";
             this.Connection = new SqlConnection();
 
         }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "909390542002",
+    "project_id": "ourtravel-b7b4e",
+    "storage_bucket": "ourtravel-b7b4e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909390542002:android:16e232c29a77b72c89c5ab",
+        "android_client_info": {
+          "package_name": "es.iesnervion.alopez.ourtravel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "909390542002-6p8cqqmcussvqu93mefhm0cqmce6ib7u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgmVpxSS0N2QS40kIyFA2woT1MaLiNOAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "909390542002-6p8cqqmcussvqu93mefhm0cqmce6ib7u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
