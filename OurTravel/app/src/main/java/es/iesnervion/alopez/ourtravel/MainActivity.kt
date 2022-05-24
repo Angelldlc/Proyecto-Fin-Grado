@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import es.iesnervion.alopez.ourtravel.ui.login.composables.LoginScreen
 import es.iesnervion.alopez.ourtravel.ui.theme.OurTravelTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,17 +23,23 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        oneTapClient = Identity.getSignInClient(this)
-        signUpRequest = BeginSignInRequest.builder()
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setServerClientId(getString(R.string.your_web_client_id))
-                    .setFilterByAuthorizedAccounts(false)
-                    .build())
-            .build()
+        setContent{
+            OurTravelTheme {
+                GoogleLoginView()
+            }
+        }
+//        oneTapClient = Identity.getSignInClient(this)
+//        signUpRequest = BeginSignInRequest.builder()
+//            .setGoogleIdTokenRequestOptions(
+//                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+//                    .setSupported(true)
+//                    .setServerClientId(getString(R.string.your_web_client_id))
+//                    .setFilterByAuthorizedAccounts(false)
+//                    .build())
+//            .build()
     }
 }
+
 
 @Composable
 fun Greeting(name: String) {
@@ -42,7 +49,7 @@ fun Greeting(name: String) {
 @Preview
 @Composable
 fun GoogleLoginView(){
-
+    LoginScreen()
 }
 
 @Preview(showBackground = true)
