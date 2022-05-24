@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import es.iesnervion.alopez.domain.model.TripPlanning
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
 @ExperimentalMaterialApi

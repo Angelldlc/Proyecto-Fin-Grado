@@ -1,6 +1,6 @@
-package es.iesnervion.alopez.usecases.triplist
+package es.iesnervion.alopez.ourtravel.usecases.triplist
 
-import es.iesnervion.alopez.domain.repository.TripRepository
+import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
 
 class DeleteTrip (
     private val repo: TripRepository

@@ -1,8 +1,8 @@
-package es.iesnervion.alopez.domain.repository
+package es.iesnervion.alopez.ourtravel.domain.repository
 
-import es.iesnervion.alopez.domain.model.Response
+import es.iesnervion.alopez.ourtravel.domain.model.Response
 import kotlinx.coroutines.flow.Flow
-import es.iesnervion.alopez.domain.model.TripPlanning
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import java.util.*
 
 interface TripRepository {

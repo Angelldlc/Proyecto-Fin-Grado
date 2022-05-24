@@ -1,4 +1,4 @@
-package es.iesnervion.alopez.usecases.triplist
+package es.iesnervion.alopez.ourtravel.usecases.triplist
 
 data class UseCases(
     val getTrips: GetTrips,

@@ -1,4 +1,4 @@
-package es.iesnervion.alopez.domain.model
+package es.iesnervion.alopez.ourtravel.domain.model
 
 import java.util.*
 
