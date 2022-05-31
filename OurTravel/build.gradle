@@ -4,6 +4,8 @@ buildscript {
         hilt_version = '2.40.5'
         kotlin_version = '1.6.21'
         hilt_navigation_compose_version = "1.0.0"
+        live_data_version = "2.4.1"
+        appcompat_version = "1.4.1"
     }
     dependencies {
         classpath 'com.google.gms:google-services:4.3.10'

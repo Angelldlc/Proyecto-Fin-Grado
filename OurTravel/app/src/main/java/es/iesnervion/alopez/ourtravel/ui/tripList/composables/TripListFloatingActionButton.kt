@@ -12,7 +12,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 fun TripListFloatingActionButton(
     viewmodel: TripListViewModel = hiltViewModel()
 ){
-    FloatingActionButton(onClick = { viewmodel.openDialogState.value = true }) {
+    FloatingActionButton(onClick = { viewmodel.openDialogState.value = true }) { //TODO cambiar Dialog por Navigation a vista TripPlanningScreen edit true
         Icon(imageVector = Icons.Default.Add, contentDescription = "Add Trip Planning")
     }
 }

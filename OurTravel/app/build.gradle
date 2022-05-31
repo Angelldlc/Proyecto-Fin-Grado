@@ -68,6 +68,8 @@ dependencies {
 
     //Firebase?
     implementation "com.google.android.gms:play-services-auth:20.2.0"
+    implementation "com.google.firebase:firebase-firestore-ktx"
+
 
     //BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:29.3.1')
@@ -102,4 +104,12 @@ dependencies {
 
     //Charts
     implementation 'io.github.bytebeats:compose-charts:0.1.2'
+
+    //LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$live_data_version"
+
+    //AppCompat
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+
+
 }
