@@ -2,6 +2,7 @@ package es.iesnervion.alopez.ourtravel.ui.login.composables
 
 //import android.annotation.SuppressLint
 //import android.util.Log
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,7 +42,12 @@ import es.iesnervion.alopez.ourtravel.R
 //import es.iesnervion.alopez.ourtravel.ui.login.LoadingState.Status.*
 import es.iesnervion.alopez.ourtravel.ui.login.LoginViewModel
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.google.android.gms.auth.api.identity.BeginSignInResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider.getCredential
 //import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.Response.*
@@ -52,6 +58,17 @@ import es.iesnervion.alopez.ourtravel.domain.model.Response.*
 @Composable
 fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+        try {
+            val account = task.getResult(ApiException::class.java)!!
+            val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
+            viewModel.signInWithGoogle(credential)
+        } catch (e: ApiException) {
+            Log.w("TAG", "Google sign in failed", e)
+        }
+    }
+
     Scaffold(
         topBar = {
 //            AuthTopBar()
@@ -61,8 +78,17 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentAlignment = BottomCenter
             ) {
+                val context = LocalContext.current
+                    val token = stringResource(R.string.your_web_client_id)
                 Button(
-                    onClick = { viewModel.oneTapSignIn() },
+                    onClick = { val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken(token)
+                                .requestEmail()
+                                .build()
+
+                            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                            launcher.launch(googleSignInClient.signInIntent)
+                         },
                     modifier = Modifier.padding(bottom = 48.dp),
                     shape = RoundedCornerShape(6.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -85,22 +111,22 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
         }
     )
 
-    val launcher =  rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            try {
-                val credentials = viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
-                val googleIdToken = credentials.googleIdToken
-                val googleCredentials = getCredential(googleIdToken, null)
-                viewModel.signInWithGoogle(googleCredentials)
-            } catch (it: ApiException) {
-                print(it)
-            }
-        }
-    }
+//    val launcher =  rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+//        if (result.resultCode == RESULT_OK) {
+//            try {
+//                val credentials = viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
+//                val googleIdToken = credentials.googleIdToken
+//                val googleCredentials = getCredential(googleIdToken, null)
+//                viewModel.signInWithGoogle(googleCredentials)
+//            } catch (it: ApiException) {
+//                print(it)
+//            }
+//        }
+//    }
 
     fun launch(signInResult: BeginSignInResult) {
         val intent = IntentSenderRequest.Builder(signInResult.pendingIntent.intentSender).build()
-        launcher.launch(intent)
+        launcher.launch(intent.fillInIntent)
     }
 
     when(val oneTapSignInResponse = viewModel.oneTapSignInState.value) {
