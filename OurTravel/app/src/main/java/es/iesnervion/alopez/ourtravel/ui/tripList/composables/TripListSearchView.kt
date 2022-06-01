@@ -28,7 +28,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 @Composable
 fun TripListSearchView(
     textState: MutableState<TextFieldValue>,
-    viewModel: TripListViewModel = hiltViewModel()
+//    viewModel: TripListViewModel = hiltViewModel()
 ) {
     TextField(
         value = textState.value,

@@ -21,7 +21,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
 @ExperimentalMaterialApi
 @Composable
-fun TripListScreen(/*viewModel: TripListViewModel = hiltViewModel()*/) {
+fun TripListScreen(/*viewModel: TripListViewModel = hiltViewModel(),*/ navigateToLoginScreen: () -> Unit ) {
     val textState = remember { mutableStateOf(TextFieldValue("")) }
     Scaffold(
         bottomBar = { TripListBottomNavBar() },

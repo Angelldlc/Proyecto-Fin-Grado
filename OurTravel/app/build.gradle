@@ -111,5 +111,8 @@ dependencies {
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appcompat_version"
 
+    //Accompanist
+    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+
 
 }

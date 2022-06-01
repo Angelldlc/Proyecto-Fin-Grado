@@ -6,6 +6,7 @@ buildscript {
         hilt_navigation_compose_version = "1.0.0"
         live_data_version = "2.4.1"
         appcompat_version = "1.4.1"
+        accompanist_version = "0.24.8-beta"
     }
     dependencies {
         classpath 'com.google.gms:google-services:4.3.10'

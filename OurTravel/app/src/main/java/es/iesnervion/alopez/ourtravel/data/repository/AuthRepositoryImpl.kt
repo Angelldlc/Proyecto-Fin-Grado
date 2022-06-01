@@ -7,6 +7,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import es.iesnervion.alopez.ourtravel.domain.model.Response.*
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.domain.repository.AuthRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -17,7 +18,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class AuthRepositoryImpl @Inject constructor (
+class AuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private var oneTapClient: SignInClient,
     @Named("signInRequest")
@@ -27,7 +28,7 @@ class AuthRepositoryImpl @Inject constructor (
     private var signInClient: GoogleSignInClient,
     @Named("usersReference")
     private val usersRef: CollectionReference
-): AuthRepository {
+) : AuthRepository {
 
     override fun isUserAuthenticatedInFirebase() = auth.currentUser != null
 
@@ -66,12 +67,14 @@ class AuthRepositoryImpl @Inject constructor (
         try {
             emit(Loading)
             auth.currentUser?.apply {
-                usersRef.document(uid).set(mapOf(
-                    "id" to uid,
-                    "username" to displayName,
-                    "photo" to photoUrl?.toString(),
-                    "tripPlannings" to metadata
-                )).await()
+                usersRef.document(uid).set(
+                    mapOf(
+                        "id" to uid,
+                        "Username" to displayName,
+                        "Photo" to photoUrl?.toString()
+                    )
+                ).await()
+                usersRef.document(uid).collection("TripPlannings").document()
                 emit(Success(true))
             }
         } catch (e: Exception) {
@@ -79,7 +82,7 @@ class AuthRepositoryImpl @Inject constructor (
         }
     }
 
-    override fun getFirebaseAuthState() = callbackFlow  {
+    override fun getFirebaseAuthState() = callbackFlow {
         val authStateListener = FirebaseAuth.AuthStateListener { auth ->
             trySend(auth.currentUser == null)
         }
