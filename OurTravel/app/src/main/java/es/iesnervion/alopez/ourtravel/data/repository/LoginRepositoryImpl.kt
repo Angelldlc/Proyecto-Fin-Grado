@@ -7,8 +7,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import es.iesnervion.alopez.ourtravel.domain.model.Response.*
-import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
-import es.iesnervion.alopez.ourtravel.domain.repository.AuthRepository
+import es.iesnervion.alopez.ourtravel.domain.repository.LoginRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
@@ -18,7 +17,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class AuthRepositoryImpl @Inject constructor(
+class LoginRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private var oneTapClient: SignInClient,
     @Named("signInRequest")
@@ -28,7 +27,7 @@ class AuthRepositoryImpl @Inject constructor(
     private var signInClient: GoogleSignInClient,
     @Named("usersReference")
     private val usersRef: CollectionReference
-) : AuthRepository {
+) : LoginRepository {
 
     override fun isUserAuthenticatedInFirebase() = auth.currentUser != null
 

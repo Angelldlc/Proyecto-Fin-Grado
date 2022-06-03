@@ -1,5 +1,6 @@
 package es.iesnervion.alopez.ourtravel.usecases.triplist
 
+import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
 import java.util.*
 
@@ -9,8 +10,8 @@ class AddTrip(
     suspend operator fun invoke(
         id: String,
         name: String,
-        startDate: Date,
-        endDate: Date,
-        totalCost: Double
+        startDate: Timestamp,
+        endDate: Timestamp,
+        totalCost: Long
     ) = repo.addTripToFirestore(id, name, startDate, endDate, totalCost)
 }

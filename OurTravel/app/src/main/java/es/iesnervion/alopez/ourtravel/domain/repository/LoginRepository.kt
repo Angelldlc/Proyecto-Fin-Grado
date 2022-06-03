@@ -5,7 +5,7 @@ import com.google.firebase.auth.AuthCredential
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import kotlinx.coroutines.flow.Flow
 
-interface AuthRepository {
+interface LoginRepository {
     fun isUserAuthenticatedInFirebase(): Boolean
 
     suspend fun oneTapSignInWithGoogle(): Flow<Response<BeginSignInResult>>

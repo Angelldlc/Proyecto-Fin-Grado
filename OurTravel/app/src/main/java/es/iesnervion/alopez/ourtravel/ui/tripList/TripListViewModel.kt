@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Success
@@ -21,8 +22,8 @@ class TripListViewModel @Inject constructor(
     private val _tripsState = mutableStateOf<Response<List<TripPlanning>>>(Response.Loading)
     val tripsState: State<Response<List<TripPlanning>>> = _tripsState
 
-    private val _isTripAddedState = mutableStateOf<Response<Void?>>(Success(null))
-    val isTripAddedState: State<Response<Void?>> = _isTripAddedState
+    private val _isTripAddedState = mutableStateOf<Response<Boolean>>(Success(null))
+    val isTripAddedState: State<Response<Boolean>> = _isTripAddedState
 
     private val _isTripDeletedState = mutableStateOf<Response<Void?>>(Success(null))
     val isTripDeletedState: State<Response<Void?>> = _isTripDeletedState
@@ -41,7 +42,7 @@ class TripListViewModel @Inject constructor(
         }
     }
 
-    fun addTrip(id: String, name: String, startDate: Date, endDate: Date, totalCost: Double) {
+    fun addTrip(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long) {
         viewModelScope.launch {
             useCases.addTrip(id, name, startDate, endDate, totalCost).collect { response ->
                 _isTripAddedState.value = response

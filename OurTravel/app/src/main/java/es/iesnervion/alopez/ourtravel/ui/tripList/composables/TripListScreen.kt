@@ -21,12 +21,12 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
 @ExperimentalMaterialApi
 @Composable
-fun TripListScreen(/*viewModel: TripListViewModel = hiltViewModel(),*/ navigateToLoginScreen: () -> Unit ) {
+fun TripListScreen(viewModel: TripListViewModel = hiltViewModel(), navigateToLoginScreen: () -> Unit, navigateToTripPlanningScreen: () -> Unit ) {
     val textState = remember { mutableStateOf(TextFieldValue("")) }
     Scaffold(
         bottomBar = { TripListBottomNavBar() },
         drawerContent = { },
-        floatingActionButton = { TripListFloatingActionButton() }
+        floatingActionButton = { TripListFloatingActionButton(navigateToTripPlanningScreen = navigateToTripPlanningScreen) }
     ) { padding ->
         Column() {
             TripListSearchView(textState)

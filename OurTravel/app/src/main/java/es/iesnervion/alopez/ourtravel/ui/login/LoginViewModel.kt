@@ -9,23 +9,17 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 
 import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.Response.*
-import es.iesnervion.alopez.ourtravel.domain.repository.AuthRepository
-import es.iesnervion.alopez.ourtravel.usecases.triplist.UseCases
+import es.iesnervion.alopez.ourtravel.domain.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repo: AuthRepository,
+    private val repo: LoginRepository,
     val oneTapClient: SignInClient
 ): ViewModel() {
 

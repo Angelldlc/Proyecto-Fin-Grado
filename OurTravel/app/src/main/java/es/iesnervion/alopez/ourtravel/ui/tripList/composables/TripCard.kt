@@ -26,7 +26,7 @@ fun TripCard(
     trip: TripPlanning,
     viewmodel: TripListViewModel = hiltViewModel()
 ){
-    val path = rememberAsyncImagePainter(model = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/GoldenGateBridge-001.jpg/268px-GoldenGateBridge-001.jpg") //TODO cambiar img por defecto por llamada a API
+    val path = rememberAsyncImagePainter(model = trip.photo) //TODO cambiar img por defecto por llamada a API
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(200.dp)

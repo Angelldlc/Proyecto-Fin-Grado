@@ -19,9 +19,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.iesnervion.alopez.ourtravel.R
-import es.iesnervion.alopez.ourtravel.data.repository.AuthRepositoryImpl
+import es.iesnervion.alopez.ourtravel.data.repository.LoginRepositoryImpl
 import es.iesnervion.alopez.ourtravel.data.repository.TripRepositoryImpl
-import es.iesnervion.alopez.ourtravel.domain.repository.AuthRepository
+import es.iesnervion.alopez.ourtravel.domain.repository.LoginRepository
 import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
 import es.iesnervion.alopez.ourtravel.usecases.triplist.AddTrip
 import es.iesnervion.alopez.ourtravel.usecases.triplist.DeleteTrip
@@ -39,13 +39,20 @@ object AppModule {
     @Named("tripsReference")
     fun provideTripsRef(
         db: FirebaseFirestore
-    ) = db.collection("Users").document("Q80KRXzmoOrdItR8h1ib").collection("TripPlannings")
+    ) = db.collection("TripPlannings")
 
     @Provides
     fun provideTripsRepository(
+        auth: FirebaseAuth,
+        @Named("usersReference")
+        usersRef: CollectionReference,
         @Named("tripsReference")
         tripPlanningRef: CollectionReference
-    ): TripRepository = TripRepositoryImpl(tripPlanningRef)
+    ): TripRepository = TripRepositoryImpl(
+        auth = auth,
+        usersRef = usersRef,
+        tripPlanningRef = tripPlanningRef
+    )
 
     @Provides
     fun provideUseCases(
@@ -129,7 +136,7 @@ object AppModule {
         signInClient: GoogleSignInClient,
         @Named("usersReference")
         usersRef: CollectionReference
-    ): AuthRepository = AuthRepositoryImpl(
+    ): LoginRepository = LoginRepositoryImpl(
         auth = auth,
         oneTapClient = oneTapClient,
         signInRequest = signInRequest,
