@@ -9,9 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Success
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
-import es.iesnervion.alopez.ourtravel.usecases.triplist.UseCases
+import es.iesnervion.alopez.ourtravel.usecases.UseCases
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel

@@ -6,6 +6,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import es.iesnervion.alopez.ourtravel.ui.login.composables.LoginScreen
@@ -41,21 +43,28 @@ fun NavGraph (
                     navController.popBackStack()
                     navController.navigate(LoginScreen.route)
                 },
+                navigateToNewTripPlanningScreen = {
+                    navController.navigate(TripPlanningScreen.route.plus("/").plus(null))
+                },
                 navigateToTripPlanningScreen = {
-                    navController.navigate(TripPlanningScreen.route)
+                    navController.navigate(TripPlanningScreen.route.plus("/").plus(it))
                 }
             )
         }
         composable(
-            route = TripPlanningScreen.route) {
-            TripPlanningScreen(
+            route = TripPlanningScreen.route.plus("/{tripId}"),
+            arguments = listOf(navArgument("tripId"){ type = NavType.StringType })) { b ->
+            val id = b.arguments?.getString("tripId")
+            requireNotNull(id)
+            TripPlanningScreen(id,
                 navigateToTripListScreen = {
                     navController.popBackStack()
                     navController.navigate(TripListScreen.route)
                 },
                 navigateToDestinationScreen = {
                     navController.navigate(DestinationScreen.route)
-                }
+                },
+//                navigateBack =
             )
         }
     }

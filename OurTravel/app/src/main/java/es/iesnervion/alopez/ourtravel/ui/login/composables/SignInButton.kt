@@ -14,6 +14,7 @@ import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import es.iesnervion.alopez.ourtravel.R
+import es.iesnervion.alopez.ourtravel.ui.theme.LightBlue
 
 @Composable
 fun SignInButton(
@@ -24,7 +25,7 @@ fun SignInButton(
         modifier = Modifier.padding(bottom = 48.dp),
         shape = RoundedCornerShape(6.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(R.color.purple_700)
+            backgroundColor = LightBlue
         )
     ) {
         Icon(

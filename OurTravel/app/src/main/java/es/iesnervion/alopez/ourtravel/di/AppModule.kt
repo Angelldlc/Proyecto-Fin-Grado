@@ -19,14 +19,20 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.iesnervion.alopez.ourtravel.R
+import es.iesnervion.alopez.ourtravel.data.repository.DestinationRepositoryImpl
 import es.iesnervion.alopez.ourtravel.data.repository.LoginRepositoryImpl
 import es.iesnervion.alopez.ourtravel.data.repository.TripRepositoryImpl
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
+import es.iesnervion.alopez.ourtravel.domain.repository.DestinationRepository
 import es.iesnervion.alopez.ourtravel.domain.repository.LoginRepository
 import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
 import es.iesnervion.alopez.ourtravel.usecases.triplist.AddTrip
 import es.iesnervion.alopez.ourtravel.usecases.triplist.DeleteTrip
 import es.iesnervion.alopez.ourtravel.usecases.triplist.GetTrips
-import es.iesnervion.alopez.ourtravel.usecases.triplist.UseCases
+import es.iesnervion.alopez.ourtravel.usecases.UseCases
+import es.iesnervion.alopez.ourtravel.usecases.destinationlist.AddDestination
+import es.iesnervion.alopez.ourtravel.usecases.destinationlist.DeleteDestination
+import es.iesnervion.alopez.ourtravel.usecases.destinationlist.GetDestinations
 import javax.inject.Named
 
 @Module
@@ -55,12 +61,35 @@ object AppModule {
     )
 
     @Provides
+    @Named("destinationsReference")
+    fun provideDestinationsRef(
+        db: FirebaseFirestore
+    ) = db.collection("Destinations")
+
+    @Provides
+    fun provideDestinationsRepository(
+        auth: FirebaseAuth,
+        @Named("usersReference")
+        usersRef: CollectionReference,
+        @Named("tripsReference")
+        tripPlanningRef: CollectionReference,
+        @Named("destinationsReference")
+        destinationRef: CollectionReference
+    ): DestinationRepository = DestinationRepositoryImpl(
+        auth, usersRef, tripPlanningRef, destinationRef
+    )
+
+    @Provides
     fun provideUseCases(
-        repo: TripRepository
+        tripRepo: TripRepository,
+        destinationRepo: DestinationRepository
     ) = UseCases(
-        getTrips = GetTrips(repo),
-        addTrip = AddTrip(repo),
-        deleteTrip = DeleteTrip(repo)
+        getTrips = GetTrips(tripRepo),
+        addTrip = AddTrip(tripRepo),
+        deleteTrip = DeleteTrip(tripRepo),
+        getDestinations = GetDestinations(destinationRepo),
+        addDestination = AddDestination(destinationRepo),
+        deleteDestination = DeleteDestination(destinationRepo)
     )
 
     //Auth

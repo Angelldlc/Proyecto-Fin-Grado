@@ -21,7 +21,8 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 fun TripList(
     padding: PaddingValues,
     textState: MutableState<TextFieldValue>,
-    viewModel: TripListViewModel = hiltViewModel()
+    viewModel: TripListViewModel = hiltViewModel(),
+    navigateToTripPlanningScreen: (String) -> Unit
 ) {
     val filteredTrips: List<TripPlanning>?
     when (val tripsResponse = viewModel.tripsState.value) {
@@ -47,7 +48,7 @@ fun TripList(
                     .padding(padding)
             ) {
                 items(filteredTrips!!) { trip ->
-                    TripCard(trip = trip, viewmodel = viewModel)
+                    TripCard(trip = trip, viewmodel = viewModel, navigateToTripPlanningScreen = navigateToTripPlanningScreen)
                 }
             }
         }

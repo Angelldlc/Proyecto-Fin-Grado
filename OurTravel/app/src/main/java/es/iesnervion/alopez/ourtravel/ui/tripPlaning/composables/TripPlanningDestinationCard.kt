@@ -1,4 +1,4 @@
-package es.iesnervion.alopez.ourtravel.ui.tripList.composables
+package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,24 +17,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
+import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 
 @ExperimentalMaterialApi
 @Composable
-fun TripCard(
-    trip: TripPlanning,
-    viewmodel: TripListViewModel = hiltViewModel(),
-    navigateToTripPlanningScreen: (String) -> Unit
-){
-    val path = rememberAsyncImagePainter(model = trip.photo) //TODO cambiar img por defecto por llamada a API
+fun TripPlanningDestinationCard(
+    destination: Destination,
+    viewmodel: TripPlanningViewModel = hiltViewModel(),
+    navigateToDestinationScreen: (Destination) -> Unit
+) {
+    val path = rememberAsyncImagePainter(model = destination.cityPhoto) //TODO cambiar img por defecto por llamada a API
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
         .padding(16.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
         onClick = {
-            trip.id?.let { navigateToTripPlanningScreen(it) }
-    }) {
+            navigateToDestinationScreen(destination)
+        }) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()){
             Image(path, contentDescription = "", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth)
             Box(modifier = Modifier
@@ -42,7 +43,7 @@ fun TripCard(
                 .clip(RoundedCornerShape(35.dp, 0.dp, 0.dp, 0.dp))
                 .background(Color.White)
                 .align(Alignment.BottomEnd)){
-                trip.name?.let {
+                destination.cityName?.let {
                     Text(
                         modifier = Modifier
                             .align(Alignment.CenterStart)

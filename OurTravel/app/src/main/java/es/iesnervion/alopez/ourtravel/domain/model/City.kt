@@ -1,6 +1,6 @@
 package es.iesnervion.alopez.ourtravel.domain.model
 
 data class City(
-    var name: String,
-    var photo: String?
+    var name: String? = null,
+    var photo: String? = null
 )
