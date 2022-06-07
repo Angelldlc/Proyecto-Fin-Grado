@@ -8,10 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -99,6 +96,13 @@ fun TripListSearchView(
                     placeholderColor = Color.Gray
                 )
             )
+//            IconButton(onClick = { viewModel. }, modifier = Modifier.padding(8.dp)) {
+//                Icon(
+//                    Icons.Filled.Logout,
+//                    contentDescription = "Menu",
+//                    modifier = Modifier.size(24.dp)/*.clickable { scope.launch { state.drawerState.open() } }*/,
+//                )
+//            }
         }
     }
 }

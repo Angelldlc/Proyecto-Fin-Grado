@@ -10,6 +10,9 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -22,21 +25,27 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun TripListDrawer(modifier: Modifier, scope: CoroutineScope, state: ScaffoldState) {
-    Box(modifier = (Modifier.fillMaxSize())) {
-        Column(modifier = modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+
             val path =
                 rememberAsyncImagePainter(model = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS66MKD0mUL1dtAsmJRtbiDj3rd-kDR9acoNA&usqp=CAU")
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth()) {
-                Image(
-                    painter = path,
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(94.dp)
-                        .clip(CircleShape)
-                        .border(1.dp, Color.Gray, CircleShape)
-                )
-                Text(text = "Pepito", fontSize = 18.sp)
+            Image(
+                painter = path,
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(204.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, Color.Gray, CircleShape)
+            )
+
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.fillMaxWidth().align(Center).padding(0.dp,0.dp,0.dp,0.dp)
+            ) {
+
+                Text(text = "Pepito", fontSize = 18.sp, )
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         Icons.Filled.Edit,
@@ -45,21 +54,15 @@ fun TripListDrawer(modifier: Modifier, scope: CoroutineScope, state: ScaffoldSta
                     )
                 }
             }
-            Row(
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        Icons.Filled.Logout,
-                        contentDescription = "Logout",
-                        modifier = Modifier.size(30.dp)
-                    )
-                }
-                Text(text = "Logout", fontSize = 18.sp)
 
-            }
+
+            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.align(TopEnd).padding(8.dp)) {
+                Icon(
+                    Icons.Filled.Logout,
+                    contentDescription = "Logout",
+                    modifier = Modifier.size(30.dp)
+                )
+
         }
     }
 }
