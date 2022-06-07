@@ -23,9 +23,9 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
 @ExperimentalMaterialApi
 @Composable
-fun TripListScreen(viewModel: TripListViewModel = hiltViewModel(), navigateToLoginScreen: () -> Unit, navigateToNewTripPlanningScreen: () -> Unit, navigateToTripPlanningScreen: (String) -> Unit ) {
-    val textState = remember { mutableStateOf(TextFieldValue("")) }
-    val bottomNavState = remember { mutableStateOf(BottomNavState.PENDANT)}
+fun TripListScreen(viewModel: TripListViewModel = hiltViewModel(), navigateToLoginScreen: () -> Unit, navigateToNewTripPlanningScreen: () -> Unit, navigateToTripPlanningScreen: (List<String>) -> Unit ) {
+    val textState = remember(navigateToTripPlanningScreen, navigateToNewTripPlanningScreen, navigateToLoginScreen) { mutableStateOf(TextFieldValue("")) }
+    val bottomNavState = remember(navigateToTripPlanningScreen, navigateToNewTripPlanningScreen, navigateToLoginScreen) { mutableStateOf(BottomNavState.PENDANT)}
     val state = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
     val scope = rememberCoroutineScope()
     Scaffold(

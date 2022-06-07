@@ -25,23 +25,37 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 fun TripCard(
     trip: TripPlanning,
     viewmodel: TripListViewModel = hiltViewModel(),
-    navigateToTripPlanningScreen: (String) -> Unit
-){
-    val path = rememberAsyncImagePainter(model = trip.photo) //TODO cambiar img por defecto por llamada a API
+    navigateToTripPlanningScreen: (List<String>) -> Unit
+) {
+    val path =
+        rememberAsyncImagePainter(model = trip.photo) //TODO cambiar img por defecto por llamada a API
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
-        .padding(16.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
+        .padding(16.dp), elevation = 8.dp, shape = RoundedCornerShape(8.dp),
         onClick = {
-            trip.id?.let { navigateToTripPlanningScreen(it) }
-    }) {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()){
-            Image(path, contentDescription = "", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth)
-            Box(modifier = Modifier
-                .size(240.dp, 60.dp)
-                .clip(RoundedCornerShape(35.dp, 0.dp, 0.dp, 0.dp))
-                .background(Color.White)
-                .align(Alignment.BottomEnd)){
+            trip.id?.let {
+                trip.name?.let { it1 ->
+                    trip.photo?.let { it2 ->
+                        navigateToTripPlanningScreen(listOf(it, it1, it2))
+                    }
+                }
+            }
+        }) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            Image(
+                path,
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillWidth
+            )
+            Box(
+                modifier = Modifier
+                    .size(240.dp, 60.dp)
+                    .clip(RoundedCornerShape(35.dp, 0.dp, 0.dp, 0.dp))
+                    .background(Color.White)
+                    .align(Alignment.BottomEnd)
+            ) {
                 trip.name?.let {
                     Text(
                         modifier = Modifier

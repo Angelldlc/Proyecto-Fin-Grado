@@ -30,16 +30,16 @@ import kotlin.math.min
 //@Preview
 @Composable
 fun TripPlanningScreen(
-    tripId: String,
+    tripId: String, name: String, photo: String,
     viewModel: TripPlanningViewModel = hiltViewModel(),
     navigateToTripListScreen: () -> Unit,
     navigateToDestinationScreen: (Destination) -> Unit
 ) {
     viewModel.getDestinations(tripId)
     val scrollState = rememberScrollState()
-    val path = rememberAsyncImagePainter(model = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS66MKD0mUL1dtAsmJRtbiDj3rd-kDR9acoNA&usqp=CAU") //TODO Cambiar por llamada a API
+    val path = rememberAsyncImagePainter(model = photo) //TODO Cambiar por llamada a API
     Scaffold(
-        topBar = { TripPlanningTopBar() },
+        topBar = { TripPlanningTopBar(name) },
         drawerContent = { TripPlanningDrawer() },
         floatingActionButton = { TripPlanningFloatingActionButton() }
 

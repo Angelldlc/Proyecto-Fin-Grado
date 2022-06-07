@@ -24,7 +24,7 @@ fun TripList(
     padding: PaddingValues,
     textState: MutableState<TextFieldValue>,
     viewModel: TripListViewModel = hiltViewModel(),
-    navigateToTripPlanningScreen: (String) -> Unit,
+    navigateToTripPlanningScreen: (List<String>) -> Unit,
     bottomNavState: MutableState<BottomNavState>
 ) {
     val filteredTrips: List<TripPlanning>?

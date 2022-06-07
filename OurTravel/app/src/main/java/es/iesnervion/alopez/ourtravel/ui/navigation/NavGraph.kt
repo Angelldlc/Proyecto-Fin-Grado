@@ -47,19 +47,25 @@ fun NavGraph (
                     navController.navigate(TripPlanningScreen.route.plus("/").plus(null))
                 },
                 navigateToTripPlanningScreen = {
-                    navController.navigate(TripPlanningScreen.route.plus("/").plus(it))
+                    navController.navigate(TripPlanningScreen.route.plus("/").plus(it[0]).plus("?name=").plus(it[1]).plus("&photo=").plus(it[2]))
                 }
             )
         }
         composable(
-            route = TripPlanningScreen.route.plus("/{tripId}"),
-            arguments = listOf(navArgument("tripId"){ type = NavType.StringType })) { b ->
-            val id = b.arguments?.getString("tripId")
+            route = TripPlanningScreen.route.plus("/{tripId}").plus("?name={name}").plus("&photo={photo}"),
+            arguments = listOf(navArgument("tripId"){ type = NavType.StringType },
+                navArgument("name"){ type = NavType.StringType/*; defaultValue = ""*/ },
+                navArgument("photo"){ type = NavType.StringType/*; defaultValue = ""*/ })) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("tripId")
+            val name = backStackEntry.arguments?.getString("name")
+            val photo = backStackEntry.arguments?.getString("photo")
             requireNotNull(id)
-            TripPlanningScreen(id,
+            requireNotNull(name)
+            requireNotNull(photo)
+            TripPlanningScreen(id, name, photo,
                 navigateToTripListScreen = {
                     navController.popBackStack()
-                    navController.navigate(TripListScreen.route)
+//                    navController.navigate(TripListScreen.route)
                 },
                 navigateToDestinationScreen = {
                     navController.navigate(DestinationScreen.route)

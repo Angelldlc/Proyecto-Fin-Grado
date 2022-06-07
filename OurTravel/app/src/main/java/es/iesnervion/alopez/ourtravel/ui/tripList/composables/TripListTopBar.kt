@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import es.iesnervion.alopez.ourtravel.R
 
+//TODO BORRAR ESTO YA NO SE USA, EN SU LUGAR USAR SEARCHVIEW
 @Composable
 fun TripListTopBar(){
     TopAppBar(

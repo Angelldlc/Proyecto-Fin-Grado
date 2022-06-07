@@ -14,9 +14,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TripPlanningTopBar(){
+fun TripPlanningTopBar(
+    name: String
+){
     TopAppBar(
-        title = { Text(text = "Viaje 1") },
+        title = { Text(text = name) },
         navigationIcon = {
             IconButton(onClick = {})
             {
