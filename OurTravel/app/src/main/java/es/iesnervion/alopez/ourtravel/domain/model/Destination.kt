@@ -16,18 +16,18 @@ data class Destination (
     @get:PropertyName("Description")
     @set:PropertyName("Description")
     var description: String? = null,
-    @get:PropertyName("AcommodationCosts")
-    @set:PropertyName("AcommodationCosts")
-    var accomodationCosts: Double? = null,
+    @get:PropertyName("AccomodationCosts")
+    @set:PropertyName("AccomodationCosts")
+    var accomodationCosts: Long? = null,
     @get:PropertyName("TransportationCosts")
     @set:PropertyName("TransportationCosts")
-    var transportationCosts: Double? = null,
+    var transportationCosts: Long? = null,
     @get:PropertyName("FoodCosts")
     @set:PropertyName("FoodCosts")
-    var foodCosts: Double? = null,
+    var foodCosts: Long? = null,
     @get:PropertyName("TourismCosts")
     @set:PropertyName("TourismCosts")
-    var tourismCosts: Double? = null,
+    var tourismCosts: Long? = null,
     @get:PropertyName("StartDate")
     @set:PropertyName("StartDate")
     var startDate: Date? = null,

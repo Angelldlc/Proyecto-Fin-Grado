@@ -9,14 +9,7 @@ import java.util.*
 interface TripRepository {
     fun getTripsFromFirestore(): Flow<Response<List<TripPlanning>>>
 
-    suspend fun addTripToFirestore(id: String,
-                                   name: String,
-                                   startDate: Timestamp,
-                                   endDate: Timestamp,
-                                   totalAccomodationCosts: Long,
-                                   totalTransportationCosts: Long,
-                                   totalFoodCosts: Long,
-                                   totalTourismCosts: Long): Flow<Response<Boolean>>
+    suspend fun addTripToFirestore(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long): Flow<Response<Boolean>>
 
     suspend fun deleteTripFromFirestore(id: String): Flow<Response<Void?>>
 }

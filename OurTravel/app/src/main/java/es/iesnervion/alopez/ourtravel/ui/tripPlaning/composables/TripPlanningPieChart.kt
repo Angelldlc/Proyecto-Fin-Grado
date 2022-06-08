@@ -1,8 +1,6 @@
 package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -16,14 +14,22 @@ import androidx.compose.ui.graphics.Color
 import es.iesnervion.alopez.ourtravel.ui.theme.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
+import es.iesnervion.alopez.ourtravel.domain.model.Response
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.cos
 
 @Composable
-fun TripPlanningPieChart(totalAccomodationCost: Long?, totalTransportationCost: Long?, totalFoodCost: Long?, totalTourismCost: Long?) {
+fun TripPlanningPieChart(destinationsResponse: Response.Success<List<Destination>>) {
+    val costs = calculateTotalCosts(destinationsResponse.data)
+    val totalAccomodationCost = costs[0]
+    val totalTransportationCost = costs[1]
+    val totalFoodCost = costs[2]
+    val totalTourismCost = costs[3]
+
     val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
     val symbol = numberFormat.currency?.symbol
     Column() {
@@ -39,7 +45,7 @@ fun TripPlanningPieChart(totalAccomodationCost: Long?, totalTransportationCost: 
                 ),
                 modifier = Modifier
                     .size(400.dp, 272.dp)
-                    .align(Alignment.Center)
+                    .align(Center)
             )
             Text(text = "Total: "+"\n"+((totalAccomodationCost?:0)+(totalTransportationCost?:0)+(totalFoodCost?:0)+(totalTourismCost?:0)).toString()+" $symbol",
                 modifier = Modifier.align(Center),
@@ -82,4 +88,19 @@ fun LegendItem(text: String, color: Color) {
     }
 }
 
+fun calculateTotalCosts(
+    destinationsList: List<Destination>?
+): MutableList<Long?> {
+    var costs = mutableListOf<Long?>(0,0,0,0)
+    if (destinationsList != null) {
+        for (destination in destinationsList){
+            costs[0] = destination.accomodationCosts?.let { costs[0]?.plus(it) }
+            costs[1] = destination.transportationCosts?.let { costs[1]?.plus(it) }
+            costs[2] = destination.foodCosts?.let { costs[2]?.plus(it) }
+            costs[3] = destination.tourismCosts?.let { costs[3]?.plus(it) }
 
+
+        }
+    }
+    return costs
+}

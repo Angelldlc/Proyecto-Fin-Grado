@@ -1,6 +1,7 @@
 package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
+import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 import kotlin.math.max
 import kotlin.math.min
@@ -31,8 +33,9 @@ fun TripPlanningScreen(
     navigateToDestinationScreen: (Destination) -> Unit
 ) {
     viewModel.getDestinations(tripId)
+    val destinationsResponse = viewModel.destinationsState.value
     val scrollState = rememberScrollState()
-    val path = rememberAsyncImagePainter(model = photo) //TODO Cambiar por llamada a API
+    val path = rememberAsyncImagePainter(model = { photo.ifEmpty { "" } }) //TODO Cambiar por llamada a API
     Scaffold(
         topBar = { TripPlanningTopBar(name, navigateToTripListScreen) },
         drawerContent = { TripPlanningDrawer() },
@@ -62,13 +65,24 @@ fun TripPlanningScreen(
                         )
                     }
             )
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(text = "Costs:", modifier = Modifier.padding(16.dp))
-            TripPlanningPieChart(200,100,50,50)
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(text = "Destinations:", modifier = Modifier.padding(16.dp))
-            TripPlanningDestinationsList(paddingValues = padding, viewModel = viewModel,navigateToDestinationScreen = navigateToDestinationScreen)
-        }
+            when (destinationsResponse) {
+                is Response.Loading -> {}
+                is Response.Success -> {
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Text(text = "Costs:", modifier = Modifier.padding(16.dp))
+                    TripPlanningPieChart(destinationsResponse)
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Text(text = "Destinations:", modifier = Modifier.padding(16.dp))
 
+                    TripPlanningDestinationsList(
+                        paddingValues = padding,
+                        viewModel = viewModel,
+                        navigateToDestinationScreen = navigateToDestinationScreen,
+                        destinationsResponse
+                    )
+                }
+                is Response.Error -> Log.d("OurTravel", destinationsResponse.message)
+            }
+        }
     }
 }

@@ -19,7 +19,8 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 fun TripPlanningDestinationsList(
     paddingValues: PaddingValues,
     viewModel: TripPlanningViewModel,
-    navigateToDestinationScreen: (Destination) -> Unit
+    navigateToDestinationScreen: (Destination) -> Unit,
+    destinationsResponse: Response.Success<List<Destination>>
 ) {
     Column(
         modifier = Modifier
@@ -27,17 +28,11 @@ fun TripPlanningDestinationsList(
             .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when (val destinationsResponse = viewModel.destinationsState.value) {
-            is Response.Loading -> {}
-            is Response.Success -> {
-                for (destination in destinationsResponse.data!!) {
-                    TripPlanningDestinationCard(
-                        destination = destination,
-                        navigateToDestinationScreen = navigateToDestinationScreen
-                    )
-                }
-            }
-            is Response.Error -> Log.d("OurTravel", destinationsResponse.message)
+        for (destination in destinationsResponse.data!!) {
+            TripPlanningDestinationCard(
+                destination = destination,
+                navigateToDestinationScreen = navigateToDestinationScreen
+            )
         }
     }
 }

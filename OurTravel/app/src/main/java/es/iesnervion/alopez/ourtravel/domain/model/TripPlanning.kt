@@ -17,21 +17,21 @@ data class TripPlanning(
     @get:PropertyName("EndDate")
     @set:PropertyName("EndDate")
     var endDate: Timestamp? = null,
-//    @get:PropertyName("TotalCost")
-//    @set:PropertyName("TotalCost")
-//    var totalCost: Long? = null,
-    @get:PropertyName("TotalAcommodationCost")
-    @set:PropertyName("TotalAcommodationCost")
-    var totalAccomodationCosts: Long? = null,
-    @get:PropertyName("TotalTransportationCost")
-    @set:PropertyName("TotalTransportationCost")
-    var totalTransportationCosts: Long? = null,
-    @get:PropertyName("TotalFoodCost")
-    @set:PropertyName("TotalFoodCost")
-    var totalFoodCosts: Long? = null,
-    @get:PropertyName("TotalTourismCost")
-    @set:PropertyName("TotalTourismCost")
-    var totalTourismCosts: Long? = null,
+    @get:PropertyName("TotalCost")
+    @set:PropertyName("TotalCost")
+    var totalCost: Long? = null,
+//    @get:PropertyName("TotalAcommodationCost")
+//    @set:PropertyName("TotalAcommodationCost")
+//    var totalAccomodationCosts: Long? = null,
+//    @get:PropertyName("TotalTransportationCost")
+//    @set:PropertyName("TotalTransportationCost")
+//    var totalTransportationCosts: Long? = null,
+//    @get:PropertyName("TotalFoodCost")
+//    @set:PropertyName("TotalFoodCost")
+//    var totalFoodCosts: Long? = null,
+//    @get:PropertyName("TotalTourismCost")
+//    @set:PropertyName("TotalTourismCost")
+//    var totalTourismCosts: Long? = null,
 //    var destinations: List<Destination?>?,
     @get:PropertyName("Photo")
     @set:PropertyName("Photo")

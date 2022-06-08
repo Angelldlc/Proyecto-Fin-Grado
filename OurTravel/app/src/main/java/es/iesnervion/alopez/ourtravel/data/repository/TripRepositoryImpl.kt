@@ -62,10 +62,7 @@ class TripRepositoryImpl @Inject constructor(
         name: String,
         startDate: Timestamp,
         endDate: Timestamp,
-        totalAccomodationCosts: Long,
-        totalTransportationCosts: Long,
-        totalFoodCosts: Long,
-        totalTourismCosts: Long
+        totalCost: Long
     ) = flow {
 //        TODO("Not yet implemented")
         val user = Firebase.auth.currentUser?.uid
@@ -79,10 +76,7 @@ class TripRepositoryImpl @Inject constructor(
                             "Name" to name,
                             "StartDate" to startDate,
                             "EndDate" to endDate,
-                            "TotalAccomodationCost" to totalAccomodationCosts,
-                            "TotalTransportationCost" to totalTransportationCosts,
-                            "TotalFoodCost" to totalFoodCosts,
-                            "TotalTourismCost" to totalTourismCosts,
+                            "TotalCost" to totalCost,
                             "Photo" to photoUrl?.toString()
                         )
                     ).await()
