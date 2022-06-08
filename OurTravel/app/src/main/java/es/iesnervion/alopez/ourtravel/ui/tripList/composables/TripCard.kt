@@ -1,7 +1,6 @@
 package es.iesnervion.alopez.ourtravel.ui.tripList.composables
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -20,6 +19,7 @@ import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun TripCard(
@@ -29,19 +29,28 @@ fun TripCard(
 ) {
     val path =
         rememberAsyncImagePainter(model = trip.photo) //TODO cambiar img por defecto por llamada a API
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .height(200.dp)
-        .padding(16.dp), elevation = 8.dp, shape = RoundedCornerShape(8.dp),
-        onClick = {
-            trip.id?.let {
-                trip.name?.let { it1 ->
-                    trip.photo?.let { it2 ->
-                        navigateToTripPlanningScreen(listOf(it, it1, it2))
+    Card(elevation = 8.dp,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(16.dp)
+            .combinedClickable(
+                enabled = true,
+                onClick = {
+                    trip.id?.let {
+                        trip.name?.let { it1 ->
+                            trip.photo?.let { it2 ->
+                                navigateToTripPlanningScreen(listOf(it, it1, it2))
+                            }
+                        }
                     }
+                },
+                onLongClick = { //TODO DELETE
+
                 }
-            }
-        }) {
+            )
+    ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             Image(
                 path,
@@ -60,7 +69,10 @@ fun TripCard(
                     Text(
                         modifier = Modifier
                             .align(Alignment.CenterStart)
-                            .padding(16.dp), text = it, fontSize = 18.sp, color = Color.Black
+                            .padding(16.dp),
+                        text = it,
+                        fontSize = 18.sp,
+                        color = Color.Black
                     )
                 }
             }

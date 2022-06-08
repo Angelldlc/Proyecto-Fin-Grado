@@ -10,13 +10,15 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import es.iesnervion.alopez.ourtravel.ui.destination.composables.DestinationScreen
 import es.iesnervion.alopez.ourtravel.ui.login.composables.LoginScreen
 import es.iesnervion.alopez.ourtravel.ui.navigation.Screen.*
 import es.iesnervion.alopez.ourtravel.ui.tripList.composables.TripListScreen
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables.TripPlanningScreen
 
 @Composable
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
 fun NavGraph (
     navController: NavHostController
 ) {
@@ -44,7 +46,7 @@ fun NavGraph (
                     navController.navigate(LoginScreen.route)
                 },
                 navigateToNewTripPlanningScreen = {
-                    navController.navigate(TripPlanningScreen.route.plus("/").plus(null))
+                    navController.navigate(TripPlanningScreen.route.plus("/?name=&photo="))
                 },
                 navigateToTripPlanningScreen = {
                     navController.navigate(TripPlanningScreen.route.plus("/").plus(it[0]).plus("?name=").plus(it[1]).plus("&photo=").plus(it[2]))
@@ -55,7 +57,8 @@ fun NavGraph (
             route = TripPlanningScreen.route.plus("/{tripId}").plus("?name={name}").plus("&photo={photo}"),
             arguments = listOf(navArgument("tripId"){ type = NavType.StringType },
                 navArgument("name"){ type = NavType.StringType/*; defaultValue = ""*/ },
-                navArgument("photo"){ type = NavType.StringType/*; defaultValue = ""*/ })) { backStackEntry ->
+                navArgument("photo"){ type = NavType.StringType/*; defaultValue = ""*/ }))
+        { backStackEntry ->
             val id = backStackEntry.arguments?.getString("tripId")
             val name = backStackEntry.arguments?.getString("name")
             val photo = backStackEntry.arguments?.getString("photo")
@@ -70,7 +73,13 @@ fun NavGraph (
                 navigateToDestinationScreen = {
                     navController.navigate(DestinationScreen.route)
                 },
-//                navigateBack =
+            )
+        }
+        composable(
+            route = DestinationScreen.route
+        ){ backStackEntry ->
+            DestinationScreen(
+
             )
         }
     }

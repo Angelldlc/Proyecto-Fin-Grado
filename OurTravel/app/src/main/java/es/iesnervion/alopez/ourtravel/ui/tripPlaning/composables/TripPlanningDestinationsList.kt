@@ -18,7 +18,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 @Composable
 fun TripPlanningDestinationsList(
     paddingValues: PaddingValues,
-    viewModel: TripPlanningViewModel = hiltViewModel(),
+    viewModel: TripPlanningViewModel,
     navigateToDestinationScreen: (Destination) -> Unit
 ) {
     Column(

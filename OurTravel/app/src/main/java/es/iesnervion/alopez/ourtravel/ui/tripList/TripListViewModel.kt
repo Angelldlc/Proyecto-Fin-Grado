@@ -41,9 +41,9 @@ class TripListViewModel @Inject constructor(
         }
     }
 
-    fun addTrip(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long) {
+    fun addTrip(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalAccomodationCosts: Long, totalTransportationCosts: Long, totalFoodCosts: Long, totalTourismCosts: Long) {
         viewModelScope.launch {
-            useCases.addTrip(id, name, startDate, endDate, totalCost).collect { response ->
+            useCases.addTrip(id, name, startDate, endDate, totalAccomodationCosts, totalTransportationCosts, totalFoodCosts, totalTourismCosts).collect { response ->
                 _isTripAddedState.value = response
             }
         }

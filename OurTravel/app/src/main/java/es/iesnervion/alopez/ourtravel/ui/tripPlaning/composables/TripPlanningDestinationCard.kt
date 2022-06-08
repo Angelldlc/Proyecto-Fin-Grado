@@ -25,7 +25,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 @Composable
 fun TripPlanningDestinationCard(
     destination: Destination,
-    viewmodel: TripPlanningViewModel = hiltViewModel(),
+//    viewmodel: TripPlanningViewModel = hiltViewModel(),
     navigateToDestinationScreen: (Destination) -> Unit
 ) {
     val path = rememberAsyncImagePainter(model = destination.cityPhoto) //TODO cambiar img por defecto por llamada a API

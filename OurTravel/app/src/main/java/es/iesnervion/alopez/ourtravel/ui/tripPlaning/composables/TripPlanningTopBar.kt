@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,12 +16,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TripPlanningTopBar(
-    name: String
-){
+    name: String,
+    navigateToTripListScreen: () -> Unit,
+    ){
     TopAppBar(
         title = { Text(text = name) },
         navigationIcon = {
-            IconButton(onClick = {})
+            IconButton(onClick = { navigateToTripListScreen() })
             {
                 Icon(
                     Icons.Filled.ArrowBack,
@@ -38,17 +40,11 @@ fun TripPlanningTopBarActions(){
     Row(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
+
         IconButton(onClick = {})
         {
             Icon(
-                Icons.Filled.Edit,
-                contentDescription = "Edit",
-                modifier = Modifier.size(24.dp))
-        }
-        IconButton(onClick = {})
-        {
-            Icon(
-                Icons.Filled.PersonAdd,
+                Icons.Filled.Share,
                 contentDescription = "Share",
                 modifier = Modifier.size(24.dp))
         }

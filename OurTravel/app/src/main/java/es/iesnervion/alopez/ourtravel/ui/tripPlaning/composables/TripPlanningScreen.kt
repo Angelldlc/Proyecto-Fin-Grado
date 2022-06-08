@@ -12,15 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import es.iesnervion.alopez.ourtravel.R
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
-import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
-import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningPieChart
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 import kotlin.math.max
 import kotlin.math.min
@@ -39,7 +34,7 @@ fun TripPlanningScreen(
     val scrollState = rememberScrollState()
     val path = rememberAsyncImagePainter(model = photo) //TODO Cambiar por llamada a API
     Scaffold(
-        topBar = { TripPlanningTopBar(name) },
+        topBar = { TripPlanningTopBar(name, navigateToTripListScreen) },
         drawerContent = { TripPlanningDrawer() },
         floatingActionButton = { TripPlanningFloatingActionButton() }
 
@@ -69,10 +64,10 @@ fun TripPlanningScreen(
             )
             Spacer(modifier = Modifier.height(30.dp))
             Text(text = "Costs:", modifier = Modifier.padding(16.dp))
-            TripPlanningPieChart()
+            TripPlanningPieChart(200,100,50,50)
             Spacer(modifier = Modifier.height(30.dp))
             Text(text = "Destinations:", modifier = Modifier.padding(16.dp))
-            TripPlanningDestinationsList(paddingValues = padding, navigateToDestinationScreen = navigateToDestinationScreen)
+            TripPlanningDestinationsList(paddingValues = padding, viewModel = viewModel,navigateToDestinationScreen = navigateToDestinationScreen)
         }
 
     }

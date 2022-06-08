@@ -1,6 +1,7 @@
 package es.iesnervion.alopez.ourtravel.ui.tripList.composables
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.tripList.BottomNavState
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun TripList(
