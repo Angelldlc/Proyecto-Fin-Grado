@@ -1,5 +1,6 @@
 package es.iesnervion.alopez.ourtravel.ui.login
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -36,6 +37,12 @@ class LoginViewModel @Inject constructor(
 
     private val _createUserState = mutableStateOf<Response<Boolean>>(Success(null))
     val createUserState: State<Response<Boolean>> = _createUserState
+
+    private var _userDisplayName: String = repo.getDisplayName()
+    val userDisplayName: String = _userDisplayName
+
+    private var _userPhoto: String = repo.getPhotoUrl()
+    val userPhoto: String = _userPhoto
 
     fun getAuthState() = liveData(Dispatchers.IO) {
         repo.getFirebaseAuthState().collect { response ->
@@ -74,6 +81,26 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    fun signOut(){
+        viewModelScope.launch {
+            repo.signOut().collect { response ->
+                _signInState.value != response
+            }
+        }
+    }
+
+//    fun getDisplayName(){
+//        viewModelScope.launch {
+//            _userDisplayName = repo.getDisplayName()
+//        }
+//    }
+//
+//    fun getUserPhoto(){
+//        viewModelScope.launch {
+//            _userPhoto = repo.getPhotoUrl()
+//        }
+//    }
 }
 
 //    val loadingState = MutableStateFlow(LoadingState.IDLE)

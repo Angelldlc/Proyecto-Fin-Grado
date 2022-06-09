@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -34,7 +35,9 @@ class MainActivity : ComponentActivity() {
     private lateinit var navController: NavHostController
     private val viewModel by viewModels<LoginViewModel>()
 
-    @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class,
+        ExperimentalFoundationApi::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

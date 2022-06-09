@@ -19,7 +19,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 fun TripPlanningDestinationsList(
     paddingValues: PaddingValues,
     viewModel: TripPlanningViewModel,
-    navigateToDestinationScreen: (Destination) -> Unit,
+    navigateToDestinationScreen: (String) -> Unit,
     destinationsResponse: Response.Success<List<Destination>>
 ) {
     Column(

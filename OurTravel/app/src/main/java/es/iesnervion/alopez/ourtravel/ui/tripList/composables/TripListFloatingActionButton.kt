@@ -11,7 +11,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
 @Composable
 fun TripListFloatingActionButton(
-    viewmodel: TripListViewModel = hiltViewModel(),
+//    viewmodel: TripListViewModel = hiltViewModel(),
     navigateToNewTripPlanningScreen: () -> Unit
 ){
     FloatingActionButton(onClick = { navigateToNewTripPlanningScreen() }) { //TODO cambiar Dialog por Navigation a vista TripPlanningScreen edit true

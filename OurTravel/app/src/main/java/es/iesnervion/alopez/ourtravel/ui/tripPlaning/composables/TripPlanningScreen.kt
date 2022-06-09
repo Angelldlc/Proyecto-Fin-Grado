@@ -2,22 +2,28 @@ package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.integerResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import es.iesnervion.alopez.ourtravel.R
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.ui.theme.Navy
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 import kotlin.math.max
 import kotlin.math.min
@@ -30,16 +36,21 @@ fun TripPlanningScreen(
     tripId: String, name: String, photo: String,
     viewModel: TripPlanningViewModel = hiltViewModel(),
     navigateToTripListScreen: () -> Unit,
-    navigateToDestinationScreen: (Destination) -> Unit
+    navigateToSearchCityScreen: () -> Unit,
+    navigateToDestinationScreen: (String) -> Unit
 ) {
     viewModel.getDestinations(tripId)
     val destinationsResponse = viewModel.destinationsState.value
     val scrollState = rememberScrollState()
-    val path = rememberAsyncImagePainter(model = { photo.ifEmpty { "" } }) //TODO Cambiar por llamada a API
+    val path = rememberAsyncImagePainter(
+        model = (if (photo.isEmpty() || photo.isBlank()) {
+            NotImage()
+        } else photo)
+    ) //TODO Cambiar por llamada a API
     Scaffold(
         topBar = { TripPlanningTopBar(name, navigateToTripListScreen) },
         drawerContent = { TripPlanningDrawer() },
-        floatingActionButton = { TripPlanningFloatingActionButton() }
+        floatingActionButton = { TripPlanningFloatingActionButton(navigateToSearchCityScreen) }
 
     ) { padding ->
         Column(
@@ -69,10 +80,20 @@ fun TripPlanningScreen(
                 is Response.Loading -> {}
                 is Response.Success -> {
                     Spacer(modifier = Modifier.height(30.dp))
-                    Text(text = "Costs:", modifier = Modifier.padding(16.dp))
+                    Text(
+                        text = "Costs:",
+                        modifier = Modifier.padding(16.dp),
+                        fontSize = 24.sp,
+                        color = Navy
+                    )
                     TripPlanningPieChart(destinationsResponse)
                     Spacer(modifier = Modifier.height(30.dp))
-                    Text(text = "Destinations:", modifier = Modifier.padding(16.dp))
+                    Text(
+                        text = "Destinations:",
+                        modifier = Modifier.padding(16.dp),
+                        fontSize = 24.sp,
+                        color = Navy
+                    )
 
                     TripPlanningDestinationsList(
                         paddingValues = padding,
@@ -84,5 +105,22 @@ fun TripPlanningScreen(
                 is Response.Error -> Log.d("OurTravel", destinationsResponse.message)
             }
         }
+    }
+}
+
+@Composable
+fun NotImage() {
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Gray)
+            .clickable { TODO("Insertar Foto") }
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_baseline_image_24),
+            contentDescription = "",
+            modifier = Modifier.align(Alignment.TopCenter)
+
+        )
     }
 }

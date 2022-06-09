@@ -26,7 +26,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 fun TripPlanningDestinationCard(
     destination: Destination,
 //    viewmodel: TripPlanningViewModel = hiltViewModel(),
-    navigateToDestinationScreen: (Destination) -> Unit
+    navigateToDestinationScreen: (String) -> Unit
 ) {
     val path = rememberAsyncImagePainter(model = destination.cityPhoto) //TODO cambiar img por defecto por llamada a API
     Card(modifier = Modifier
@@ -34,7 +34,7 @@ fun TripPlanningDestinationCard(
         .height(200.dp)
         .padding(16.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
         onClick = {
-            navigateToDestinationScreen(destination)
+            destination.id?.let { navigateToDestinationScreen(it) }
         }) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()){
             Image(path, contentDescription = "", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth)

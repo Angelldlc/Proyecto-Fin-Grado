@@ -24,7 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts.StartIntentSend
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    navigateToTripListScreen: () -> Unit
+    navigateToTripListScreen: (/*List<String>*/) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -99,7 +99,7 @@ fun LoginScreen(
                         viewModel.createUser()
                     }
                 } else {
-                    navigateToTripListScreen()
+                    navigateToTripListScreen(/*listOf(viewModel.userDisplayName, viewModel.userPhoto)*/)
 //                    Text(text = "Success")
                 }
             }
@@ -116,7 +116,7 @@ fun LoginScreen(
         is Success -> {
             createUserResponse.data?.let { isUserCreated ->
                 if (isUserCreated) {
-                    navigateToTripListScreen()
+                    navigateToTripListScreen(/*listOf(viewModel.userDisplayName, viewModel.userPhoto)*/)
 //                    Text(text = "Success")
                 }
             }

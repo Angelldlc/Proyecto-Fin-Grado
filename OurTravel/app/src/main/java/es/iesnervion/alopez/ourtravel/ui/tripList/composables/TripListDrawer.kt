@@ -25,14 +25,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import es.iesnervion.alopez.ourtravel.ui.login.LoginViewModel
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun TripListDrawer(modifier: Modifier, scope: CoroutineScope, state: ScaffoldState) {
+fun TripListDrawer(
+    viewModel: LoginViewModel,
+    navigateToLoginScreen: () -> Unit
+) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Center)) {
             val path =
-                rememberAsyncImagePainter(model = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS66MKD0mUL1dtAsmJRtbiDj3rd-kDR9acoNA&usqp=CAU")
+                rememberAsyncImagePainter(model = viewModel.userPhoto)
             Text(
                 text = "Sesión Iniciada como:",
                 fontSize = 24.sp,
@@ -51,7 +55,7 @@ fun TripListDrawer(modifier: Modifier, scope: CoroutineScope, state: ScaffoldSta
                     .align(CenterHorizontally)
             )
             Text(
-                text = "Pepito",
+                text = viewModel.userDisplayName,
                 fontSize = 24.sp,
                 modifier = Modifier
                     .padding(0.dp, 20.dp, 0.dp, 0.dp)
@@ -61,13 +65,17 @@ fun TripListDrawer(modifier: Modifier, scope: CoroutineScope, state: ScaffoldSta
 
         Row(modifier = Modifier
             .align(BottomStart)
-            .clickable { }) {
-            Text(text = "Cerrar Sesión", fontSize = 24.sp, modifier = Modifier.padding(16.dp))
+            .padding(16.dp)
+            .clickable {
+                viewModel.signOut()
+                navigateToLoginScreen()
+            }) {
+            Text(text = "Cerrar Sesión", fontSize = 24.sp, modifier = Modifier.padding(8.dp))
             Icon(
                 Icons.Filled.Logout,
                 contentDescription = "Logout",
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(8.dp)
                     .size(30.dp),
                 tint = Color.Red
             )
