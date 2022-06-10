@@ -27,8 +27,6 @@ class TripListViewModel @Inject constructor(
     private val _isTripDeletedState = mutableStateOf<Response<Void?>>(Success(null))
     val isTripDeletedState: State<Response<Void?>> = _isTripDeletedState
 
-    var openDialogState = mutableStateOf(false)
-
     init {
         getTrips()
     }

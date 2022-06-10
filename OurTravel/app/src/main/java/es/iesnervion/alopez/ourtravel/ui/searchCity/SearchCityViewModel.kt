@@ -1,13 +1,34 @@
 package es.iesnervion.alopez.ourtravel.ui.searchCity
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import es.iesnervion.alopez.ourtravel.domain.model.City
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
+import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.usecases.UseCases
+import es.iesnervion.alopez.ourtravel.usecases.cities.GetCities
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchCityViewModel () : ViewModel() {
+@HiltViewModel
+class SearchCityViewModel @Inject constructor(
+    private val useCases: UseCases
+) : ViewModel() {
 
-    private val url = "https://api.teleport.org/api/"
+    private var _citiesState = MutableLiveData<Response<List<City>>>(Response.Loading)
+    val citiesState: LiveData<Response<List<City>>> = _citiesState
 
-
-
-
+    fun getCities(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val cities1 = useCases.getCities()
+            _citiesState.postValue(Response.Success(cities1))
+        }
+    }
 
 }

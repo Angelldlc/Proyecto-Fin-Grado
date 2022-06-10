@@ -19,10 +19,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.iesnervion.alopez.ourtravel.R
+import es.iesnervion.alopez.ourtravel.data.datasource.CitiesDataSource
+import es.iesnervion.alopez.ourtravel.data.datasource.CitiesDataSourceImpl
+import es.iesnervion.alopez.ourtravel.data.repository.CitiesRepository
 import es.iesnervion.alopez.ourtravel.data.repository.DestinationRepositoryImpl
 import es.iesnervion.alopez.ourtravel.data.repository.LoginRepositoryImpl
 import es.iesnervion.alopez.ourtravel.data.repository.TripRepositoryImpl
-import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.domain.repository.DestinationRepository
 import es.iesnervion.alopez.ourtravel.domain.repository.LoginRepository
 import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
@@ -30,11 +32,13 @@ import es.iesnervion.alopez.ourtravel.usecases.triplist.AddTrip
 import es.iesnervion.alopez.ourtravel.usecases.triplist.DeleteTrip
 import es.iesnervion.alopez.ourtravel.usecases.triplist.GetTrips
 import es.iesnervion.alopez.ourtravel.usecases.UseCases
+import es.iesnervion.alopez.ourtravel.usecases.cities.GetCities
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.AddDestination
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.DeleteDestination
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.GetDestinations
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -85,14 +89,16 @@ object AppModule {
     @Provides
     fun provideUseCases(
         tripRepo: TripRepository,
-        destinationRepo: DestinationRepository
+        destinationRepo: DestinationRepository,
+        citiesRepo : CitiesRepository
     ) = UseCases(
         getTrips = GetTrips(tripRepo),
         addTrip = AddTrip(tripRepo),
         deleteTrip = DeleteTrip(tripRepo),
         getDestinations = GetDestinations(destinationRepo),
         addDestination = AddDestination(destinationRepo),
-        deleteDestination = DeleteDestination(destinationRepo)
+        deleteDestination = DeleteDestination(destinationRepo),
+        getCities = GetCities(citiesRepo)
     )
 
     //Auth
@@ -180,7 +186,7 @@ object AppModule {
     @Singleton
     @Provides
     @Named("BaseUrl")
-    fun provideBaseUrl() = "https://api.teleport.org/api/cities/"
+    fun provideBaseUrl() = "https://apicitiesourtravel2.azurewebsites.net/api/"
 
 
     @Singleton
@@ -191,5 +197,18 @@ object AppModule {
             .baseUrl(baseUrl)
             .build()
     }
+
+    private const val BASE_URL = "https://apicitiesourtravel2.azurewebsites.net/api/"
+
+    @Provides
+    @Singleton
+    fun provideCitiesDataSource(retrofit: Retrofit): CitiesDataSource = CitiesDataSourceImpl(retrofit)
+
+//    @Provides
+//    @Singleton
+//    fun retrofitProvider(): Retrofit = Retrofit.Builder()
+//        .baseUrl(BASE_URL)
+//        .addConverterFactory(MoshiConverterFactory.create())
+//        .build()
 
 }

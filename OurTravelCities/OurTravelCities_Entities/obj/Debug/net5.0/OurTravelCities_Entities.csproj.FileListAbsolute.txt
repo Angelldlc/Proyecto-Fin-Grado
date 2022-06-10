@@ -1,0 +1,12 @@
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\bin\Debug\net5.0\OurTravelCities_Entities.deps.json
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\bin\Debug\net5.0\OurTravelCities_Entities.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\bin\Debug\net5.0\ref\OurTravelCities_Entities.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\bin\Debug\net5.0\OurTravelCities_Entities.pdb
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\obj\Debug\net5.0\OurTravelCities_Entities.csproj.AssemblyReference.cache
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\obj\Debug\net5.0\OurTravelCities_Entities.GeneratedMSBuildEditorConfig.editorconfig
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\obj\Debug\net5.0\OurTravelCities_Entities.AssemblyInfoInputs.cache
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\obj\Debug\net5.0\OurTravelCities_Entities.AssemblyInfo.cs
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\obj\Debug\net5.0\OurTravelCities_Entities.csproj.CoreCompileInputs.cache
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\obj\Debug\net5.0\OurTravelCities_Entities.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\obj\Debug\net5.0\ref\OurTravelCities_Entities.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_Entities\obj\Debug\net5.0\OurTravelCities_Entities.pdb

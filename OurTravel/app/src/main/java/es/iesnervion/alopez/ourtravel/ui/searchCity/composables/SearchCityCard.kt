@@ -19,15 +19,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import es.iesnervion.alopez.ourtravel.domain.model.City
 
 
 @ExperimentalMaterialApi
-@Preview
+//@Preview
 @Composable
 fun SearchCityCard(
-
+    city: City
 ){
-    val path = rememberAsyncImagePainter(model = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS66MKD0mUL1dtAsmJRtbiDj3rd-kDR9acoNA&usqp=CAU") //TODO Cambiar por llamada a API
+    val path = rememberAsyncImagePainter(model = city.photo) //TODO Cambiar por llamada a API
     Card(modifier = Modifier
         .fillMaxSize()
         .height(200.dp)
@@ -39,11 +40,13 @@ fun SearchCityCard(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillBounds
             )
-            Text(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(16.dp), text = "Su silla", fontSize = 18.sp, color = Color.White, fontWeight= FontWeight.Bold
-            )
+            city.name?.let {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(16.dp), text = it, fontSize = 18.sp, color = Color.White, fontWeight= FontWeight.Bold
+                )
+            }
         }
     }
 }

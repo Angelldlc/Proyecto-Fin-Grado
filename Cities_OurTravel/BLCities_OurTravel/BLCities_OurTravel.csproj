@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DALCities_OurTravel\DALCities_OurTravel.csproj" />
+    <ProjectReference Include="..\EntitiesCities_OurTravel\EntitiesCities_OurTravel.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -39,7 +39,7 @@ fun TripListDrawer(
                 rememberAsyncImagePainter(model = viewModel.userPhoto)
             Text(
                 text = "Sesión Iniciada como:",
-                fontSize = 24.sp,
+                fontSize = 20.sp,
                 modifier = Modifier
                     .padding(0.dp, 0.dp, 0.dp, 20.dp)
                     .align(CenterHorizontally)
@@ -49,14 +49,14 @@ fun TripListDrawer(
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(204.dp)
+                    .size(154.dp)
                     .clip(CircleShape)
                     .border(1.dp, Color.Gray, CircleShape)
                     .align(CenterHorizontally)
             )
             Text(
                 text = viewModel.userDisplayName,
-                fontSize = 24.sp,
+                fontSize = 20.sp,
                 modifier = Modifier
                     .padding(0.dp, 20.dp, 0.dp, 0.dp)
                     .align(CenterHorizontally)
@@ -70,7 +70,7 @@ fun TripListDrawer(
                 viewModel.signOut()
                 navigateToLoginScreen()
             }) {
-            Text(text = "Cerrar Sesión", fontSize = 24.sp, modifier = Modifier.padding(8.dp))
+            Text(text = "Cerrar Sesión", fontSize = 20.sp, modifier = Modifier.padding(8.dp))
             Icon(
                 Icons.Filled.Logout,
                 contentDescription = "Logout",

@@ -1,0 +1,17 @@
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\bin\Debug\net5.0\BLCities_OurTravel.deps.json
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\bin\Debug\net5.0\BLCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\bin\Debug\net5.0\ref\BLCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\bin\Debug\net5.0\BLCities_OurTravel.pdb
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\bin\Debug\net5.0\DALCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\bin\Debug\net5.0\EntitiesCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\bin\Debug\net5.0\DALCities_OurTravel.pdb
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\bin\Debug\net5.0\EntitiesCities_OurTravel.pdb
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\BLCities_OurTravel.csproj.AssemblyReference.cache
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\BLCities_OurTravel.GeneratedMSBuildEditorConfig.editorconfig
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\BLCities_OurTravel.AssemblyInfoInputs.cache
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\BLCities_OurTravel.AssemblyInfo.cs
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\BLCities_OurTravel.csproj.CoreCompileInputs.cache
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\BLCities_OurTravel.csproj.CopyComplete
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\BLCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\ref\BLCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\BLCities_OurTravel\obj\Debug\net5.0\BLCities_OurTravel.pdb

@@ -1,0 +1,15 @@
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\bin\Release\net5.0\DALCities_OurTravel.deps.json
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\bin\Release\net5.0\DALCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\bin\Release\net5.0\ref\DALCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\bin\Release\net5.0\DALCities_OurTravel.pdb
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\bin\Release\net5.0\EntitiesCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\bin\Release\net5.0\EntitiesCities_OurTravel.pdb
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\DALCities_OurTravel.csproj.AssemblyReference.cache
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\DALCities_OurTravel.GeneratedMSBuildEditorConfig.editorconfig
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\DALCities_OurTravel.AssemblyInfoInputs.cache
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\DALCities_OurTravel.AssemblyInfo.cs
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\DALCities_OurTravel.csproj.CoreCompileInputs.cache
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\DALCities_OurTravel.csproj.CopyComplete
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\DALCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\ref\DALCities_OurTravel.dll
+D:\Repositorios\Proyecto Fin Grado\Cities_OurTravel\DALCities_OurTravel\obj\Release\net5.0\DALCities_OurTravel.pdb

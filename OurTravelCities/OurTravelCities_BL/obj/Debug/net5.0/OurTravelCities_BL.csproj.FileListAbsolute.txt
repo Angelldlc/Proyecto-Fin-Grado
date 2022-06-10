@@ -1,0 +1,17 @@
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\bin\Debug\net5.0\OurTravelCities_BL.deps.json
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\bin\Debug\net5.0\OurTravelCities_BL.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\bin\Debug\net5.0\ref\OurTravelCities_BL.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\bin\Debug\net5.0\OurTravelCities_BL.pdb
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\bin\Debug\net5.0\OurTravelCities_DAL.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\bin\Debug\net5.0\OurTravelCities_Entities.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\bin\Debug\net5.0\OurTravelCities_DAL.pdb
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\bin\Debug\net5.0\OurTravelCities_Entities.pdb
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\OurTravelCities_BL.csproj.AssemblyReference.cache
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\OurTravelCities_BL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\OurTravelCities_BL.AssemblyInfoInputs.cache
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\OurTravelCities_BL.AssemblyInfo.cs
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\OurTravelCities_BL.csproj.CoreCompileInputs.cache
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\OurTravelCities_BL.csproj.CopyComplete
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\OurTravelCities_BL.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\ref\OurTravelCities_BL.dll
+D:\Repositorios\Proyecto Fin Grado\OurTravelCities\OurTravelCities_BL\obj\Debug\net5.0\OurTravelCities_BL.pdb

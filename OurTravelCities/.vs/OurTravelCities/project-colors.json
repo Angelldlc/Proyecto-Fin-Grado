@@ -1,0 +1,26 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "6a2c9f7c-3084-4acf-bac9-b51c38b7fb97": {
+      "ProjectGuid": "6a2c9f7c-3084-4acf-bac9-b51c38b7fb97",
+      "DisplayName": "OurTravelCities_API",
+      "ColorIndex": 0
+    },
+    "9e0e85e0-335e-43b6-93fd-7b747502f0d4": {
+      "ProjectGuid": "9e0e85e0-335e-43b6-93fd-7b747502f0d4",
+      "DisplayName": "OurTravelCities_DAL",
+      "ColorIndex": 1
+    },
+    "02d280fe-f763-42c7-adee-9b572614c443": {
+      "ProjectGuid": "02d280fe-f763-42c7-adee-9b572614c443",
+      "DisplayName": "OurTravelCities_BL",
+      "ColorIndex": 2
+    },
+    "dc773790-34dc-48ac-9915-aea186d56fd1": {
+      "ProjectGuid": "dc773790-34dc-48ac-9915-aea186d56fd1",
+      "DisplayName": "OurTravelCities_Entities",
+      "ColorIndex": 3
+    }
+  },
+  "NextColorIndex": 4
+}

@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "EntitiesCities_OurTravel/1.0.0": {
+        "runtime": {
+          "EntitiesCities_OurTravel.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "EntitiesCities_OurTravel/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

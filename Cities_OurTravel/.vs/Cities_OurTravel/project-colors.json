@@ -1,0 +1,26 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "278c7278-034d-4e11-b6e9-ab30dfa3bbe5": {
+      "ProjectGuid": "278c7278-034d-4e11-b6e9-ab30dfa3bbe5",
+      "DisplayName": "APICities_OurTravel",
+      "ColorIndex": 0
+    },
+    "c4797e7f-912e-4b30-8c53-fc3e0526ace8": {
+      "ProjectGuid": "c4797e7f-912e-4b30-8c53-fc3e0526ace8",
+      "DisplayName": "DALCities_OurTravel",
+      "ColorIndex": 1
+    },
+    "94c4619e-1c2d-4e77-9f3a-5c3cb7a631d4": {
+      "ProjectGuid": "94c4619e-1c2d-4e77-9f3a-5c3cb7a631d4",
+      "DisplayName": "BLCities_OurTravel",
+      "ColorIndex": 2
+    },
+    "b9c90e8e-f749-436c-89ac-8eaf2232abb3": {
+      "ProjectGuid": "b9c90e8e-f749-436c-89ac-8eaf2232abb3",
+      "DisplayName": "EntitiesCities_OurTravel",
+      "ColorIndex": 3
+    }
+  },
+  "NextColorIndex": 4
+}

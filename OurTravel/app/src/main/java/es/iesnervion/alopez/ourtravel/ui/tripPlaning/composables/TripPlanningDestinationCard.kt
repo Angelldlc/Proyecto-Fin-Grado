@@ -15,18 +15,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
-import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
-import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
 
 @ExperimentalMaterialApi
 @Composable
 fun TripPlanningDestinationCard(
     destination: Destination,
 //    viewmodel: TripPlanningViewModel = hiltViewModel(),
-    navigateToDestinationScreen: (String) -> Unit
+    navigateToDestinationScreen: (Destination) -> Unit
 ) {
     val path = rememberAsyncImagePainter(model = destination.cityPhoto) //TODO cambiar img por defecto por llamada a API
     Card(modifier = Modifier
@@ -34,7 +31,8 @@ fun TripPlanningDestinationCard(
         .height(200.dp)
         .padding(16.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
         onClick = {
-            destination.id?.let { navigateToDestinationScreen(it) }
+//            destination.id?.let { navigateToDestinationScreen(it) }
+            navigateToDestinationScreen(destination)
         }) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()){
             Image(path, contentDescription = "", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth)

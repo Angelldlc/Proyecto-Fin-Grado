@@ -1,5 +1,6 @@
 package es.iesnervion.alopez.ourtravel.usecases
 
+import es.iesnervion.alopez.ourtravel.usecases.cities.GetCities
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.AddDestination
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.DeleteDestination
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.GetDestinations
@@ -13,5 +14,6 @@ data class UseCases(
     val deleteTrip: DeleteTrip,
     val getDestinations: GetDestinations,
     val addDestination: AddDestination,
-    val deleteDestination: DeleteDestination
+    val deleteDestination: DeleteDestination,
+    val getCities: GetCities
 )

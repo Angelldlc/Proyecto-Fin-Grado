@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +23,7 @@ import es.iesnervion.alopez.ourtravel.R
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.ui.theme.Navy
-import es.iesnervion.alopez.ourtravel.ui.tripPlaning.TripPlanningViewModel
+import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 import kotlin.math.max
 import kotlin.math.min
 
@@ -34,10 +33,10 @@ import kotlin.math.min
 @Composable
 fun TripPlanningScreen(
     tripId: String, name: String, photo: String,
-    viewModel: TripPlanningViewModel = hiltViewModel(),
+    viewModel: DestinationViewModel = hiltViewModel(),
     navigateToTripListScreen: () -> Unit,
     navigateToSearchCityScreen: () -> Unit,
-    navigateToDestinationScreen: (String) -> Unit
+    navigateToDestinationScreen: (Destination) -> Unit
 ) {
     viewModel.getDestinations(tripId)
     val destinationsResponse = viewModel.destinationsState.value

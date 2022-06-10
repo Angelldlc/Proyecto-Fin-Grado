@@ -1,52 +1,73 @@
 package es.iesnervion.alopez.ourtravel.ui.destination.composables
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.LocationCity
-import androidx.compose.material.icons.filled.PinDrop
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.ui.theme.Navy
-import es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables.TripPlanningPieChart
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
+import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 import kotlin.math.max
 import kotlin.math.min
 
 @Composable
 fun DestinationScreen(
-    name: String,
-    navigateToTripPlanningScreen: () -> Unit
-){
+//    name: String,
+    destination: Destination?,
+    navigateToTripPlanningScreen: () -> Unit,
+    viewModel: DestinationViewModel = hiltViewModel()
+) {
     val edit = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
-    val path = rememberAsyncImagePainter(model = "")
-    
+    val path = rememberAsyncImagePainter(model = destination?.cityPhoto ?: "")
+//    val textState = remember() { mutableStateOf(TextFieldValue("")) }
+
+//    val destination = viewModel.getDestinations(name)
+
     Scaffold(
-        topBar = { DestinationTopBar(name, navigateToTripPlanningScreen) },
-        floatingActionButton = { DestinationFloatingActionButton(
-           if (edit.value){ Icons.Filled.Edit } else { Icons.Filled.Save } 
-        ) }
-    ) { padding ->  
+        topBar = {
+            destination?.cityName?.let {
+                DestinationTopBar(
+                    it,
+                    navigateToTripPlanningScreen
+                )
+            }
+        },
+        floatingActionButton = {
+            DestinationFloatingActionButton(
+                if (edit.value) {
+                    Icons.Filled.Save
+                } else {
+                    Icons.Filled.Edit
+                }, edit, viewModel
+            )
+        }
+    ) { padding ->
         Column(
             Modifier
                 .verticalScroll(state = scrollState)
                 .padding(padding)
         ) {
             val height = 220.dp
-            Image(path,
+            Image(
+                path,
 //                painter = painterResource( /*viewmodel.photo*/),
                 contentDescription = "Banner Image",
                 contentScale = ContentScale.FillWidth,
@@ -63,58 +84,232 @@ fun DestinationScreen(
                         )
                     }
             )
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(
-                text = "Costs:",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 24.sp,
-                color = Navy
+
+            CustomizedText(text = "Estimated Costs:")
+            DestinationPieChart(
+                destination?.accomodationCosts ?: 0,
+                destination?.transportationCosts ?: 0,
+                destination?.foodCosts ?: 0,
+                destination?.tourismCosts ?: 0
             )
-            DestinationPieChart(0,0,0,0)//TODO cambiar valores
             Spacer(modifier = Modifier.height(30.dp))
-            Text(
-                text = "Travel Stay:",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 24.sp,
-                color = Navy
+            CostsFields(
+                destination?.transportationCosts ?: 0,
+                destination?.foodCosts ?: 0,
+                edit.value
             )
-            TravelStay(edit = edit.value)
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(
-                text = "Travel:",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 24.sp,
-                color = Navy
-            )
-            Travel(edit = edit.value)
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(
-                text = "Interesting Places:",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 24.sp,
-                color = Navy
-            )
-            InterestingPlaces(edit = edit.value)
+//            Spacer(modifier = Modifier.height(30.dp))
+            CustomizedText(text = "Travel Stay:")
+            TravelStay(edit = edit.value, destination?.travelStay)
+//            Spacer(modifier = Modifier.height(30.dp))
+            CustomizedText(text = "Description:")
+            Description(edit = edit.value, destination?.description)
+//            Spacer(modifier = Modifier.height(30.dp))
+            CustomizedText(text = "Interesting Places:")
+            InterestingPlaces(edit = edit.value, destination?.tourismAttractions)
+
+
         }
     }
 }
 
 @Composable
-fun TravelStay(edit: Boolean){
+fun TravelStay(edit: Boolean, travelStay: String?) {
+
     Row() {
-        TextField(value = "", onValueChange = { }, enabled = edit)
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(Icons.Filled.PinDrop, contentDescription = "")
+        val textState = remember() { mutableStateOf(TextFieldValue("")) }
+
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = textState.value,
+            onValueChange = { value ->
+                textState.value = value
+            },
+            enabled = edit,
+            placeholder = { Text("Estancia", color = Color.Gray) },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Navy,
+                cursorColor = Navy,
+                leadingIconColor = Navy,
+                trailingIconColor = Navy,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.LightGray,
+                disabledIndicatorColor = Color.Transparent,
+                placeholderColor = Color.Gray
+            )
+        )
+        IconButton(onClick = { /*TODO*/ }, enabled = edit) {
+            Icon(Icons.Filled.LocationOn, contentDescription = "", tint = Navy)
+        }
+    }
+    Row() {
+        val textState = remember() { mutableStateOf(TextFieldValue("")) }
+
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = textState.value,
+            onValueChange = { value ->
+                textState.value = value
+            },
+            enabled = edit,
+            placeholder = { Text("Fecha Inicio", color = Color.Gray) },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Navy,
+                cursorColor = Navy,
+                leadingIconColor = Navy,
+                trailingIconColor = Navy,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.LightGray,
+                disabledIndicatorColor = Color.Transparent,
+                placeholderColor = Color.Gray
+            )
+        )
+        IconButton(onClick = { /*TODO*/ }, enabled = edit) {
+            Icon(Icons.Filled.CalendarMonth, contentDescription = "", tint = Navy)
+        }
+    }
+    Row() {
+        val textState = remember() { mutableStateOf(TextFieldValue("")) }
+
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = textState.value,
+            onValueChange = { value ->
+                textState.value = value
+            },
+            enabled = edit,
+            placeholder = { Text("Fecha Fin", color = Color.Gray) },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Navy,
+                cursorColor = Navy,
+                leadingIconColor = Navy,
+                trailingIconColor = Navy,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.LightGray,
+                disabledIndicatorColor = Color.Transparent,
+                placeholderColor = Color.Gray
+            )
+        )
+        IconButton(onClick = { /*TODO*/ }, enabled = edit) {
+            Icon(Icons.Filled.CalendarMonth, contentDescription = "", tint = Navy)
         }
     }
 }
 
 @Composable
-fun Travel(edit: Boolean){
-    TextField(value = "", onValueChange = {}, enabled = edit, modifier = Modifier.fillMaxWidth().height(400.dp))
+fun Description(edit: Boolean, description: String?) {
+    val textState = remember() { mutableStateOf(TextFieldValue("")) }
+
+    TextField(
+        value = textState.value,
+        onValueChange = { value ->
+            textState.value = value
+        },
+        enabled = edit,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp),
+
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Navy,
+            cursorColor = Navy,
+            leadingIconColor = Navy,
+            trailingIconColor = Navy,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.LightGray,
+            disabledIndicatorColor = Color.Transparent,
+            placeholderColor = Color.Gray
+        )
+    )
 }
 
 @Composable
-fun InterestingPlaces(edit: Boolean){
-    //TODO Ver LazyColumn adding new elements by button
+fun InterestingPlaces(edit: Boolean, tourismAttractions: List<String?>?) {
+    val textState = remember() { mutableStateOf(TextFieldValue("")) }
+
+    TextField(
+        value = textState.value,
+        onValueChange = { value ->
+            textState.value = value
+        },
+        enabled = edit,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp),
+
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Navy,
+            cursorColor = Navy,
+            leadingIconColor = Navy,
+            trailingIconColor = Navy,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.LightGray,
+            disabledIndicatorColor = Color.Transparent,
+            placeholderColor = Color.Gray
+        )
+    )
+}
+
+@Composable
+fun CustomizedText(text: String) {
+    Spacer(modifier = Modifier.height(30.dp))
+    Text(
+        text = text,
+        modifier = Modifier.padding(16.dp),
+        fontSize = 24.sp,
+        color = Navy
+    )
+}
+
+@Composable
+fun CostsFields(estimatedTransportationCost: Long, estimatedFoodCost: Long, edit: Boolean) {
+    Row() {
+        val textState = remember() { mutableStateOf(TextFieldValue("")) }
+
+        TextField(
+            value = textState.value,
+            onValueChange = { value ->
+                textState.value = value
+            },
+            enabled = edit,
+            placeholder = { Text("Gastos en comida", color = Color.Gray) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Navy,
+                cursorColor = Navy,
+                leadingIconColor = Navy,
+                trailingIconColor = Navy,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.LightGray,
+                disabledIndicatorColor = Color.Transparent,
+                placeholderColor = Color.Gray
+
+            )
+        )
+    }
+    Row() {
+        val textState = remember() { mutableStateOf(TextFieldValue("")) }
+
+        TextField(
+            value = textState.value,
+            onValueChange = { value ->
+                textState.value = value
+            },
+            enabled = edit,
+            placeholder = { Text("Gastos en transporte", color = Color.Gray) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Navy,
+                cursorColor = Navy,
+                leadingIconColor = Navy,
+                trailingIconColor = Navy,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.LightGray,
+                disabledIndicatorColor = Color.Transparent,
+                placeholderColor = Color.Gray
+
+            )
+        )
+    }
 }
