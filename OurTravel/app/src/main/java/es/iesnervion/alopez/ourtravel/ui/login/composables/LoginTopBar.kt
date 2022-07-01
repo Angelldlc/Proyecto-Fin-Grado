@@ -9,7 +9,7 @@ fun LoginTopBar(){
     TopAppBar (
         title = {
             Text(
-                text = "Login"//TODO Editar
+                text = "Login"
             )
         }
     )

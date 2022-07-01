@@ -29,7 +29,6 @@ import kotlin.math.min
 
 @Composable
 fun DestinationScreen(
-//    name: String,
     destination: Destination?,
     navigateToTripPlanningScreen: () -> Unit,
     viewModel: DestinationViewModel = hiltViewModel()
@@ -37,9 +36,6 @@ fun DestinationScreen(
     val edit = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val path = rememberAsyncImagePainter(model = destination?.cityPhoto ?: "")
-//    val textState = remember() { mutableStateOf(TextFieldValue("")) }
-
-//    val destination = viewModel.getDestinations(name)
 
     Scaffold(
         topBar = {
@@ -56,7 +52,7 @@ fun DestinationScreen(
                     Icons.Filled.Save
                 } else {
                     Icons.Filled.Edit
-                }, edit, viewModel
+                }, edit
             )
         }
     ) { padding ->
@@ -68,7 +64,6 @@ fun DestinationScreen(
             val height = 220.dp
             Image(
                 path,
-//                painter = painterResource( /*viewmodel.photo*/),
                 contentDescription = "Banner Image",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
@@ -98,13 +93,10 @@ fun DestinationScreen(
                 destination?.foodCosts ?: 0,
                 edit.value
             )
-//            Spacer(modifier = Modifier.height(30.dp))
             CustomizedText(text = "Travel Stay:")
             TravelStay(edit = edit.value, destination?.travelStay)
-//            Spacer(modifier = Modifier.height(30.dp))
             CustomizedText(text = "Description:")
             Description(edit = edit.value, destination?.description)
-//            Spacer(modifier = Modifier.height(30.dp))
             CustomizedText(text = "Interesting Places:")
             InterestingPlaces(edit = edit.value, destination?.tourismAttractions)
 

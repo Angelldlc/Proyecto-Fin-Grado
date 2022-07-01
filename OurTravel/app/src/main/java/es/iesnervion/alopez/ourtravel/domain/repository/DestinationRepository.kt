@@ -1,10 +1,8 @@
 package es.iesnervion.alopez.ourtravel.domain.repository
 
-import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
-import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 

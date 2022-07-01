@@ -11,7 +11,6 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.google.firebase.Timestamp
 import com.google.gson.Gson
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
@@ -21,7 +20,6 @@ import es.iesnervion.alopez.ourtravel.ui.navigation.Screen.*
 import es.iesnervion.alopez.ourtravel.ui.searchCity.composables.SearchCityScreen
 import es.iesnervion.alopez.ourtravel.ui.tripList.composables.TripListScreen
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables.TripPlanningScreen
-import java.util.*
 
 @ExperimentalFoundationApi
 @Composable
@@ -41,38 +39,35 @@ fun NavGraph (
         ) {
             LoginScreen(
                 navigateToTripListScreen = {
-                    navController.navigate(TripListScreen.route/*.plus("/?username=").plus(it[0]).plus("&photo=").plus(it[1])*/)
+                    navController.navigate(TripListScreen.route)
                 }
             )
         }
         composable(
-            route = TripListScreen.route/*.plus("/?username={username}&photo={photo}")*/
+            route = TripListScreen.route
         ) { backStackEntry ->
             TripListScreen(
                 navigateToLoginScreen = {
                     navController.popBackStack()
-//                    navController.navigate(LoginScreen.route)
 
                 },
                 navigateToNewTripPlanningScreen = {
-                    val trip = Gson().toJson(TripPlanning(/*"", "", Timestamp(Date()), Timestamp(Date()), 0, ""*/))
+                    val trip = Gson().toJson(TripPlanning())
                     navController.navigate(TripPlanningScreen.route.plus("/?name=&photo="))
                 },
                 navigateToTripPlanningScreen = {
-//                    val trip = Gson().toJson(it)
-//                    val id = it.id
+
                     navController.navigate(TripPlanningScreen.route.plus("/").plus(it[0]).plus("?name=")/*.plus("?trip=$trip")*/.plus(it[1]).plus("&photo=").plus(it[2]))
                 }
             )
         }
         composable(
-            route = TripPlanningScreen.route.plus("/{tripId}?")/*trip={trip}"*/.plus("name={name}&photo={photo}"/*&destinationId={destinationId}*/),
+            route = TripPlanningScreen.route.plus("/{tripId}?").plus("name={name}&photo={photo}"),
             arguments = listOf(
-//                navArgument("trip"){ type = NavType.StringType; defaultValue = "" }
+
                 navArgument("tripId"){ type = NavType.StringType },
-                navArgument("name"){ type = NavType.StringType/*; defaultValue = ""*/ },
-                navArgument("photo"){ type = NavType.StringType/*; defaultValue = ""*/ },
-//                navArgument("destinationId"){ type = NavType.StringType; defaultValue = "" }
+                navArgument("name"){ type = NavType.StringType },
+                navArgument("photo"){ type = NavType.StringType },
             ))
         { backStackEntry ->
             val trip = backStackEntry.arguments?.getString("trip").let { json ->
@@ -81,16 +76,13 @@ fun NavGraph (
             val id = backStackEntry.arguments?.getString("tripId")
             val name = backStackEntry.arguments?.getString("name")
             val photo = backStackEntry.arguments?.getString("photo")
-//            val destinationId = backStackEntry.arguments?.getString("destinationId")
             requireNotNull(id)
             requireNotNull(name)
             requireNotNull(photo)
-//            requireNotNull(destinationId)
 
-            TripPlanningScreen(id, name, photo/*trip*/,
+            TripPlanningScreen(id, name, photo,
                 navigateToTripListScreen = {
                     navController.popBackStack()
-//                    navController.navigate(TripListScreen.route)
                 },
                 navigateToDestinationScreen = {
                     val destination = Gson().toJson(it)

@@ -28,17 +28,16 @@ import es.iesnervion.alopez.ourtravel.data.repository.TripRepositoryImpl
 import es.iesnervion.alopez.ourtravel.domain.repository.DestinationRepository
 import es.iesnervion.alopez.ourtravel.domain.repository.LoginRepository
 import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
-import es.iesnervion.alopez.ourtravel.usecases.triplist.AddTrip
-import es.iesnervion.alopez.ourtravel.usecases.triplist.DeleteTrip
-import es.iesnervion.alopez.ourtravel.usecases.triplist.GetTrips
 import es.iesnervion.alopez.ourtravel.usecases.UseCases
 import es.iesnervion.alopez.ourtravel.usecases.cities.GetCities
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.AddDestination
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.DeleteDestination
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.GetDestinations
+import es.iesnervion.alopez.ourtravel.usecases.triplist.AddTrip
+import es.iesnervion.alopez.ourtravel.usecases.triplist.DeleteTrip
+import es.iesnervion.alopez.ourtravel.usecases.triplist.GetTrips
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -198,17 +197,8 @@ object AppModule {
             .build()
     }
 
-    private const val BASE_URL = "https://apicitiesourtravel2.azurewebsites.net/api/"
-
     @Provides
     @Singleton
     fun provideCitiesDataSource(retrofit: Retrofit): CitiesDataSource = CitiesDataSourceImpl(retrofit)
-
-//    @Provides
-//    @Singleton
-//    fun retrofitProvider(): Retrofit = Retrofit.Builder()
-//        .baseUrl(BASE_URL)
-//        .addConverterFactory(MoshiConverterFactory.create())
-//        .build()
 
 }

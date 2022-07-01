@@ -6,7 +6,7 @@ import java.util.*
 data class Destination (
     @get:PropertyName("Id")
     @set:PropertyName("Id")
-    var id: String? = null, //TODO Necesito el id?
+    var id: String? = null,
     @get:PropertyName("CityName")
     @set:PropertyName("CityName")
     var cityName: String? = null,

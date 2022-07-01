@@ -2,9 +2,8 @@ package es.iesnervion.alopez.ourtravel.domain.repository
 
 import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.domain.model.Response
-import kotlinx.coroutines.flow.Flow
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
-import java.util.*
+import kotlinx.coroutines.flow.Flow
 
 interface TripRepository {
     fun getTripsFromFirestore(): Flow<Response<List<TripPlanning>>>
