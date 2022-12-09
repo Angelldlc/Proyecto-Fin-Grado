@@ -35,6 +35,7 @@ import es.iesnervion.alopez.ourtravel.usecases.destinationlist.DeleteDestination
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.GetDestinations
 import es.iesnervion.alopez.ourtravel.usecases.triplist.AddTrip
 import es.iesnervion.alopez.ourtravel.usecases.triplist.DeleteTrip
+import es.iesnervion.alopez.ourtravel.usecases.triplist.GetLastTripInsertedId
 import es.iesnervion.alopez.ourtravel.usecases.triplist.GetTrips
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -92,6 +93,7 @@ object AppModule {
         citiesRepo : CitiesRepository
     ) = UseCases(
         getTrips = GetTrips(tripRepo),
+        getLastTripInsertedId = GetLastTripInsertedId(tripRepo),
         addTrip = AddTrip(tripRepo),
         deleteTrip = DeleteTrip(tripRepo),
         getDestinations = GetDestinations(destinationRepo),
@@ -185,7 +187,7 @@ object AppModule {
     @Singleton
     @Provides
     @Named("BaseUrl")
-    fun provideBaseUrl() = "https://apicitiesourtravel2.azurewebsites.net/api/"
+    fun provideBaseUrl() = /*"https://apicitiesourtravel2.azurewebsites.net/api/"*/ "https://citiesourtravel.azurewebsites.net/api/" //TODO preguntar a fernando por la api
 
 
     @Singleton

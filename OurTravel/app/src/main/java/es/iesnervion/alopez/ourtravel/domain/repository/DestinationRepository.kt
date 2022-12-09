@@ -21,5 +21,5 @@ interface DestinationRepository {
                                           travelStay: String,
                                           tourismAttractions: List<String>): Flow<Response<Boolean>>
 
-    suspend fun deleteDestinationFromFirestore(id: String): Flow<Response<Void?>>
+    suspend fun deleteDestinationFromFirestore(id: String): Flow<Response<Boolean>>
 }

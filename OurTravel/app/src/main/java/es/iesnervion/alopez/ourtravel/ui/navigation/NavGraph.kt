@@ -82,6 +82,8 @@ fun NavGraph (
 
             TripPlanningScreen(id, name, photo,
                 navigateToTripListScreen = {
+                    navController.currentBackStackEntry 
+                    navController.clearBackStack(SearchCityScreen.route)
                     navController.popBackStack()
                 },
                 navigateToDestinationScreen = {
@@ -107,15 +109,25 @@ fun NavGraph (
 
             DestinationScreen(destination = destination,
                 navigateToTripPlanningScreen = {
+                    navController.clearBackStack(SearchCityScreen.route)
                     navController.popBackStack()
                 }
             )
         }
         composable(
-            route = SearchCityScreen.route
+            route = SearchCityScreen.route,
+//            arguments = listOf(
+//                navArgument("cityName"){ type = NavType.StringType },
+//                navArgument("cityPhoto"){ type = NavType.StringType }
+//            )
         ){ backStackEntry ->
+//            val
             SearchCityScreen(
-
+                navigateToDestinationScreen = {
+                    val destination = Gson().toJson(it)
+                    navController.popBackStack()
+                    navController.navigate(DestinationScreen.route.plus("/${it.id}?destination=$destination"))
+                }
             )
 
         }

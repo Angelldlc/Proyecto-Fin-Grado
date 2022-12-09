@@ -24,11 +24,11 @@ class DestinationViewModel @Inject constructor(
     private val _isDestinationAddedState = mutableStateOf<Response<Boolean>>(Response.Success(null))
     val isDestinationAddedState: State<Response<Boolean>> = _isDestinationAddedState
 
-    private val _isDestinationDeletedState = mutableStateOf<Response<Void?>>(Response.Success(null))
-    val isDestinationDeletedState: State<Response<Void?>> = _isDestinationDeletedState
+    private val _isDestinationDeletedState = mutableStateOf<Response<Boolean>>(Response.Success(null))
+    val isDestinationDeletedState: State<Response<Boolean>> = _isDestinationDeletedState
 
 //    init {
-//        getDestinations(tripId)
+//        getDestinations(tripId) //TODO solucionar problema ID
 //    }
 
     fun getDestinations(tripId: String) {
@@ -57,11 +57,11 @@ class DestinationViewModel @Inject constructor(
         }
     }
 
-    fun deleteDestination(id: String) {
-        viewModelScope.launch {
-            useCases.deleteDestination(id).collect { response ->
-                _isDestinationDeletedState.value = response
-            }
-        }
-    }
+//    fun deleteDestination(id: String) {
+//        viewModelScope.launch {
+//            useCases.deleteDestination(id).collect { response ->
+//                _isDestinationDeletedState.value = response
+//            }
+//        }
+//    }
 }

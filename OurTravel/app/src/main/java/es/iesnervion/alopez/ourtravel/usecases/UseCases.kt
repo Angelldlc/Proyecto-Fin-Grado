@@ -6,10 +6,12 @@ import es.iesnervion.alopez.ourtravel.usecases.destinationlist.DeleteDestination
 import es.iesnervion.alopez.ourtravel.usecases.destinationlist.GetDestinations
 import es.iesnervion.alopez.ourtravel.usecases.triplist.AddTrip
 import es.iesnervion.alopez.ourtravel.usecases.triplist.DeleteTrip
+import es.iesnervion.alopez.ourtravel.usecases.triplist.GetLastTripInsertedId
 import es.iesnervion.alopez.ourtravel.usecases.triplist.GetTrips
 
 data class UseCases(
     val getTrips: GetTrips,
+    val getLastTripInsertedId: GetLastTripInsertedId,
     val addTrip: AddTrip,
     val deleteTrip: DeleteTrip,
     val getDestinations: GetDestinations,

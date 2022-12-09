@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface TripRepository {
     fun getTripsFromFirestore(): Flow<Response<List<TripPlanning>>>
 
-    suspend fun addTripToFirestore(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long): Flow<Response<Boolean>>
+    fun getLastTripInsertedId(): Flow<Response<String>>
 
-    suspend fun deleteTripFromFirestore(id: String): Flow<Response<Void?>>
+    suspend fun addTripToFirestore(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String): Flow<Response<Boolean>>
+
+    suspend fun deleteTripFromFirestore(id: String): Flow<Response<Boolean>>
 }

@@ -49,26 +49,50 @@ class TripRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getLastTripInsertedId() = callbackFlow {
+        val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
+        val snapshotListener = userRef?.collection(tripPlanningRef.path)
+            ?.whereEqualTo("Name", "")?.addSnapshotListener { snapshot, e ->
+                val response = if (snapshot != null) {
+                    val tripId = try {
+                        snapshot.toObjects(TripPlanning::class.java)[0].id
+//                        snapshot.toObjects(TripPlanning::class.java)
+                    } catch (e: Exception) {
+                        null
+                    }
+                    Success(tripId)
+                } else {
+                    Error(e?.message ?: e.toString())
+                }
+                trySend(response).isSuccess
+            }
+        awaitClose {
+            snapshotListener?.remove()
+        }
+    }
+
     override suspend fun addTripToFirestore(
         id: String,
         name: String,
         startDate: Timestamp,
         endDate: Timestamp,
-        totalCost: Long
+        totalCost: Long,
+        photo: String
     ) = flow {
         val user = Firebase.auth.currentUser?.uid
         if (user != null) {
             try {
                 emit(Response.Loading)
                 auth.currentUser?.apply {
-                    usersRef.document(uid).collection("TripPlannings").document(tripPlanningRef.id).set(
+                    val uniqueid = usersRef.document(uid).collection("TripPlannings").document().id
+                    usersRef.document(uid).collection("TripPlannings").document(uniqueid).set(
                         mapOf(
-                            "Id" to tripPlanningRef.id,
+                            "Id" to uniqueid,
                             "Name" to name,
                             "StartDate" to startDate,
                             "EndDate" to endDate,
                             "TotalCost" to totalCost,
-                            "Photo" to photoUrl?.toString()
+                            "Photo" to photo
                         )
                     ).await()
                     emit(Success(true))
@@ -82,8 +106,24 @@ class TripRepositoryImpl @Inject constructor(
 
     }
 
+    override suspend fun deleteTripFromFirestore(id: String) = flow {
+        val user = Firebase.auth.currentUser?.uid
+        if (user != null) {
+            try {
+                emit(Response.Loading)
+                auth.currentUser?.apply {
+                    try {
+                        usersRef.document(uid).collection("TripPlannings").document(id).delete().await()
+                        emit(Success(true))
+                    } catch (e: Exception) {
+                        emit(Response.Failure(e))
+                    }
+                }
+            }catch (e: Exception){
+                emit(Response.Failure(e))
+            }
+        }else{
 
-    override suspend fun deleteTripFromFirestore(id: String): Flow<Response<Void?>> {
-        TODO("Not yet implemented")
+        }
     }
 }

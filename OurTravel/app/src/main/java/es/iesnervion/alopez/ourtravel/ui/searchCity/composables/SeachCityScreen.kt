@@ -9,20 +9,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.ui.searchCity.SearchCityViewModel
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
-@Preview
+//@Preview
 @Composable
 fun SearchCityScreen(
     viewModel: SearchCityViewModel = hiltViewModel(),
+    navigateToDestinationScreen: (Destination) -> Unit
 ){
     val textState = remember() { mutableStateOf(TextFieldValue("")) }
     Scaffold(
         topBar = { SearchCitySearchView(textState) },
     ) { padding ->
-        SearchCityList(textState, viewModel, padding)
+        SearchCityList(textState, viewModel, padding, navigateToDestinationScreen)
     }
 
 }

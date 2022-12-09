@@ -98,8 +98,32 @@ class DestinationRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteDestinationFromFirestore(id: String): Flow<Response<Void?>> {
-        TODO("Not yet implemented")
+    override suspend fun deleteDestinationFromFirestore(id: String) = flow {
+        val user = Firebase.auth.currentUser?.uid
+        if (user != null){
+            try {
+                emit(Response.Loading)
+                auth.currentUser?.apply {
+                    try {
+                        usersRef.document(uid).collection("TripPlannings").document(tripPlanningRef.id).collection("Destinations").document(id).delete().await()
+                        emit(Response.Success(true))
+                    } catch (e: Exception) {
+                        emit(Response.Failure(e))
+                    }
+                }
+            }catch (e: Exception){
+                emit(Response.Failure(e))
+            }
+        }else{
+
+        }
     }
+        //TODO("Not yet implemented")
+//        try{
+//            usersRef.document(id).delete().await()
+//            emit(Response.Success(true))
+//        }catch (e: Exception){
+//            emit(Response.Failure(e))
+//        }
 
 }

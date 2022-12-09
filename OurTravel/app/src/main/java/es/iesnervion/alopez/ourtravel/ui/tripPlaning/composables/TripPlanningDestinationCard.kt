@@ -1,7 +1,9 @@
 package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun TripPlanningDestinationCard(
@@ -32,7 +35,7 @@ fun TripPlanningDestinationCard(
         .padding(16.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
         onClick = {
 //            destination.id?.let { navigateToDestinationScreen(it) }
-            navigateToDestinationScreen(destination)
+        navigateToDestinationScreen(destination)
         }) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()){
             Image(path, contentDescription = "", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth)

@@ -12,6 +12,7 @@ class AddTrip(
         name: String,
         startDate: Timestamp,
         endDate: Timestamp,
-        totalCost: Long
-    ) = repo.addTripToFirestore(id, name, startDate, endDate, totalCost)
+        totalCost: Long,
+        photo: String
+    ) = repo.addTripToFirestore(id, name, startDate, endDate, totalCost, photo)
 }

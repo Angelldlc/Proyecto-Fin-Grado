@@ -20,19 +20,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.City
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
 
 
 @ExperimentalMaterialApi
 //@Preview
 @Composable
 fun SearchCityCard(
-    city: City
+    city: City,
+    navigateToDestinationScreen: (Destination) -> Unit
 ){
     val path = rememberAsyncImagePainter(model = city.photo) //TODO Cambiar por llamada a API
     Card(modifier = Modifier
         .fillMaxSize()
         .height(200.dp)
-        .padding(8.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp), onClick = {}) {
+        .padding(8.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
+        onClick = {
+            navigateToDestinationScreen(Destination(cityName = city.name, cityPhoto = city.photo))
+        }) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             Image(
                 path,

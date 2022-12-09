@@ -21,9 +21,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.ui.theme.Navy
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
+import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
+import kotlinx.coroutines.delay
+import okhttp3.internal.notify
+import okhttp3.internal.wait
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -31,11 +40,29 @@ import kotlin.math.min
 fun DestinationScreen(
     destination: Destination?,
     navigateToTripPlanningScreen: () -> Unit,
-    viewModel: DestinationViewModel = hiltViewModel()
+    viewModel: DestinationViewModel = hiltViewModel(),
+    tripViewModel: TripListViewModel = hiltViewModel()
 ) {
     val edit = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val path = rememberAsyncImagePainter(model = destination?.cityPhoto ?: "")
+    val lastTripInsertedId = remember{ mutableStateOf(tripViewModel.lastTripInsertedId) }
+
+//TODO PROVISIONAL
+    tripViewModel.addTripWithDestinationData(edit.value, destination, viewModel)
+//    var tripId = if (lastTripInsertedId.value.value is Response.Loading) {""} else { (lastTripInsertedId.value.value as Response.Success).data.toString()}
+    viewModel.addDestination(/*lastTripInsertedId.value.toString()*/(if (lastTripInsertedId.value.value is Response.Loading) {""} else { (lastTripInsertedId.value.value as Response.Success).data.toString()}),
+        City(destination?.cityName, destination?.cityPhoto),
+        destination?.description.toString(),
+        destination?.accomodationCosts ?: 0,
+        destination?.transportationCosts ?: 0,
+        destination?.foodCosts ?: 0,
+        destination?.tourismCosts ?: 0,
+        destination?.startDate ?: Date(),
+        destination?.endDate ?: Date(),
+        destination?.travelStay.toString(),
+        (destination?.tourismAttractions ?: emptyList<String>()) as List<String>
+    )
 
     Scaffold(
         topBar = {
@@ -54,6 +81,7 @@ fun DestinationScreen(
                     Icons.Filled.Edit
                 }, edit
             )
+
         }
     ) { padding ->
         Column(

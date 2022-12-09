@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.PersonAdd
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,6 +16,7 @@ import androidx.compose.ui.unit.dp
 fun TripPlanningTopBar(
     name: String,
     navigateToTripListScreen: () -> Unit,
+    openDialog: MutableState<Boolean>
     ){
     TopAppBar(
         title = { Text(text = name) },
@@ -30,13 +29,13 @@ fun TripPlanningTopBar(
                     modifier = Modifier.size(24.dp))
             }
         },
-        actions = { TripPlanningTopBarActions() },
+        actions = { TripPlanningTopBarActions(openDialog) },
 
         )
 }
 
 @Composable
-fun TripPlanningTopBarActions(){
+fun TripPlanningTopBarActions(openDialog: MutableState<Boolean>){
     Row(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
@@ -46,6 +45,14 @@ fun TripPlanningTopBarActions(){
             Icon(
                 Icons.Filled.Share,
                 contentDescription = "Share",
+                modifier = Modifier.size(24.dp))
+        }
+
+        IconButton(onClick = { openDialog.value = true})
+        {
+            Icon(
+                Icons.Filled.Delete,
+                contentDescription = "Delete",
                 modifier = Modifier.size(24.dp))
         }
     }

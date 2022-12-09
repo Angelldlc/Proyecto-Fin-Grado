@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.iesnervion.alopez.ourtravel.domain.model.City
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.searchCity.SearchCityViewModel
@@ -33,7 +34,8 @@ fun SearchCityList(
     //
     textState: MutableState<TextFieldValue>,
     viewModel: SearchCityViewModel,
-    padding: PaddingValues
+    padding: PaddingValues,
+    navigateToDestinationScreen: (Destination) -> Unit
 ) {
     val cities by viewModel.citiesState.observeAsState(Response.Loading)
     viewModel.getCities()
@@ -62,7 +64,7 @@ fun SearchCityList(
                 filteredCities?.size?.let {
                     items(it) { city ->
                         BoxWithConstraints {
-                            SearchCityCard(filteredCities[city])
+                            SearchCityCard(filteredCities[city], navigateToDestinationScreen)
                         }
                     }
                 }
