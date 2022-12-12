@@ -26,7 +26,8 @@ fun TripPlanningTopBar(
                 Icon(
                     Icons.Filled.ArrowBack,
                     contentDescription = "Back",
-                    modifier = Modifier.size(24.dp))
+                    modifier = Modifier.size(24.dp)
+                )
             }
         },
         actions = { TripPlanningTopBarActions(openDialog) },
@@ -40,12 +41,13 @@ fun TripPlanningTopBarActions(openDialog: MutableState<Boolean>){
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
 
-        IconButton(onClick = {})
+        IconButton(onClick = {}, enabled = false)
         {
             Icon(
                 Icons.Filled.Share,
                 contentDescription = "Share",
-                modifier = Modifier.size(24.dp))
+                modifier = Modifier.size(24.dp)
+            )
         }
 
         IconButton(onClick = { openDialog.value = true})

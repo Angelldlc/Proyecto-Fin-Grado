@@ -29,8 +29,6 @@ import es.iesnervion.alopez.ourtravel.ui.navigation.Screen.*
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-//    private lateinit var oneTapClient: SignInClient
-//    private lateinit var signUpRequest: BeginSignInRequest
 
     private lateinit var navController: NavHostController
     private val viewModel by viewModels<LoginViewModel>()
@@ -43,6 +41,7 @@ class MainActivity : ComponentActivity() {
 
         setContent{
             OurTravelTheme {
+
                 navController = rememberAnimatedNavController()
                 NavGraph(
                     navController = navController
@@ -51,18 +50,8 @@ class MainActivity : ComponentActivity() {
                     navController.navigate(TripListScreen.route)
                 }
                 viewModel.getAuthState()
-//                TripListScreen()
             }
         }
-//        oneTapClient = Identity.getSignInClient(this)
-//        signUpRequest = BeginSignInRequest.builder()
-//            .setGoogleIdTokenRequestOptions(
-//                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-//                    .setSupported(true)
-//                    .setServerClientId(getString(R.string.your_web_client_id))
-//                    .setFilterByAuthorizedAccounts(false)
-//                    .build())
-//            .build()
     }
 }
 
@@ -72,11 +61,6 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-//@Preview
-//@Composable
-//fun GoogleLoginView(){
-//    LoginScreen()
-//}
 
 @Preview(showBackground = true)
 @Composable

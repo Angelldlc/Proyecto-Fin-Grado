@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun TripListSearchView(
     textState: MutableState<TextFieldValue>, scope: CoroutineScope, state: ScaffoldState
-//    viewModel: TripListViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier
@@ -44,7 +43,7 @@ fun TripListSearchView(
                 Icon(
                     Icons.Filled.Menu,
                     contentDescription = "Menu",
-                    modifier = Modifier.size(24.dp)/*.clickable { scope.launch { state.drawerState.open() } }*/,
+                    modifier = Modifier.size(24.dp),
                 )
             }
             TextField(
@@ -96,21 +95,6 @@ fun TripListSearchView(
                     placeholderColor = Color.Gray
                 )
             )
-//            IconButton(onClick = { viewModel. }, modifier = Modifier.padding(8.dp)) {
-//                Icon(
-//                    Icons.Filled.Logout,
-//                    contentDescription = "Menu",
-//                    modifier = Modifier.size(24.dp)/*.clickable { scope.launch { state.drawerState.open() } }*/,
-//                )
-//            }
         }
     }
-}
-
-@Preview
-@Composable
-fun TripListSearchViewPreview() {
-//    TripListSearchView(textState = remember { mutableStateOf(TextFieldValue("")) }, drawerState = rememberDrawerState(
-//        initialValue = DrawerValue.Closed
-//    ))
 }

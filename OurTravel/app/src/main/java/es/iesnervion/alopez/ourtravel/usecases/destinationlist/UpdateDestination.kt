@@ -1,11 +1,10 @@
 package es.iesnervion.alopez.ourtravel.usecases.destinationlist
 
-import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.repository.DestinationRepository
 import java.util.*
 
-class AddDestination(
+class UpdateDestination(
     private val destinationRepo: DestinationRepository
 ) {
     suspend operator fun invoke(
@@ -21,5 +20,5 @@ class AddDestination(
         endDate: Date,
         travelStay: String,
         tourismAttractions: List<String>
-    ) = destinationRepo.addDestinationToFirestore(tripId, id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
+    ) = destinationRepo.updateDestinationFromFirestore(tripId, id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
 }

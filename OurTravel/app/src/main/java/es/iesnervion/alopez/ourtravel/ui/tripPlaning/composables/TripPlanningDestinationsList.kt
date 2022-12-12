@@ -15,9 +15,10 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 @ExperimentalMaterialApi
 @Composable
 fun TripPlanningDestinationsList(
+    tripId: String,
     paddingValues: PaddingValues,
     viewModel: DestinationViewModel,
-    navigateToDestinationScreen: (Destination) -> Unit,
+    navigateToDestinationScreen: (Destination, String) -> Unit,
     destinationsResponse: Response.Success<List<Destination>>
 ) {
     Column(
@@ -28,7 +29,7 @@ fun TripPlanningDestinationsList(
     ) {
         for (destination in destinationsResponse.data!!) {
             TripPlanningDestinationCard(
-                destination = destination,
+                destination = destination, tripId,
                 navigateToDestinationScreen = navigateToDestinationScreen
             )
         }

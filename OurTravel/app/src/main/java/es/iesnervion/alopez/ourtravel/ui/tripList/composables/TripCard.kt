@@ -25,7 +25,7 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 fun TripCard(
     trip: TripPlanning,
     viewmodel: TripListViewModel = hiltViewModel(),
-    navigateToTripPlanningScreen: (List<String>) -> Unit
+    navigateToTripPlanningScreen: (TripPlanning) -> Unit
 ) {
     val path =
         rememberAsyncImagePainter(model = trip.photo) //TODO cambiar img por defecto por llamada a API
@@ -38,13 +38,7 @@ fun TripCard(
             .combinedClickable(
                 enabled = true,
                 onClick = {
-                    trip.id?.let {
-                        trip.name?.let { it1 ->
-                            trip.photo?.let { it2 ->
-                                navigateToTripPlanningScreen(listOf(it, it1, it2))
-                            }
-                        }
-                    }
+                          navigateToTripPlanningScreen(trip)
                 },
                 onLongClick = { //TODO DELETE
 

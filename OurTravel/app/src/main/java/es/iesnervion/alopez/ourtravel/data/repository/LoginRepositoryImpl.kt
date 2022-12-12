@@ -16,6 +16,12 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+/**
+ * Clase pública LoginRepositoryImpl.
+ *
+ * Clase encargada de gestionar el inicio de sesión de la aplicación.
+ *
+ */
 @Singleton
 class LoginRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
@@ -29,8 +35,28 @@ class LoginRepositoryImpl @Inject constructor(
     private val usersRef: CollectionReference
 ) : LoginRepository {
 
+    /**
+     * Método público implementado isUserAuthenticatedInFirebase.
+     *
+     * Método público que devuelve si un usuario esta actualmente auntenticado en Firebase.
+     *
+     * Entradas: void.
+     * Salidas: Boolean
+     *
+     */
     override fun isUserAuthenticatedInFirebase() = auth.currentUser != null
 
+    /**
+     * Método público implementado asíncrono oneTapSignInWithGoogle.
+     *
+     * Método publico que permite al usuario iniciar sesión con su cuenta de Google con One Tap.
+     * El método devuelve una respuesta satisfactoria si se ejecuta correctamente y una fallida en
+     * caso contrario.
+     *
+     * Entradas: void.
+     * Salidas: Response<BeginSignInResult>.
+     *
+     */
     override suspend fun oneTapSignInWithGoogle() = flow {
         try {
             emit(Loading)
@@ -41,6 +67,17 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Método público implementado asíncrono oneTapSignUpWithGoogle.
+     *
+     * Método publico que permite al usuario registrarse con su cuenta de Google con One Tap. El
+     * método devuelve una respuesta satisfactoria si se ejecuta correctamente y una fallida en
+     * caso contrario.
+     *
+     * Entradas: void.
+     * Salidas: Response<BeginSignInResult>.
+     *
+     */
     override suspend fun oneTapSignUpWithGoogle() = flow {
         try {
             emit(Loading)
@@ -51,6 +88,17 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Método público implementado asíncrono firebaseSignInWithGoogle
+     *
+     * Método público que inicia sesión en Firebase con la cuenta de Google del usuario. El método
+     * devuelve una respuesta satisfactoria si se ejecuta correctamente y una fallida en
+     * caso contrario.
+     *
+     * Entradas: googleCredential AuthCredential. Credenciales del usuario.
+     * Salidas: Response<Boolean>
+     *
+     */
     override suspend fun firebaseSignInWithGoogle(googleCredential: AuthCredential) = flow {
         try {
             emit(Loading)
@@ -62,6 +110,16 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Método público implementado asíncrono createUserInFirestore.
+     *
+     * Método público que crea un usuario en la base de datos de Firebase. El método devuelve una
+     * respuesta satisfactoria si se ejecuta correctamente y una fallida en caso contrario.
+     *
+     * Entradas: void.
+     * Salidas: Response<Boolean>
+     *
+     */
     override suspend fun createUserInFirestore() = flow {
         try {
             emit(Loading)
@@ -81,6 +139,16 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Método público implementado getFirebaseAuthState.
+     *
+     * Método público que devuelve el estado de la autenticación del usuario de Firebase. El método
+     * devuelve true si el usuario actual es nulo y false en caso contrario.
+     *
+     * Entradas: void.
+     * Salidas: Boolean.
+     *
+     */
     override fun getFirebaseAuthState() = callbackFlow {
         val authStateListener = FirebaseAuth.AuthStateListener { auth ->
             trySend(auth.currentUser == null)
@@ -91,6 +159,16 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Método público implementado asíncrono signOut.
+     *
+     * Método público que realiza la desconexión del usuario de la aplicación. El método devuelve
+     * una respuesta satisfactoria si se ejecuta correctamente y una fallida en caso contrario.
+     *
+     * Entradas: void.
+     * Salidas: Response<Boolean>.
+     *
+     */
     override suspend fun signOut() = flow {
         try {
             emit(Loading)
@@ -102,6 +180,16 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Método público implementado asíncrono revokeAccess.
+     *
+     * Método público que revoca el accesso a las aplicación al usuario. El método devuelve una
+     * respuesta satisfactoria si se ejecuta correctamente y una fallida en caso contrario.
+     *
+     * Entradas: void.
+     * Salidas: Response<Boolean>.
+     *
+     */
     override suspend fun revokeAccess() = flow {
         try {
             emit(Loading)
@@ -117,7 +205,25 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Método público implementado getDisplayName
+     *
+     * Método público que devuelve el nombre de usuario.
+     *
+     * Entradas: void.
+     * Salidas: String.
+     *
+     */
     override fun getDisplayName() = auth.currentUser?.displayName.toString()
 
+    /**
+     * Método público implementado getPhotoUrl
+     *
+     * Método público que devuelve la foto del usuario.
+     *
+     * Entradas: void.
+     * Salidas: String.
+     *
+     */
     override fun getPhotoUrl() = auth.currentUser?.photoUrl.toString()
 }

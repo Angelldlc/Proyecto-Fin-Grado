@@ -16,6 +16,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Clase pública SearchCityViewModel.
+ *
+ * Clase pública que administra la lógica de la vista SearchCityScreen.
+ *
+ */
 @HiltViewModel
 class SearchCityViewModel @Inject constructor(
     private val useCases: UseCases

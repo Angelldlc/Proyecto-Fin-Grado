@@ -2,6 +2,7 @@ package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -17,12 +18,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.R
+import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.theme.Navy
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
@@ -31,33 +34,51 @@ import kotlin.math.min
 
 @ExperimentalMaterialApi
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-//@Preview
 @Composable
 fun TripPlanningScreen(
-    tripId: String, name: String, photo: String,
+    parentViewModel: TripListViewModel = hiltViewModel(),
+    tripId: String?, trip: TripPlanning, city: City?,
     viewModel: DestinationViewModel = hiltViewModel(),
-    viewModelTripList: TripListViewModel = hiltViewModel(),
     navigateToTripListScreen: () -> Unit,
     navigateToSearchCityScreen: () -> Unit,
-    navigateToDestinationScreen: (Destination) -> Unit
+    navigateToDestinationScreen: (Destination, String) -> Unit
 ) {
-    viewModel.getDestinations(tripId)
+    BackHandler(onBack = navigateToTripListScreen)
+    if(trip.id.isNullOrEmpty() || trip.id.isNullOrBlank()) {
+        parentViewModel.addTrip(
+            trip.name ?: "",
+            Timestamp.now(),
+            Timestamp.now(),
+            0,
+            trip.photo ?: "",
+            Timestamp.now()
+        )
+        parentViewModel.getLastTripInsertedId()
+        navigateToDestinationScreen(
+            Destination(cityPhoto = city?.photo, cityName = city?.name), if (parentViewModel.lastTripInsertedId.value is Response.Success) {
+                (parentViewModel.lastTripInsertedId.value as Response.Success<String>).data.toString()
+            } else {
+                ""
+            }
+        )
+    } else {
+        viewModel.getDestinations(trip.id!!)
+    }
     val openDialog = remember { mutableStateOf(false) }
     val destinationsResponse = viewModel.destinationsState.value
     val scrollState = rememberScrollState()
     val path = rememberAsyncImagePainter(
-        model = (if (photo.isEmpty() || photo.isBlank()) {
+        model = (if (trip.photo.isNullOrEmpty() || trip.photo!!.isBlank()) {
             NotImage()
-        } else photo)
-    ) //TODO Cambiar por llamada a API
+        } else trip.photo)
+    )
     Scaffold(
-        topBar = { TripPlanningTopBar(name, navigateToTripListScreen, openDialog) },
-        drawerContent = { TripPlanningDrawer() },
+        topBar = { TripPlanningTopBar(trip.name ?: "", navigateToTripListScreen, openDialog) },
         floatingActionButton = { TripPlanningFloatingActionButton(navigateToSearchCityScreen) }
 
     ) { padding ->
         if(openDialog.value){
-            DeleteAlertDialog(tripId, openDialog, viewModelTripList, navigateToTripListScreen)
+            DeleteAlertDialog(trip.id.toString(), openDialog, parentViewModel, navigateToTripListScreen)
         }
         Column(
             modifier = Modifier
@@ -66,7 +87,6 @@ fun TripPlanningScreen(
         ) {
             val height = 220.dp
             Image(path,
-//                painter = painterResource( /*viewmodel.photo*/),
                 contentDescription = "Banner Image",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
@@ -92,7 +112,7 @@ fun TripPlanningScreen(
                         fontSize = 24.sp,
                         color = Navy
                     )
-                    TripPlanningPieChart(destinationsResponse)
+                    TripPlanningPieChart(destinationsResponse, trip.id.toString(), parentViewModel)
                     Spacer(modifier = Modifier.height(30.dp))
                     Text(
                         text = "Destinations:",
@@ -102,6 +122,7 @@ fun TripPlanningScreen(
                     )
 
                     TripPlanningDestinationsList(
+                        trip.id.toString(),
                         paddingValues = padding,
                         viewModel = viewModel,
                         navigateToDestinationScreen = navigateToDestinationScreen,
@@ -121,7 +142,7 @@ fun NotImage() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Gray)
-            .clickable { TODO("Insertar Foto") }
+            .clickable {  }
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_baseline_image_24),
@@ -155,30 +176,13 @@ fun DeleteAlertDialog(tripId: String,
                         Text("Cancel")
                     }
                     Button(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(16.dp).clickable(enabled = tripId.isNotEmpty()){},
                         onClick = {
                             viewModelTripList.deleteTrip(tripId)
-                            /*when(viewModelTripList.isTripDeletedState.value){
-                                is Response.Loading -> {}
-                                is Response.Success -> navigateToTripListScreen()
-                                is Response.Failure -> openDialog.value = false
-                            }*/
-
-                            /*do {
-                                if(viewModelTripList.isTripDeletedState.value is Response.Success){
-                                    navigateToTripListScreen()
-                                }else{
-                                    openDialog.value = false
-                                    //TODO Toast
-                                }
-                            }while (viewModelTripList.isTripDeletedState.value is Response.Loading)*/
-
-
                             if(viewModelTripList.isTripDeletedState.value is Response.Success || viewModelTripList.isTripDeletedState.value is Response.Loading){
                                 navigateToTripListScreen()
                             }else{
                                 openDialog.value = false
-                                //TODO Toast
                             }
                         }
                     ) {

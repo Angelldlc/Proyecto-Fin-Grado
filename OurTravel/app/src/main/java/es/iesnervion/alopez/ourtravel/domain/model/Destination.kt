@@ -3,6 +3,12 @@ package es.iesnervion.alopez.ourtravel.domain.model
 import com.google.firebase.firestore.PropertyName
 import java.util.*
 
+/**
+ * Data Class pública Destination.
+ *
+ * Clase de datos pública que representa un destino.
+ *
+ */
 data class Destination (
     @get:PropertyName("Id")
     @set:PropertyName("Id")

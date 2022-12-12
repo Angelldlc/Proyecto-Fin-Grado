@@ -12,7 +12,12 @@ import es.iesnervion.alopez.ourtravel.usecases.UseCases
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-
+/**
+ * Clase pública DestinationViewModel.
+ *
+ * Clase pública que administra la lógica de la vista DestinationScreen.
+ *
+ */
 @HiltViewModel
 class DestinationViewModel @Inject constructor(
     private val useCases: UseCases
@@ -21,15 +26,15 @@ class DestinationViewModel @Inject constructor(
     private val _destinationsState = mutableStateOf<Response<List<Destination>>>(Response.Loading)
     val destinationsState: State<Response<List<Destination>>> = _destinationsState
 
-    private val _isDestinationAddedState = mutableStateOf<Response<Boolean>>(Response.Success(null))
+    private val _isDestinationAddedState = mutableStateOf<Response<Boolean>>(Response.Success(false))
     val isDestinationAddedState: State<Response<Boolean>> = _isDestinationAddedState
+
+    private val _isDestinationUpdatedState = mutableStateOf<Response<Boolean>>(Response.Success(false))
+    val isDestinationUpdatedState: State<Response<Boolean>> = _isDestinationUpdatedState
 
     private val _isDestinationDeletedState = mutableStateOf<Response<Boolean>>(Response.Success(null))
     val isDestinationDeletedState: State<Response<Boolean>> = _isDestinationDeletedState
 
-//    init {
-//        getDestinations(tripId) //TODO solucionar problema ID
-//    }
 
     fun getDestinations(tripId: String) {
         viewModelScope.launch {
@@ -39,29 +44,53 @@ class DestinationViewModel @Inject constructor(
         }
     }
 
-    fun addDestination(id: String,
-                       city: City,
-                       description: String,
-                       accomodationCosts: Long,
-                       transportationCosts: Long,
-                       foodCosts: Long,
-                       tourismCosts: Long,
-                       startDate: Date,
-                       endDate: Date,
-                       travelStay: String,
-                       tourismAttractions: List<String>) {
+    fun addDestination(
+        tripId: String,
+        id: String,
+        city: City,
+        description: String,
+        accomodationCosts: Long,
+        transportationCosts: Long,
+        foodCosts: Long,
+        tourismCosts: Long,
+        startDate: Date,
+        endDate: Date,
+        travelStay: String,
+        tourismAttractions: List<String>
+    ) {
         viewModelScope.launch {
-            useCases.addDestination(id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions).collect { response ->
+            useCases.addDestination(tripId, id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions).collect { response ->
                 _isDestinationAddedState.value = response
             }
         }
     }
 
-//    fun deleteDestination(id: String) {
-//        viewModelScope.launch {
-//            useCases.deleteDestination(id).collect { response ->
-//                _isDestinationDeletedState.value = response
-//            }
-//        }
-//    }
+    fun updateDestinationFromFirestore(
+        tripId: String,
+        id: String,
+        city: City,
+        description: String,
+        accomodationCosts: Long,
+        transportationCosts: Long,
+        foodCosts: Long,
+        tourismCosts: Long,
+        startDate: Date,
+        endDate: Date,
+        travelStay: String,
+        tourismAttractions: List<String>
+    ) {
+        viewModelScope.launch {
+            useCases.updateDestination(tripId, id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions).collect() { response ->
+                _isDestinationUpdatedState.value = response
+            }
+        }
+    }
+
+    fun deleteDestination(tripId: String, id: String) {
+        viewModelScope.launch {
+            useCases.deleteDestination(tripId,id).collect { response ->
+                _isDestinationDeletedState.value = response
+            }
+        }
+    }
 }

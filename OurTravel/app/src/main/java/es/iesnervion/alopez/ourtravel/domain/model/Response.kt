@@ -2,6 +2,12 @@ package es.iesnervion.alopez.ourtravel.domain.model
 
 import java.lang.Exception
 
+/**
+ * Sealed Class pública Response.
+ *
+ * Clase sellada pública que representa una respuesta obtenida de una corrutina.
+ *
+ */
 sealed class Response<out T> {
 
     object Loading: Response<Nothing>()

@@ -82,10 +82,3 @@ fun TripListDrawer(
         }
     }
 }
-
-
-@Preview
-@Composable
-fun DrawerPreview() {
-//    TripListDrawer(Modifier.padding(16.dp))
-}

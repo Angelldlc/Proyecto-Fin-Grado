@@ -3,7 +3,12 @@ package es.iesnervion.alopez.ourtravel.domain.model
 import com.google.firebase.firestore.PropertyName
 import com.google.firebase.Timestamp
 import java.util.*
-
+/**
+ * Data Class pública TripPlanning.
+ *
+ * Clase de datos pública que representa un viaje.
+ *
+ */
 data class TripPlanning(
     @get:PropertyName("Id")
     @set:PropertyName("Id")

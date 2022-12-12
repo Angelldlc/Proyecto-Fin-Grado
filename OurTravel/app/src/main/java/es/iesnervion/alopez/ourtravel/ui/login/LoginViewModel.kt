@@ -18,6 +18,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Clase pública LoginViewModel.
+ *
+ * Clase pública que administra la lógica de la vista LoginScreen
+ *
+ */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val repo: LoginRepository,

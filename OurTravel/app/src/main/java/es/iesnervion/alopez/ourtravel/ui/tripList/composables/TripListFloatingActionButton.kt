@@ -11,10 +11,9 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
 @Composable
 fun TripListFloatingActionButton(
-//    viewmodel: TripListViewModel = hiltViewModel(),
     navigateToNewTripPlanningScreen: () -> Unit
 ){
-    FloatingActionButton(onClick = { navigateToNewTripPlanningScreen() }) { //TODO cambiar Dialog por Navigation a vista TripPlanningScreen edit true
+    FloatingActionButton(onClick = { navigateToNewTripPlanningScreen() }) {
         Icon(imageVector = Icons.Filled.Add, tint = Color.White , contentDescription = "Add Trip Planning")
     }
 }

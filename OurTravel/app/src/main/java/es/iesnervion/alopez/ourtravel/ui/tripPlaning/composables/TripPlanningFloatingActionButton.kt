@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 fun TripPlanningFloatingActionButton(
     navigateToSearchCityScreen: () -> Unit
 ){
-    FloatingActionButton(onClick = { navigateToSearchCityScreen() }) { //TODO cambiar Dialog por Navigation a vista TripPlanningScreen edit true
+    FloatingActionButton(onClick = { navigateToSearchCityScreen() }) {
         Icon(imageVector = Icons.Filled.Add, tint = Color.White , contentDescription = "Add Trip Planning")
     }
 }

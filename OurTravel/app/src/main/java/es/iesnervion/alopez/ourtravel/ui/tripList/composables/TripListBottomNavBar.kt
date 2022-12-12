@@ -10,11 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import es.iesnervion.alopez.ourtravel.ui.tripList.BottomNavState
 
-//@Preview
 @Composable
 fun TripListBottomNavBar(
     bottomNavState: MutableState<BottomNavState>
-//    viewModel: TripListViewModel = hiltViewModel()
 ){
     BottomNavigation() {
         BottomNavigationItem(icon = { Icon(Icons.Filled.Event, contentDescription = "") }, selected = (bottomNavState.value == BottomNavState.PENDING) , onClick = { bottomNavState.value = BottomNavState.PENDING }, label = { Text(text = "Próximos Viajes")})

@@ -5,6 +5,10 @@ import com.google.firebase.auth.AuthCredential
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Interfaz LoginRepository.
+ *
+ */
 interface LoginRepository {
     fun isUserAuthenticatedInFirebase(): Boolean
 

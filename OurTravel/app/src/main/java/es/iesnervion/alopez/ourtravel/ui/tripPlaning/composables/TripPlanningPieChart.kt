@@ -14,8 +14,12 @@ import androidx.compose.ui.graphics.Color
 import es.iesnervion.alopez.ourtravel.ui.theme.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
+import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import java.text.NumberFormat
@@ -23,12 +27,13 @@ import java.util.*
 import kotlin.math.cos
 
 @Composable
-fun TripPlanningPieChart(destinationsResponse: Response.Success<List<Destination>>) {
+fun TripPlanningPieChart(destinationsResponse: Response.Success<List<Destination>>, tripId: String, viewModel: TripListViewModel = hiltViewModel()) {
     val costs = calculateTotalCosts(destinationsResponse.data)
     val totalAccomodationCost = costs[0]
     val totalTransportationCost = costs[1]
     val totalFoodCost = costs[2]
     val totalTourismCost = costs[3]
+    updateTripFields(destinationsResponse.data, tripId, viewModel)
 
     val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
     val symbol = numberFormat.currency?.symbol
@@ -72,12 +77,6 @@ fun Legend(totalAccomodationCost: Long?, totalTransportationCost: Long?, totalFo
             LegendItem("Tourism: $totalTourismCost $symbol", MediumSpringBud)
         }
     }
-//    Column(Modifier.padding(16.dp)) {
-//            LegendItem("Accomodation: $totalAccomodationCost $symbol", PaleCerulean)
-//            LegendItem("Transportation: $totalTransportationCost $symbol", PastelPink)
-//            LegendItem("Food: $totalFoodCost $symbol", DeepChampagne)
-//            LegendItem("Tourism: $totalTourismCost $symbol", MediumSpringBud)
-//    }
 }
 
 @Composable
@@ -103,4 +102,26 @@ fun calculateTotalCosts(
         }
     }
     return costs
+}
+
+fun updateTripFields(destinations: List<Destination>?, tripId: String, viewModel: TripListViewModel){
+    if (destinations != null) {
+        if (destinations.isNotEmpty()) {
+            val costs = calculateTotalCosts(destinations)
+            val totalCosts = try {
+                (costs[0] ?: 0) + (costs[1] ?: 0) + (costs[2] ?: 0) + (costs[3] ?: 0)
+            } catch (e: Exception) {
+                0
+            }
+            var startDate = destinations[0].startDate
+            var endDate = destinations[0].endDate
+            for (destination in destinations) {
+                startDate =
+                    if (startDate?.before(destination.startDate) == true) destination.startDate else startDate
+                endDate =
+                    if (endDate?.after(destination.endDate) == true) destination.endDate else endDate
+            }
+            viewModel.updateTrip(tripId, Timestamp(startDate!!), Timestamp(endDate!!), totalCosts)
+        }
+    }
 }

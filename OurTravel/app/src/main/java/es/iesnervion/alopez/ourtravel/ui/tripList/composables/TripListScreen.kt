@@ -11,18 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.login.LoginViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripList.BottomNavState
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 
 @ExperimentalMaterialApi
 @Composable
-fun TripListScreen(
+fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
     viewModel: LoginViewModel = hiltViewModel(),
     viewModelTripList: TripListViewModel = hiltViewModel(),
     navigateToLoginScreen: () -> Unit,
     navigateToNewTripPlanningScreen: () -> Unit,
-    navigateToTripPlanningScreen: (List<String>) -> Unit
+    navigateToTripPlanningScreen: (TripPlanning) -> Unit
 ) {
     val textState = remember(
         navigateToTripPlanningScreen,
@@ -44,11 +45,9 @@ fun TripListScreen(
         floatingActionButton = { TripListFloatingActionButton(navigateToNewTripPlanningScreen = navigateToNewTripPlanningScreen) }
     ) { padding ->
         Column() {
-//            TripListSearchView(textState)
             TripList(
                 padding = padding,
                 textState,
-//                viewModelTripList,
                 navigateToTripPlanningScreen = navigateToTripPlanningScreen,
                 bottomNavState = bottomNavState
             )

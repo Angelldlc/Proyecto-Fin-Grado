@@ -20,11 +20,9 @@ import es.iesnervion.alopez.ourtravel.ui.theme.Navy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-//TODO Ver si es necesaria esta función
 @Composable
 fun SearchCitySearchView(
     textState: MutableState<TextFieldValue>
-//    viewModel: TripListViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier

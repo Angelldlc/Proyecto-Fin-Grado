@@ -15,28 +15,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.City
-import es.iesnervion.alopez.ourtravel.domain.model.Destination
 
 
 @ExperimentalMaterialApi
-//@Preview
 @Composable
-fun SearchCityCard(
+fun SearchCityCard(tripId: String?,
     city: City,
-    navigateToDestinationScreen: (Destination) -> Unit
+    navigateToTripPlanningScreenFromSearchCity: (City, String?) -> Unit
 ){
-    val path = rememberAsyncImagePainter(model = city.photo) //TODO Cambiar por llamada a API
+    val path = rememberAsyncImagePainter(model = city.photo)
     Card(modifier = Modifier
         .fillMaxSize()
         .height(200.dp)
         .padding(8.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
         onClick = {
-            navigateToDestinationScreen(Destination(cityName = city.name, cityPhoto = city.photo))
+            navigateToTripPlanningScreenFromSearchCity(city, tripId)
         }) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             Image(

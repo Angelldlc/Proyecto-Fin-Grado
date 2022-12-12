@@ -20,22 +20,19 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 
-@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun TripPlanningDestinationCard(
-    destination: Destination,
-//    viewmodel: TripPlanningViewModel = hiltViewModel(),
-    navigateToDestinationScreen: (Destination) -> Unit
+    destination: Destination, tripId: String,
+    navigateToDestinationScreen: (Destination, String) -> Unit
 ) {
-    val path = rememberAsyncImagePainter(model = destination.cityPhoto) //TODO cambiar img por defecto por llamada a API
+    val path = rememberAsyncImagePainter(model = destination.cityPhoto)
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
         .padding(16.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
         onClick = {
-//            destination.id?.let { navigateToDestinationScreen(it) }
-        navigateToDestinationScreen(destination)
+        navigateToDestinationScreen(destination, tripId)
         }) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()){
             Image(path, contentDescription = "", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth)
