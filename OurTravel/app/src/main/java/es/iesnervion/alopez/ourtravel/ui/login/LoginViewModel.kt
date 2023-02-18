@@ -32,16 +32,16 @@ class LoginViewModel @Inject constructor(
 
     val isUserAuthenticated get() = repo.isUserAuthenticatedInFirebase()
 
-    private val _oneTapSignInState = mutableStateOf<Response<BeginSignInResult>>(Success(null))
+    private val _oneTapSignInState = mutableStateOf<Response<BeginSignInResult>>(Success(null, ""))
     val oneTapSignInState: State<Response<BeginSignInResult>> = _oneTapSignInState
 
-    private val _oneTapSignUpState = mutableStateOf<Response<BeginSignInResult>>(Success(null))
+    private val _oneTapSignUpState = mutableStateOf<Response<BeginSignInResult>>(Success(null, ""))
     val oneTapSignUpState: State<Response<BeginSignInResult>> = _oneTapSignUpState
 
-    private val _signInState = mutableStateOf<Response<Boolean>>(Success(null))
+    private val _signInState = mutableStateOf<Response<Boolean>>(Success(null, ""))
     val signInState: State<Response<Boolean>> = _signInState
 
-    private val _createUserState = mutableStateOf<Response<Boolean>>(Success(null))
+    private val _createUserState = mutableStateOf<Response<Boolean>>(Success(null, ""))
     val createUserState: State<Response<Boolean>> = _createUserState
 
     private var _userDisplayName: String = repo.getDisplayName()

@@ -62,7 +62,7 @@ class TripRepositoryImpl @Inject constructor(
                 } catch (e: Exception) {
                     emptyList()
                 }
-                Success(trips)
+                Success(trips,"")
             } else {
                 Error(e?.message ?: e.toString())
             }
@@ -89,7 +89,7 @@ class TripRepositoryImpl @Inject constructor(
      * Comentario: Este método acaba ejecutandose antes de tiempo por un problema con el ámbito de
      * las corrutinas, no he podido solucionarlo por falta de tiempo.
      */
-    override fun getLastTripInsertedId() = callbackFlow {
+    /*override fun getLastTripInsertedId() = callbackFlow {
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
         val snapshotListener = userRef
             ?.collection(tripPlanningRef.path)
@@ -111,7 +111,7 @@ class TripRepositoryImpl @Inject constructor(
         awaitClose {
             snapshotListener?.remove()
         }
-    }
+    }*/
 
     /**
      * Método público implementado asíncrono addTripToFirestore.
@@ -143,7 +143,7 @@ class TripRepositoryImpl @Inject constructor(
         val user = Firebase.auth.currentUser?.uid
         if (user != null) {
             try {
-                emit(Response.Loading)
+                /*emit(Response.Loading)*/
                 auth.currentUser?.apply {
                     val uniqueid = usersRef.document(uid).collection("TripPlannings").document().id
                     try {
@@ -158,7 +158,7 @@ class TripRepositoryImpl @Inject constructor(
                                 "CreationDate" to creationDate
                             )
                         ).await()
-                        emit(Success(true))
+                        emit(Success(true, id = uniqueid))
                     } catch (e: Exception){
                         emit(Response.Failure(e))
                     }
@@ -206,7 +206,7 @@ class TripRepositoryImpl @Inject constructor(
                                     "TotalCost" to totalCost
                                 )
                             ).await()
-                        emit(Success(true))
+                        emit(Success(true,""))
                     } catch (e: Exception) {
                         emit(Response.Failure(e))
                     }
@@ -240,7 +240,7 @@ class TripRepositoryImpl @Inject constructor(
                             .collection("TripPlannings")
                             .document(id)
                             .delete().await()
-                        emit(Success(true))
+                        emit(Success(true,""))
                     } catch (e: Exception) {
                         emit(Response.Failure(e))
                     }

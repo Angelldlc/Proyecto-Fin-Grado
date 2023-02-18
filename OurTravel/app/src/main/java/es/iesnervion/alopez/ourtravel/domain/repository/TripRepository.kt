@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface TripRepository {
     fun getTripsFromFirestore(): Flow<Response<List<TripPlanning>>>
 
-    fun getLastTripInsertedId(): Flow<Response<String>>
+    /*fun getLastTripInsertedId(): Flow<Response<String>>*/
 
     suspend fun addTripToFirestore(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp): Flow<Response<Boolean>>
 

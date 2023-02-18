@@ -33,7 +33,7 @@ class SearchCityViewModel @Inject constructor(
     fun getCities(){
         viewModelScope.launch(Dispatchers.IO) {
             val cities1 = try { useCases.getCities() } catch (e: Exception){ emptyList() }
-            _citiesState.postValue(Response.Success(cities1))
+            _citiesState.postValue(Response.Success(cities1, ""))
         }
     }
 

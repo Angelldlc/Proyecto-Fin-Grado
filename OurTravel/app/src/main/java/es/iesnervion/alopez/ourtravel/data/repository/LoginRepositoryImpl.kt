@@ -61,7 +61,7 @@ class LoginRepositoryImpl @Inject constructor(
         try {
             emit(Loading)
             val result = oneTapClient.beginSignIn(signInRequest).await()
-            emit(Success(result))
+            emit(Success(result, ""))
         } catch (e: Exception) {
             emit(Failure(e))
         }
@@ -82,7 +82,7 @@ class LoginRepositoryImpl @Inject constructor(
         try {
             emit(Loading)
             val result = oneTapClient.beginSignIn(signUpRequest).await()
-            emit(Success(result))
+            emit(Success(result, ""))
         } catch (e: Exception) {
             emit(Failure(e))
         }
@@ -104,7 +104,7 @@ class LoginRepositoryImpl @Inject constructor(
             emit(Loading)
             val authResult = auth.signInWithCredential(googleCredential).await()
             val isNewUser = authResult.additionalUserInfo?.isNewUser
-            emit(Success(isNewUser!!))
+            emit(Success(isNewUser!!, ""))
         } catch (e: Exception) {
             emit(Failure(e))
         }
@@ -132,7 +132,7 @@ class LoginRepositoryImpl @Inject constructor(
                     )
                 ).await()
                 usersRef.document(uid).collection("TripPlannings").document()
-                emit(Success(true))
+                emit(Success(true, ""))
             }
         } catch (e: Exception) {
             emit(Failure(e))
@@ -174,7 +174,7 @@ class LoginRepositoryImpl @Inject constructor(
             emit(Loading)
             auth.signOut()
             oneTapClient.signOut().await()
-            emit(Success(true))
+            emit(Success(true, ""))
         } catch (e: Exception) {
             emit(Failure(e))
         }
@@ -199,7 +199,7 @@ class LoginRepositoryImpl @Inject constructor(
                 signInClient.revokeAccess().await()
                 oneTapClient.signOut().await()
             }
-            emit(Success(true))
+            emit(Success(true, ""))
         } catch (e: Exception) {
             emit(Failure(e))
         }

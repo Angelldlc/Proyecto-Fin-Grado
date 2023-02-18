@@ -13,7 +13,8 @@ sealed class Response<out T> {
     object Loading: Response<Nothing>()
 
     data class Success<out T>(
-        val data: T?
+        val data: T?,
+        val id: String?
     ): Response<T>()
 
     data class Error(

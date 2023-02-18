@@ -26,13 +26,13 @@ class DestinationViewModel @Inject constructor(
     private val _destinationsState = mutableStateOf<Response<List<Destination>>>(Response.Loading)
     val destinationsState: State<Response<List<Destination>>> = _destinationsState
 
-    private val _isDestinationAddedState = mutableStateOf<Response<Boolean>>(Response.Success(false))
+    private val _isDestinationAddedState = mutableStateOf<Response<Boolean>>(Response.Success(false,""))
     val isDestinationAddedState: State<Response<Boolean>> = _isDestinationAddedState
 
-    private val _isDestinationUpdatedState = mutableStateOf<Response<Boolean>>(Response.Success(false))
+    private val _isDestinationUpdatedState = mutableStateOf<Response<Boolean>>(Response.Success(false,""))
     val isDestinationUpdatedState: State<Response<Boolean>> = _isDestinationUpdatedState
 
-    private val _isDestinationDeletedState = mutableStateOf<Response<Boolean>>(Response.Success(null))
+    private val _isDestinationDeletedState = mutableStateOf<Response<Boolean>>(Response.Success(null,""))
     val isDestinationDeletedState: State<Response<Boolean>> = _isDestinationDeletedState
 
 

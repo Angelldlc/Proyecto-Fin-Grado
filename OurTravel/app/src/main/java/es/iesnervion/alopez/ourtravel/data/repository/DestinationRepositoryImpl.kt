@@ -62,7 +62,7 @@ class DestinationRepositoryImpl @Inject constructor(
                     } catch (e: Exception) {
                         emptyList()
                     }
-                    Response.Success(destinations)
+                    Response.Success(destinations, "")
                 } else {
                     Response.Error(e?.message ?: e.toString())
                 }
@@ -140,7 +140,7 @@ class DestinationRepositoryImpl @Inject constructor(
                                     "TourismAttractions" to tourismAttractions,
                                 )
                             ).await()
-                        emit(Response.Success(true))
+                        emit(Response.Success(true, ""))
                     } catch (e: Exception) {
                         emit(Response.Failure(e))
                     }
@@ -209,7 +209,7 @@ class DestinationRepositoryImpl @Inject constructor(
                                     "TourismAttractions" to tourismAttractions,
                                 )
                             ).await()
-                        emit(Response.Success(true))
+                        emit(Response.Success(true, ""))
                     } catch (e: Exception) {
                         emit(Response.Failure(e))
                     }
@@ -245,7 +245,7 @@ class DestinationRepositoryImpl @Inject constructor(
                             .collection("Destinations")
                             .document(id)
                             .delete().await()
-                        emit(Response.Success(true))
+                        emit(Response.Success(true, ""))
                     } catch (e: Exception) {
                         emit(Response.Failure(e))
                     }

@@ -34,17 +34,17 @@ class TripListViewModel @Inject constructor(
     private val _tripsState = mutableStateOf<Response<List<TripPlanning>>>(Response.Loading)
     val tripsState: State<Response<List<TripPlanning>>> = _tripsState
 
-    private val _lastTripInsertedId = mutableStateOf<Response<String>>(Success(""))
-    val lastTripInsertedId: State<Response<String>> = _lastTripInsertedId
+    private val _lastTripInsertedId = mutableStateOf<Response<Boolean>>(Success(null,""))
+    val lastTripInsertedId: State<Response<Boolean>> = _lastTripInsertedId
 
-    private val _isTripAddedState = mutableStateOf<Response<Boolean>>(Success(false))
+    private val _isTripAddedState = mutableStateOf<Response<Boolean>>(Success(null,""))
     val isTripAddedState: State<Response<Boolean>> = _isTripAddedState
 
-    private val _isTripUpdatedState = mutableStateOf<Response<Boolean>>(Success(null))
+    private val _isTripUpdatedState = mutableStateOf<Response<Boolean>>(Success(null,""))
     val isTripUpdatedState: State<Response<Boolean>> = _isTripUpdatedState
 
 
-    private val _isTripDeletedState = mutableStateOf<Response<Boolean>>(Success(null))
+    private val _isTripDeletedState = mutableStateOf<Response<Boolean>>(Success(null,""))
     val isTripDeletedState: State<Response<Boolean>> = _isTripDeletedState
 
     init {
@@ -59,13 +59,14 @@ class TripListViewModel @Inject constructor(
         }
     }
 
-    fun getLastTripInsertedId(){
+    /*fun getLastTripInsertedId(): String {
         viewModelScope.launch {
             useCases.getLastTripInsertedId().collect { response ->
                 _lastTripInsertedId.value = response
             }
         }
-    }
+        return _lastTripInsertedId.value.toString() //TODO corregir
+    }*/
 
     fun addTrip(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp) {
         viewModelScope.launch {

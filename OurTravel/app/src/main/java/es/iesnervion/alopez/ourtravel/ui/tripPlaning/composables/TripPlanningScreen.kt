@@ -43,8 +43,9 @@ fun TripPlanningScreen(
     navigateToSearchCityScreen: () -> Unit,
     navigateToDestinationScreen: (Destination, String) -> Unit
 ) {
+    var idTrip = trip.id
     BackHandler(onBack = navigateToTripListScreen)
-    if(trip.id.isNullOrEmpty() || trip.id.isNullOrBlank()) {
+    if(idTrip.isNullOrEmpty() || idTrip.isNullOrBlank()) {
         parentViewModel.addTrip(
             trip.name ?: "",
             Timestamp.now(),
@@ -53,16 +54,19 @@ fun TripPlanningScreen(
             trip.photo ?: "",
             Timestamp.now()
         )
-        parentViewModel.getLastTripInsertedId()
+        idTrip = /*parentViewModel.isTripAddedState.value.toString()*/if (parentViewModel.isTripAddedState.value is Response.Success) {
+            (parentViewModel.lastTripInsertedId.value as Response.Success<Boolean>).id
+        } else { "" }
+       /* idTrip = parentViewModel.getLastTripInsertedId()*/ //TODO intentar recoger el valor aqui para abajo no trabajar con el estado
         navigateToDestinationScreen(
-            Destination(cityPhoto = city?.photo, cityName = city?.name), if (parentViewModel.lastTripInsertedId.value is Response.Success) {
+            Destination(cityPhoto = city?.photo, cityName = city?.name), idTrip ?: "" /*if (parentViewModel.lastTripInsertedId.value is Response.Success) {
                 (parentViewModel.lastTripInsertedId.value as Response.Success<String>).data.toString()
             } else {
                 ""
-            }
+            }*/
         )
     } else {
-        viewModel.getDestinations(trip.id!!)
+        viewModel.getDestinations(idTrip)
     }
     val openDialog = remember { mutableStateOf(false) }
     val destinationsResponse = viewModel.destinationsState.value
@@ -78,7 +82,7 @@ fun TripPlanningScreen(
 
     ) { padding ->
         if(openDialog.value){
-            DeleteAlertDialog(trip.id.toString(), openDialog, parentViewModel, navigateToTripListScreen)
+            DeleteAlertDialog(idTrip.toString(), openDialog, parentViewModel, navigateToTripListScreen)
         }
         Column(
             modifier = Modifier
@@ -112,7 +116,7 @@ fun TripPlanningScreen(
                         fontSize = 24.sp,
                         color = Navy
                     )
-                    TripPlanningPieChart(destinationsResponse, trip.id.toString(), parentViewModel)
+                    TripPlanningPieChart(destinationsResponse, idTrip.toString(), parentViewModel)
                     Spacer(modifier = Modifier.height(30.dp))
                     Text(
                         text = "Destinations:",
@@ -122,7 +126,7 @@ fun TripPlanningScreen(
                     )
 
                     TripPlanningDestinationsList(
-                        trip.id.toString(),
+                        idTrip.toString(),
                         paddingValues = padding,
                         viewModel = viewModel,
                         navigateToDestinationScreen = navigateToDestinationScreen,
