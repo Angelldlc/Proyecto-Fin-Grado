@@ -1,6 +1,8 @@
 package es.iesnervion.alopez.ourtravel.ui.tripList
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +12,12 @@ import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Success
+import es.iesnervion.alopez.ourtravel.domain.model.Response.Loading
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
+import es.iesnervion.alopez.ourtravel.domain.repository.AddTripPlanningResponse
+import es.iesnervion.alopez.ourtravel.domain.repository.UpdateTripPlanningResponse
+import es.iesnervion.alopez.ourtravel.domain.repository.DeleteTripPlanningResponse
+import es.iesnervion.alopez.ourtravel.domain.repository.TripPlanningResponse
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 import es.iesnervion.alopez.ourtravel.usecases.UseCases
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +38,22 @@ class TripListViewModel @Inject constructor(
     private val useCases: UseCases
 ): ViewModel() {
 
-    private val _tripsState = mutableStateOf<Response<List<TripPlanning>>>(Response.Loading)
+    var tripsResponse by mutableStateOf<TripPlanningResponse>(Loading)
+        private set
+
+    var addTripResponse by mutableStateOf<AddTripPlanningResponse>(Success(false,""))
+        private set
+
+    var updateTripResponse by mutableStateOf<UpdateTripPlanningResponse>(Success(false,""))
+        private set
+
+    var deleteTripResponse by mutableStateOf<DeleteTripPlanningResponse>(Success(false,""))
+        private set
+
+    var openDialog by mutableStateOf(false)
+        private set
+
+    /*private val _tripsState = mutableStateOf<Response<List<TripPlanning>>>(Response.Loading)
     val tripsState: State<Response<List<TripPlanning>>> = _tripsState
 
     private val _lastTripInsertedId = mutableStateOf<Response<Boolean>>(Success(null,""))
@@ -45,19 +67,19 @@ class TripListViewModel @Inject constructor(
 
 
     private val _isTripDeletedState = mutableStateOf<Response<Boolean>>(Success(null,""))
-    val isTripDeletedState: State<Response<Boolean>> = _isTripDeletedState
+    val isTripDeletedState: State<Response<Boolean>> = _isTripDeletedState*/
 
     init {
         getTrips()
     }
 
-    private fun getTrips() {
+    private fun getTrips() =
         viewModelScope.launch {
             useCases.getTrips().collect { response ->
-                _tripsState.value = response
+                tripsResponse = response
             }
         }
-    }
+
 
     /*fun getLastTripInsertedId(): String {
         viewModelScope.launch {
@@ -68,27 +90,28 @@ class TripListViewModel @Inject constructor(
         return _lastTripInsertedId.value.toString() //TODO corregir
     }*/
 
-    fun addTrip(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp) {
-        viewModelScope.launch {
-            useCases.addTrip(name, startDate, endDate, totalCost, photo, creationDate).collect { response ->
-                _isTripAddedState.value = response
-            }
-        }
+    fun addTrip(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp) = viewModelScope.launch {
+        addTripResponse = Loading
+        addTripResponse = useCases.addTrip(name, startDate, endDate, totalCost, photo, creationDate)
     }
 
-    fun updateTrip(id: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long){
-        viewModelScope.launch {
-            useCases.updateTrip(id, startDate, endDate, totalCost).collect() { response ->
-                _isTripUpdatedState.value = response
-            }
-        }
+    fun updateTrip(id: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long) = viewModelScope.launch {
+        updateTripResponse = Loading
+        updateTripResponse = useCases.updateTrip(id, startDate, endDate, totalCost)
     }
 
-    fun deleteTrip(id: String) {
-        viewModelScope.launch {
-            useCases.deleteTrip(id).collect { response ->
-                _isTripDeletedState.value = response
-            }
-        }
+
+    fun deleteTrip(id: String) = viewModelScope.launch {
+        deleteTripResponse = Loading
+        deleteTripResponse = useCases.deleteTrip(id)
     }
+
+    fun openDialog() {
+        openDialog = true
+    }
+
+    fun closeDialog() {
+        openDialog = false
+    }
+
 }

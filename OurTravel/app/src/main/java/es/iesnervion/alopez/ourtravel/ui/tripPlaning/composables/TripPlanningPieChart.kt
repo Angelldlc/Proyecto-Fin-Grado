@@ -25,8 +25,9 @@ import me.bytebeats.views.charts.pie.PieChartData
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.cos
-
+/*
 @Composable
+
 fun TripPlanningPieChart(destinationsResponse: Response.Success<List<Destination>>, tripId: String, viewModel: TripListViewModel = hiltViewModel()) {
     val costs = calculateTotalCosts(destinationsResponse.data)
     val totalAccomodationCost = costs[0]
@@ -82,7 +83,9 @@ fun Legend(totalAccomodationCost: Long?, totalTransportationCost: Long?, totalFo
 @Composable
 fun LegendItem(text: String, color: Color) {
     Row() {
-        Icon(Icons.Filled.Square, contentDescription = "", tint = color/*, modifier = Modifier.size(25.dp)*/)
+        Icon(Icons.Filled.Square, contentDescription = "", tint = color*/
+/*, modifier = Modifier.size(25.dp)*//*
+)
         Text(text = text, fontSize = 16.sp)
     }
 }
@@ -124,4 +127,4 @@ fun updateTripFields(destinations: List<Destination>?, tripId: String, viewModel
             viewModel.updateTrip(tripId, Timestamp(startDate!!), Timestamp(endDate!!), totalCosts)
         }
     }
-}
+}*/

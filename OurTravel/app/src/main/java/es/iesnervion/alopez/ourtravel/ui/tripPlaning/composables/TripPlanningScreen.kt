@@ -1,36 +1,29 @@
 package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.R
 import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
-import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
+import es.iesnervion.alopez.ourtravel.domain.repository.Destinations
+import es.iesnervion.alopez.ourtravel.ui.login.composables.Destinations
+import es.iesnervion.alopez.ourtravel.ui.login.composables.DestinationsContent
 import es.iesnervion.alopez.ourtravel.ui.theme.Navy
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
-import kotlin.math.max
-import kotlin.math.min
 
 @ExperimentalMaterialApi
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -39,13 +32,14 @@ fun TripPlanningScreen(
     parentViewModel: TripListViewModel = hiltViewModel(),
     tripId: String?, trip: TripPlanning, city: City?,
     viewModel: DestinationViewModel = hiltViewModel(),
+    /*getDestinations: (String) -> Unit,*/ //TODO Mirar getDestinations() y viewmodel.destinationState.value
     navigateToTripListScreen: () -> Unit,
     navigateToSearchCityScreen: () -> Unit,
     navigateToDestinationScreen: (Destination, String) -> Unit
 ) {
     var idTrip = trip.id
     BackHandler(onBack = navigateToTripListScreen)
-    if(idTrip.isNullOrEmpty() || idTrip.isNullOrBlank()) {
+    /*if(idTrip.isNullOrEmpty() || idTrip.isNullOrBlank()) {
         parentViewModel.addTrip(
             trip.name ?: "",
             Timestamp.now(),
@@ -54,22 +48,26 @@ fun TripPlanningScreen(
             trip.photo ?: "",
             Timestamp.now()
         )
-        idTrip = /*parentViewModel.isTripAddedState.value.toString()*/if (parentViewModel.isTripAddedState.value is Response.Success) {
-            (parentViewModel.lastTripInsertedId.value as Response.Success<Boolean>).id
+        idTrip = *//*parentViewModel.isTripAddedState.value.toString()*//*if (parentViewModel.isTripAddedState.value is Response.Success) {
+            (parentViewModel.isTripAddedState.value as Response.Success<Boolean>).id
         } else { "" }
-       /* idTrip = parentViewModel.getLastTripInsertedId()*/ //TODO intentar recoger el valor aqui para abajo no trabajar con el estado
+       *//* idTrip = parentViewModel.getLastTripInsertedId()*//* //TODO intentar recoger el valor aqui para abajo no trabajar con el estado
         navigateToDestinationScreen(
-            Destination(cityPhoto = city?.photo, cityName = city?.name), idTrip ?: "" /*if (parentViewModel.lastTripInsertedId.value is Response.Success) {
+            Destination(cityPhoto = city?.photo, cityName = city?.name), idTrip ?: "" *//*if (parentViewModel.lastTripInsertedId.value is Response.Success) {
                 (parentViewModel.lastTripInsertedId.value as Response.Success<String>).data.toString()
             } else {
                 ""
-            }*/
+            }*//*
         )
     } else {
         viewModel.getDestinations(idTrip)
+    }*/
+    /*val openDialog = remember { mutableStateOf(false) }*/
+    if (idTrip != null) {
+        val destinations  = viewModel.getDestinations(idTrip) //TODO getDestinations: (tripId: String) -> Unit
     }
-    val openDialog = remember { mutableStateOf(false) }
-    val destinationsResponse = viewModel.destinationsState.value
+    val destinationsResponse = viewModel.destinationsResponse //TODO cambiar
+
     val scrollState = rememberScrollState()
     val path = rememberAsyncImagePainter(
         model = (if (trip.photo.isNullOrEmpty() || trip.photo!!.isBlank()) {
@@ -77,10 +75,73 @@ fun TripPlanningScreen(
         } else trip.photo)
     )
     Scaffold(
-        topBar = { TripPlanningTopBar(trip.name ?: "", navigateToTripListScreen, openDialog) },
+        topBar = { TripPlanningTopBar(trip.name ?: "", navigateToTripListScreen) { parentViewModel.openDialog() } },
         floatingActionButton = { TripPlanningFloatingActionButton(navigateToSearchCityScreen) }
 
     ) { padding ->
+        if(parentViewModel.openDialog){
+            DeleteAlertDialog(
+                tripId = idTrip.toString(),
+                openDialog = parentViewModel.openDialog,
+                closeDialog = { parentViewModel.closeDialog() },
+                deleteTrip = { tripId -> parentViewModel.deleteTrip(tripId) },
+                navigateToTripListScreen = navigateToTripListScreen
+            )
+        }
+        Destinations (
+            destinationsContent = { destinations ->
+                DestinationsContent(
+                    padding = padding,
+                    destinations = destinations,
+                    tripId = idTrip.toString(),
+                    navigateToDestinationScreen = navigateToDestinationScreen
+                )
+            }
+        )
+    }
+
+        /*TripPlannings( tripPlanningsContent = { trips ->
+            TripPlanningContent(
+                padding = padding,
+                scrollState = scrollState,
+                path = path,
+                tripPlannings = trips
+            )
+            DeleteAlertDialog(
+                tripId = tripId.toString(),
+                openDialog = parentViewModel.openDialog,
+                closeDialog = { parentViewModel.closeDialog() },
+                deleteTrip = { tripId -> parentViewModel.deleteTrip(tripId) },
+                navigateToTripListScreen = navigateToTripListScreen
+            )
+            }
+
+        )*/
+
+        /*TripPlanningPieChart(destinationsResponse, idTrip.toString(), parentViewModel)*/
+        Spacer(modifier = Modifier.height(272.dp))
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(
+            text = "Destinations:",
+            modifier = Modifier.padding(16.dp),
+            fontSize = 24.sp,
+            color = Navy
+        )
+
+        /*Destinations(
+        TripPlanningDestinationsList(
+            idTrip.toString(),
+            paddingValues = padding,
+            *//*viewModel = viewModel,*//*
+            navigateToDestinationScreen = navigateToDestinationScreen,
+            ,
+            viewModel.destinationsResponse//TODO arreglar
+
+        )
+        )*/
+
+
+    /*
         if(openDialog.value){
             DeleteAlertDialog(idTrip.toString(), openDialog, parentViewModel, navigateToTripListScreen)
         }
@@ -136,8 +197,10 @@ fun TripPlanningScreen(
                 }
                 is Response.Error -> Log.d("OurTravel", destinationsResponse.message)
             }
-        }
-    }
+        }*/
+    AddTrip()
+    UpdateTrip()
+    DeleteTrip()
 }
 
 @Composable
@@ -146,7 +209,7 @@ fun NotImage() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Gray)
-            .clickable {  }
+            .clickable { }
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_baseline_image_24),
@@ -158,13 +221,17 @@ fun NotImage() {
 }
 
 @Composable
-fun DeleteAlertDialog(tripId: String,
-                      openDialog: MutableState<Boolean>,
-                      viewModelTripList: TripListViewModel = hiltViewModel(),
-                      navigateToTripListScreen: () -> Unit) {
-    if(openDialog.value) {
+fun DeleteAlertDialog(
+    tripId: String,
+    openDialog: Boolean,
+    closeDialog: () -> Unit,
+    deleteTrip: (tripId: String) -> Unit,
+    /*viewModelTripList: TripListViewModel = hiltViewModel(),*/
+    navigateToTripListScreen: () -> Unit
+) {
+    if(openDialog) {
         AlertDialog(
-            onDismissRequest = { openDialog.value = false },
+            onDismissRequest = { closeDialog() },
             title = { Text(text = "Are you sure you want to delete this trip?") },
             buttons = {
                 Row(
@@ -175,19 +242,23 @@ fun DeleteAlertDialog(tripId: String,
                 ) {
                     Button(
                         modifier = Modifier.padding(16.dp),
-                        onClick = { openDialog.value = false }
+                        onClick = { closeDialog() }
                     ) {
                         Text("Cancel")
                     }
                     Button(
-                        modifier = Modifier.padding(16.dp).clickable(enabled = tripId.isNotEmpty()){},
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .clickable(enabled = tripId.isNotEmpty()) {},
                         onClick = {
-                            viewModelTripList.deleteTrip(tripId)
-                            if(viewModelTripList.isTripDeletedState.value is Response.Success || viewModelTripList.isTripDeletedState.value is Response.Loading){
+                            deleteTrip(tripId)
+                            closeDialog()
+                            navigateToTripListScreen()
+                            /*if(viewModelTripList.isTripDeletedState.value is Response.Success || viewModelTripList.isTripDeletedState.value is Response.Loading){
                                 navigateToTripListScreen()
                             }else{
                                 openDialog.value = false
-                            }
+                            }*/
                         }
                     ) {
                         Text("Delete")

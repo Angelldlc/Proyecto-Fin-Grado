@@ -76,11 +76,18 @@ fun DestinationScreen(
                     Icons.Filled.Edit
                 }, edit, tripId, dest.value
             )
-
         }
     ) { padding ->
-        if(openDialog.value){
-            DeleteDestinationAlertDialog(tripId, destination?.id.toString() , openDialog, viewModel, navigateToTripPlanningScreen)
+
+
+        if(viewModel.openDialog){
+            DeleteDestinationAlertDialog(
+                tripId,
+                destination?.id.toString(),
+                viewModel.openDialog,
+                closeDialog = { viewModel.closeDialog() },
+                deleteDestination = { tripId, id ->  viewModel.deleteDestination(tripId, id) },
+                navigateToTripPlanningScreen)
         }
         Column(
             Modifier
@@ -131,7 +138,7 @@ fun DestinationScreen(
 
         }
     }
-    if (tripId.isNotEmpty() && tripId.isNotBlank() && destination?.id.isNullOrEmpty() && destination?.id.isNullOrBlank()) {
+    /*if (tripId.isNotEmpty() && tripId.isNotBlank() && destination?.id.isNullOrEmpty() && destination?.id.isNullOrBlank()) {
         viewModel.addDestination(
             tripId, destination?.id.toString(),
             City(destination?.cityName, destination?.cityPhoto),
@@ -145,7 +152,7 @@ fun DestinationScreen(
             destination?.travelStay.toString(),
             (destination?.tourismAttractions ?: emptyList<String>()) as List<String>
         )
-    }
+    }*/
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -410,13 +417,14 @@ fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Lo
 fun DeleteDestinationAlertDialog(
     tripId: String,
     id: String,
-    openDialog: MutableState<Boolean>,
-    viewModel: DestinationViewModel = hiltViewModel(),
+    openDialog: Boolean,
+    closeDialog: () -> Unit,
+    deleteDestination: (tripId: String, id: String) -> Unit,
     navigateToTripPlanningScreen: () -> Unit
 ) {
-    if(openDialog.value) {
+    if(openDialog) {
         AlertDialog(
-            onDismissRequest = { openDialog.value = false },
+            onDismissRequest = { closeDialog() },
             title = { Text(text = "Are you sure you want to delete this destination?") },
             buttons = {
                 Row(
@@ -427,7 +435,7 @@ fun DeleteDestinationAlertDialog(
                 ) {
                     Button(
                         modifier = Modifier.padding(16.dp),
-                        onClick = { openDialog.value = false }
+                        onClick = { closeDialog() }
                     ) {
                         Text("Cancel")
                     }
@@ -436,12 +444,14 @@ fun DeleteDestinationAlertDialog(
                             .padding(16.dp)
                             .clickable(enabled = id.isNotEmpty()) {},
                         onClick = {
-                            viewModel.deleteDestination(tripId, id)
-                            if(viewModel.isDestinationDeletedState.value is Response.Success || viewModel.isDestinationDeletedState.value is Response.Loading){
+                            deleteDestination(tripId, id)
+                            closeDialog()
+                            navigateToTripPlanningScreen()
+                            /*if(viewModel.isDestinationDeletedState.value is Response.Success || viewModel.isDestinationDeletedState.value is Response.Loading){
                                 navigateToTripPlanningScreen()
                             }else{
                                 openDialog.value = false
-                            }
+                            }*/
                         }
                     ) {
                         Text("Delete")

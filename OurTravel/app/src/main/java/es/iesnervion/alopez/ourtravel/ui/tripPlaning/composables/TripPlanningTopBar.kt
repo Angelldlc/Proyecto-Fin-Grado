@@ -7,16 +7,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun TripPlanningTopBar(
     name: String,
     navigateToTripListScreen: () -> Unit,
-    openDialog: MutableState<Boolean>
+    openDialog: () -> Unit
     ){
     TopAppBar(
         title = { Text(text = name) },
@@ -36,7 +34,7 @@ fun TripPlanningTopBar(
 }
 
 @Composable
-fun TripPlanningTopBarActions(openDialog: MutableState<Boolean>){
+fun TripPlanningTopBarActions(openDialog: () -> Unit){
     Row(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
@@ -50,7 +48,7 @@ fun TripPlanningTopBarActions(openDialog: MutableState<Boolean>){
             )
         }
 
-        IconButton(onClick = { openDialog.value = true})
+        IconButton(onClick = { openDialog() })
         {
             Icon(
                 Icons.Filled.Delete,

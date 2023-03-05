@@ -9,14 +9,21 @@ import kotlinx.coroutines.flow.Flow
  * Interfaz TripRepository.
  *
  */
+typealias TripPlannings = List<TripPlanning>
+typealias TripPlanningResponse = Response<TripPlannings>
+typealias AddTripPlanningResponse = Response<Boolean>
+typealias UpdateTripPlanningResponse = Response<Boolean>
+typealias DeleteTripPlanningResponse = Response<Boolean>
+
+
 interface TripRepository {
-    fun getTripsFromFirestore(): Flow<Response<List<TripPlanning>>>
+    fun getTripsFromFirestore(): Flow<TripPlanningResponse>
 
     /*fun getLastTripInsertedId(): Flow<Response<String>>*/
 
-    suspend fun addTripToFirestore(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp): Flow<Response<Boolean>>
+    suspend fun addTripToFirestore(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp): AddTripPlanningResponse
 
-    suspend fun updateTripFromFirestore(id: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long): Flow<Response<Boolean>>
+    suspend fun updateTripFromFirestore(id: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long): UpdateTripPlanningResponse
 
-    suspend fun deleteTripFromFirestore(id: String): Flow<Response<Boolean>>
+    suspend fun deleteTripFromFirestore(id: String): DeleteTripPlanningResponse
 }

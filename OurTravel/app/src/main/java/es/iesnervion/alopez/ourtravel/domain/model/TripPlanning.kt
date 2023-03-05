@@ -27,5 +27,8 @@ data class TripPlanning(
     var totalCost: Long? = null,
     @get:PropertyName("Photo")
     @set:PropertyName("Photo")
-    var photo: String? = null
+    var photo: String? = null,
+    @get:PropertyName("CreationDate")
+    @set:PropertyName("CreationDate")
+    var creationDate: Timestamp? = null
 )

@@ -10,8 +10,15 @@ import java.util.*
  * Interfaz DestinationRepository.
  *
  */
+
+typealias Destinations = List<Destination>
+typealias DestinationsResponse = Response<Destinations>
+typealias AddDestinationResponse = Response<Boolean>
+typealias UpdateDestinationResponse = Response<Boolean>
+typealias DeleteDestinationResponse = Response<Boolean>
+
 interface DestinationRepository {
-    fun getDestinationsFromFirestore(tripId: String): Flow<Response<List<Destination>>>
+    fun getDestinationsFromFirestore(tripId: String): Flow<DestinationsResponse>
 
     suspend fun addDestinationToFirestore(tripId: String,
                                           id: String,
@@ -24,7 +31,7 @@ interface DestinationRepository {
                                           startDate: Date,
                                           endDate: Date,
                                           travelStay: String,
-                                          tourismAttractions: List<String>): Flow<Response<Boolean>>
+                                          tourismAttractions: List<String>): AddDestinationResponse
 
     suspend fun updateDestinationFromFirestore(tripId: String,
                                                 id: String,
@@ -37,7 +44,7 @@ interface DestinationRepository {
                                                 startDate: Date,
                                                 endDate: Date,
                                                 travelStay: String,
-                                                tourismAttractions: List<String>): Flow<Response<Boolean>>
+                                                tourismAttractions: List<String>): UpdateDestinationResponse
 
-    suspend fun deleteDestinationFromFirestore(tripId: String, id: String): Flow<Response<Boolean>>
+    suspend fun deleteDestinationFromFirestore(tripId: String, id: String): DeleteDestinationResponse
 }
