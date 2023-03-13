@@ -79,7 +79,6 @@ fun DestinationScreen(
         }
     ) { padding ->
 
-
         if(viewModel.openDialog){
             DeleteDestinationAlertDialog(
                 tripId,
@@ -317,7 +316,7 @@ fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Lo
             value = textState.value,
             onValueChange = { value ->
                 textState.value = value
-                dest.value?.accomodationCosts = value.text.toLong()
+                dest.value?.accomodationCosts = try { value.text.toLong() }catch (e: Exception){ 0 }
             },
             enabled = edit,
             placeholder = { Text("Gastos de estancia", color = Color.Gray) },
@@ -343,7 +342,7 @@ fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Lo
             value = textState.value,
             onValueChange = { value ->
                 textState.value = value
-                dest.value?.foodCosts = value.text.toLong()
+                dest.value?.foodCosts = try{ value.text.toLong() }catch (e: Exception){ 0 }
             },
             enabled = edit,
             placeholder = { Text("Gastos en comida", color = Color.Gray) },
@@ -368,7 +367,7 @@ fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Lo
             value = textState.value,
             onValueChange = { value ->
                 textState.value = value
-                dest.value?.transportationCosts = value.text.toLong()
+                dest.value?.transportationCosts = try{ value.text.toLong() } catch (e: Exception) { 0 }
             },
             enabled = edit,
             placeholder = { Text("Gastos en transporte", color = Color.Gray) },
@@ -393,7 +392,7 @@ fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Lo
             value = textState.value,
             onValueChange = { value ->
                 textState.value = value
-                dest.value?.tourismCosts = value.text.toLong()
+                dest.value?.tourismCosts = try{ value.text.toLong() } catch (e: Exception) { 0 }
             },
             enabled = edit,
             placeholder = { Text("Gastos en turismo", color = Color.Gray) },

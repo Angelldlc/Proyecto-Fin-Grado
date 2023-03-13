@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,12 +20,14 @@ import es.iesnervion.alopez.ourtravel.R
 import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
-import es.iesnervion.alopez.ourtravel.domain.repository.Destinations
-import es.iesnervion.alopez.ourtravel.ui.login.composables.Destinations
-import es.iesnervion.alopez.ourtravel.ui.login.composables.DestinationsContent
+import es.iesnervion.alopez.ourtravel.ui.login.composables.AddDestination
+import es.iesnervion.alopez.ourtravel.ui.destination.composables.Destinations
+import es.iesnervion.alopez.ourtravel.ui.destination.composables.DestinationsContent
 import es.iesnervion.alopez.ourtravel.ui.theme.Navy
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
+import kotlin.math.max
+import kotlin.math.min
 
 @ExperimentalMaterialApi
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -88,16 +92,74 @@ fun TripPlanningScreen(
                 navigateToTripListScreen = navigateToTripListScreen
             )
         }
-        Destinations (
-            destinationsContent = { destinations ->
-                DestinationsContent(
-                    padding = padding,
-                    destinations = destinations,
-                    tripId = idTrip.toString(),
-                    navigateToDestinationScreen = navigateToDestinationScreen
-                )
+        Column (
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .fillMaxSize())
+        {
+            val height = 220.dp
+            Image(path,
+                contentDescription = "Banner Image",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(height)
+                    .graphicsLayer {
+                        alpha = min(
+                            1f,
+                            max(
+                                0.0f,
+                                1 - (scrollState.value / ((height.value * 2) + (height.value / 1.5f)))
+                            )
+                        )
+                    }
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+            Text(
+                text = "Costs:",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 24.sp,
+                color = Navy
+            )
+
+            Destinations {
+                TripPlanningPieChart(destinationsResponse = it, tripId = idTrip.toString(), viewModel = parentViewModel)
             }
-        )
+            /*TripPlanningPieChart(destinations, idTrip.toString(), parentViewModel)*/
+
+            Spacer(modifier = Modifier.height(30.dp))
+            Text(
+                text = "Destinations:",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 24.sp,
+                color = Navy
+            )
+
+            Destinations (
+                destinationsContent = { destinations ->
+                    DestinationsContent(
+                        padding = padding,
+                        destinations = destinations,
+                        tripId = idTrip.toString(),
+                        navigateToDestinationScreen = navigateToDestinationScreen
+                    )
+                }
+            )
+
+
+
+            /*TripPlanningDestinationsList(
+                idTrip.toString(),
+                paddingValues = padding,
+                viewModel = viewModel,
+                navigateToDestinationScreen = navigateToDestinationScreen,
+                destinationsResponse
+
+            )*/
+        }
+
+
     }
 
         /*TripPlannings( tripPlanningsContent = { trips ->
@@ -119,14 +181,14 @@ fun TripPlanningScreen(
         )*/
 
         /*TripPlanningPieChart(destinationsResponse, idTrip.toString(), parentViewModel)*/
-        Spacer(modifier = Modifier.height(272.dp))
-        Spacer(modifier = Modifier.height(30.dp))
-        Text(
-            text = "Destinations:",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 24.sp,
-            color = Navy
-        )
+//        Spacer(modifier = Modifier.height(272.dp))
+//        Spacer(modifier = Modifier.height(30.dp))
+//        Text(
+//            text = "Destinations:",
+//            modifier = Modifier.padding(16.dp),
+//            fontSize = 24.sp,
+//            color = Navy
+//        )
 
         /*Destinations(
         TripPlanningDestinationsList(
@@ -198,7 +260,7 @@ fun TripPlanningScreen(
                 is Response.Error -> Log.d("OurTravel", destinationsResponse.message)
             }
         }*/
-    AddTrip()
+    AddDestination()
     UpdateTrip()
     DeleteTrip()
 }

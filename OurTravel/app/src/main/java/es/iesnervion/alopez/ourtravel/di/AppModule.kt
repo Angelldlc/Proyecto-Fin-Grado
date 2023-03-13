@@ -30,10 +30,7 @@ import es.iesnervion.alopez.ourtravel.domain.repository.LoginRepository
 import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
 import es.iesnervion.alopez.ourtravel.usecases.UseCases
 import es.iesnervion.alopez.ourtravel.usecases.cities.GetCities
-import es.iesnervion.alopez.ourtravel.usecases.destinationlist.AddDestination
-import es.iesnervion.alopez.ourtravel.usecases.destinationlist.DeleteDestination
-import es.iesnervion.alopez.ourtravel.usecases.destinationlist.GetDestinations
-import es.iesnervion.alopez.ourtravel.usecases.destinationlist.UpdateDestination
+import es.iesnervion.alopez.ourtravel.usecases.destinationlist.*
 import es.iesnervion.alopez.ourtravel.usecases.triplist.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -96,6 +93,7 @@ object AppModule {
         updateTrip = UpdateTrip(tripRepo),
         deleteTrip = DeleteTrip(tripRepo),
         getDestinations = GetDestinations(destinationRepo),
+        getLastDestinationInsertedId = GetLastDestinationInsertedId(destinationRepo),
         addDestination = AddDestination(destinationRepo),
         updateDestination = UpdateDestination(destinationRepo),
         deleteDestination = DeleteDestination(destinationRepo),

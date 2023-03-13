@@ -15,11 +15,14 @@ typealias AddTripPlanningResponse = Response<Boolean>
 typealias UpdateTripPlanningResponse = Response<Boolean>
 typealias DeleteTripPlanningResponse = Response<Boolean>
 
+//Nosequeestoyhaciendo
+typealias LastTripInsertedId =  String
+
 
 interface TripRepository {
     fun getTripsFromFirestore(): Flow<TripPlanningResponse>
 
-    /*fun getLastTripInsertedId(): Flow<Response<String>>*/
+    suspend fun getLastTripInsertedId(): /*Flow<LastTripInsertedId>*/ String?
 
     suspend fun addTripToFirestore(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp): AddTripPlanningResponse
 

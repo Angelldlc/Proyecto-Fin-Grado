@@ -14,8 +14,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import es.iesnervion.alopez.ourtravel.domain.model.City
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.ui.searchCity.SearchCityViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -25,7 +28,19 @@ fun SearchCityList(
     textState: MutableState<TextFieldValue>,
     viewModel: SearchCityViewModel,
     padding: PaddingValues,
-    navigateToTripPlanningScreenFromSearchCity: (City, String?) -> Unit
+    addDestination: (
+                     city: City,
+                     description: String,
+                     accomodationCosts: Long,
+                     transportationCosts: Long,
+                     foodCosts: Long,
+                     tourismCosts: Long,
+                     startDate: Date,
+                     endDate: Date,
+                     travelStay: String,
+                     tourismAttractions: List<String>) -> Unit,
+    navigateToTripPlanningScreenFromSearchCity: (City, String?) -> Unit,
+    navigateToDestinationScreenFromSearchCity: (Destination, String?) -> Unit
 ) {
     val cities by viewModel.citiesState.observeAsState(Response.Loading)
     viewModel.getCities()
@@ -54,7 +69,7 @@ fun SearchCityList(
                 filteredCities?.size?.let {
                     items(it) { city ->
                         BoxWithConstraints {
-                            SearchCityCard(tripId, filteredCities[city], navigateToTripPlanningScreenFromSearchCity)
+                            SearchCityCard(tripId, filteredCities[city], addDestination, navigateToTripPlanningScreenFromSearchCity, navigateToDestinationScreenFromSearchCity)
                         }
                     }
                 }

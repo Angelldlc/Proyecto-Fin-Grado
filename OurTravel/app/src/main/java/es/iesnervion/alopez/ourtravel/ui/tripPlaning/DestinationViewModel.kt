@@ -66,7 +66,6 @@ class DestinationViewModel @Inject constructor(
 
     fun addDestination(
         tripId: String,
-        id: String,
         city: City,
         description: String,
         accomodationCosts: Long,
@@ -79,7 +78,7 @@ class DestinationViewModel @Inject constructor(
         tourismAttractions: List<String>
     ) = viewModelScope.launch {
         addDestinationResponse = Loading
-        addDestinationResponse = useCases.addDestination(tripId, id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
+        addDestinationResponse = useCases.addDestination(tripId, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
     }
 
 

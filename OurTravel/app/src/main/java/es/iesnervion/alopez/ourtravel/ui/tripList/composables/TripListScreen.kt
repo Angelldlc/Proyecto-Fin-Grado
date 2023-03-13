@@ -1,20 +1,15 @@
 package es.iesnervion.alopez.ourtravel.ui.tripList.composables
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.login.LoginViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripList.BottomNavState
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
+import es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables.AddTrip
 
 @ExperimentalMaterialApi
 @Composable
@@ -25,11 +20,20 @@ fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
     navigateToNewTripPlanningScreen: () -> Unit,
     navigateToTripPlanningScreen: (TripPlanning) -> Unit
 ) {
+//    val lastTripInsertedId = remember() { mutableStateOf(viewModelTripList.lastTripInsertedId) }
+    /*val lastTripId = remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        viewModelTripList.getLastTripInsertedId { tripId ->
+            lastTripId.value = tripId
+        }
+    }*/
+
     val textState = remember(
         navigateToTripPlanningScreen,
         navigateToNewTripPlanningScreen,
         navigateToLoginScreen
     ) { mutableStateOf(TextFieldValue("")) }
+    val addTripResponse = remember() { mutableStateOf(viewModelTripList.addTripResponse) }
     val bottomNavState = remember(
         navigateToTripPlanningScreen,
         navigateToNewTripPlanningScreen,
@@ -42,7 +46,11 @@ fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
         topBar = { TripListSearchView(textState = textState, scope, state) },
         bottomBar = { TripListBottomNavBar(bottomNavState) },
         drawerContent = { TripListDrawer(viewModel, navigateToLoginScreen) },
-        floatingActionButton = { TripListFloatingActionButton(navigateToNewTripPlanningScreen = navigateToNewTripPlanningScreen) }
+        floatingActionButton = { TripListFloatingActionButton(
+            addTrip = { name, startDate, endDate, totalCost, photo, creationDate -> viewModelTripList.addTrip(name, startDate, endDate, totalCost, photo, creationDate) },
+            navigateToTripPlanningScreen = { newTrip -> navigateToTripPlanningScreen(newTrip) },
+            getLastTripInsertedId = viewModelTripList::getLastTripInsertedId
+             ) }
     ) { padding ->
         Column() {
             TripList(
@@ -52,6 +60,7 @@ fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
                 bottomNavState = bottomNavState
             )
         }
+        AddTrip()
     }
 }
 

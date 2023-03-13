@@ -8,25 +8,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.iesnervion.alopez.ourtravel.domain.model.City
-import es.iesnervion.alopez.ourtravel.domain.model.Destination
-import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Success
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Loading
-import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.domain.repository.AddTripPlanningResponse
 import es.iesnervion.alopez.ourtravel.domain.repository.UpdateTripPlanningResponse
 import es.iesnervion.alopez.ourtravel.domain.repository.DeleteTripPlanningResponse
 import es.iesnervion.alopez.ourtravel.domain.repository.TripPlanningResponse
-import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 import es.iesnervion.alopez.ourtravel.usecases.UseCases
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
 import okhttp3.internal.wait
 import java.util.*
 import javax.inject.Inject
+
 /**
  * Clase pública TripListViewModel.
  *
@@ -36,22 +31,25 @@ import javax.inject.Inject
 @HiltViewModel
 class TripListViewModel @Inject constructor(
     private val useCases: UseCases
-): ViewModel() {
+) : ViewModel() {
 
     var tripsResponse by mutableStateOf<TripPlanningResponse>(Loading)
         private set
 
-    var addTripResponse by mutableStateOf<AddTripPlanningResponse>(Success(false,""))
+    var addTripResponse by mutableStateOf<AddTripPlanningResponse>(Success(false, ""))
         private set
 
-    var updateTripResponse by mutableStateOf<UpdateTripPlanningResponse>(Success(false,""))
+    var updateTripResponse by mutableStateOf<UpdateTripPlanningResponse>(Success(false, ""))
         private set
 
-    var deleteTripResponse by mutableStateOf<DeleteTripPlanningResponse>(Success(false,""))
+    var deleteTripResponse by mutableStateOf<DeleteTripPlanningResponse>(Success(false, ""))
         private set
 
     var openDialog by mutableStateOf(false)
         private set
+/*
+    private val _lastTripInsertedId = mutableStateOf("")
+    val lastTripInsertedId: State<String> = _lastTripInsertedId*/
 
     /*private val _tripsState = mutableStateOf<Response<List<TripPlanning>>>(Response.Loading)
     val tripsState: State<Response<List<TripPlanning>>> = _tripsState
@@ -80,6 +78,11 @@ class TripListViewModel @Inject constructor(
             }
         }
 
+   /* fun getLastTripInsertedId() {
+        viewModelScope.launch {
+            _lastTripInsertedId.value = useCases.getLastTripInsertedId().toString()
+        }
+    }*/
 
     /*fun getLastTripInsertedId(): String {
         viewModelScope.launch {
@@ -90,15 +93,47 @@ class TripListViewModel @Inject constructor(
         return _lastTripInsertedId.value.toString() //TODO corregir
     }*/
 
-    fun addTrip(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp) = viewModelScope.launch {
+    /*fun getLastTripInsertedId(): String {
+        var lastTripInsertedId = ""
+        viewModelScope.launch {
+            lastTripInsertedId = useCases.getLastTripInsertedId().toString()*//*.collect { response ->
+            lastTripInsertedId = response
+        }.toString()*//*
+        }
+        return lastTripInsertedId //TODO Comprobar si esta bien
+    }*/
+
+    /*fun getLastTripInsertedId() {
+        viewModelScope.launch {
+            lastTripInsertedId.value = useCases.getLastTripInsertedId().toString()
+        }
+    }*/
+
+    fun getLastTripInsertedId(callback: (String) -> Unit) {
+        viewModelScope.launch {
+            val lastTripInsertedId = useCases.getLastTripInsertedId()
+            callback(lastTripInsertedId.toString())
+        }
+    }
+
+
+    fun addTrip(
+        name: String,
+        startDate: Timestamp,
+        endDate: Timestamp,
+        totalCost: Long,
+        photo: String,
+        creationDate: Timestamp
+    ) = viewModelScope.launch {
         addTripResponse = Loading
         addTripResponse = useCases.addTrip(name, startDate, endDate, totalCost, photo, creationDate)
     }
 
-    fun updateTrip(id: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long) = viewModelScope.launch {
-        updateTripResponse = Loading
-        updateTripResponse = useCases.updateTrip(id, startDate, endDate, totalCost)
-    }
+    fun updateTrip(id: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long) =
+        viewModelScope.launch {
+            updateTripResponse = Loading
+            updateTripResponse = useCases.updateTrip(id, startDate, endDate, totalCost)
+        }
 
 
     fun deleteTrip(id: String) = viewModelScope.launch {

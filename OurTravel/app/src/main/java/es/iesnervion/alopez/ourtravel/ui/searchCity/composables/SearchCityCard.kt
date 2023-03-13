@@ -19,13 +19,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.City
+import es.iesnervion.alopez.ourtravel.domain.model.Destination
+import java.util.*
 
 
 @ExperimentalMaterialApi
 @Composable
 fun SearchCityCard(tripId: String?,
     city: City,
-    navigateToTripPlanningScreenFromSearchCity: (City, String?) -> Unit
+    addDestination: (city: City,
+                     description: String,
+                     accomodationCosts: Long,
+                     transportationCosts: Long,
+                     foodCosts: Long,
+                     tourismCosts: Long,
+                     startDate: Date,
+                     endDate: Date,
+                     travelStay: String,
+                     tourismAttractions: List<String>) -> Unit,
+    navigateToTripPlanningScreenFromSearchCity: (City, String?) -> Unit,
+    navigateToDestinationScreenFromSearchCity: (Destination, String?) -> Unit
 ){
     val path = rememberAsyncImagePainter(model = city.photo)
     Card(modifier = Modifier
@@ -33,7 +46,10 @@ fun SearchCityCard(tripId: String?,
         .height(200.dp)
         .padding(8.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
         onClick = {
-            navigateToTripPlanningScreenFromSearchCity(city, tripId)
+            addDestination(city, "", 0, 0, 0, 0, Date(), Date(), "", listOf())
+            navigateToDestinationScreenFromSearchCity(Destination(cityName = city.name, cityPhoto = city.photo), tripId)
+            //navigateToTripPlanningScreenFromSearchCity(city, tripId) // TODO cambiar a navigateToDestinationScreenFromSearchCity
+                                                                     // TODO añadir destino
         }) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             Image(

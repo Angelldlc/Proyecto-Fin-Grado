@@ -90,29 +90,41 @@ class TripRepositoryImpl @Inject constructor(
      * Comentario: Este método acaba ejecutandose antes de tiempo por un problema con el ámbito de
      * las corrutinas, no he podido solucionarlo por falta de tiempo.
      */
-    /*override fun getLastTripInsertedId() = callbackFlow {
+    override suspend fun getLastTripInsertedId(): String?  {
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
-        val snapshotListener = userRef
+        val tripsCollection = userRef
             ?.collection(tripPlanningRef.path)
             ?.orderBy("CreationDate", Query.Direction.DESCENDING)
             ?.limit(1)
-            ?.addSnapshotListener { snapshot, e ->
-                val response = if (snapshot != null) {
-                    val tripId = try {
-                        snapshot.toObjects(TripPlanning::class.java)[0].id
-                    } catch (e: Exception) {
-                        null
-                    }
-                    Success(tripId)
-                } else {
-                    Error(e?.message ?: e.toString())
-                }
-                trySend(response).isSuccess
-            }
-        awaitClose {
-            snapshotListener?.remove()
+
+        /*return */val lastTrip = try{
+             tripsCollection?.get()
+                ?.await()
+                ?.documents
+                ?.firstOrNull()
+                ?.id
+        } catch (e:Exception) {
+            null
         }
-    }*/
+        return lastTrip
+
+            /*?.addSnapshotListener { snapshot, e ->
+                val response = if (snapshot != null) {
+                    val tripId = *//*try {*//*
+                        snapshot.toObjects(TripPlanning::class.java)[0].id
+                    *//*} catch (e: Exception) {
+                        null
+                    }*//*
+                    tripId.toString()
+                } else {
+                    ""
+                }
+                trySend(response)
+            }*/
+        /*awaitClose {
+            snapshotListener?.remove()
+        }*/
+    }
 
     /**
      * Método público implementado asíncrono addTripToFirestore.

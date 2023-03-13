@@ -1,4 +1,9 @@
 package es.iesnervion.alopez.ourtravel.usecases.destinationlist
 
-class GetLastDestinationInsertedId {
+import es.iesnervion.alopez.ourtravel.domain.repository.DestinationRepository
+
+class GetLastDestinationInsertedId (
+    private val repo: DestinationRepository
+) {
+    suspend operator fun invoke() = repo.getLastDestinationInsertedId()
 }

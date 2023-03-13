@@ -30,7 +30,7 @@ fun TripList(
     bottomNavState: MutableState<BottomNavState>
 ) {
     val filteredTrips: List<TripPlanning>?
-    when (val tripsResponse = viewModel.tripsState.value) {
+    when (val tripsResponse = viewModel.tripsResponse) {
         is Response.Loading -> {}
         is Response.Success -> {
             val searchedText = textState.value.text

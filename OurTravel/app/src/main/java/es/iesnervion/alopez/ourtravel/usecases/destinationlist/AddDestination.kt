@@ -10,7 +10,6 @@ class AddDestination(
 ) {
     suspend operator fun invoke(
         tripId: String,
-        id: String,
         city: City,
         description: String,
         accomodationCosts: Long,
@@ -21,5 +20,5 @@ class AddDestination(
         endDate: Date,
         travelStay: String,
         tourismAttractions: List<String>
-    ) = destinationRepo.addDestinationToFirestore(tripId, id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
+    ) = destinationRepo.addDestinationToFirestore(tripId, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
 }

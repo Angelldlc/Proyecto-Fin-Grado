@@ -65,6 +65,9 @@ fun NavGraph (
                     navController.popBackStack()
 
                 },
+
+                //TODO Cambiar el siguiente metodo para navegar a la pantalla del viaje, añadirlo, y ya dentro añadir el destino.
+
                 navigateToNewTripPlanningScreen = {
                     navController.navigate(SearchCityScreen.route.plus("/?tripId="))
                 },
@@ -158,6 +161,12 @@ fun NavGraph (
                     val trip = TripPlanning()
                     navController.popBackStack()
                     navController.navigate(TripPlanningScreen.route.plus("/{$tripId}?trip={$trip}&city=${city}"))
+                },
+                navigateToDestinationScreenFromSearchCity = { dest, tripId ->
+                    val destination = Gson().toJson(dest)
+                    val idDestination = dest.id
+                    navController.navigate(DestinationScreen.route.plus("/$idDestination").plus("?destination=${destination}&tripId=${tripPlanningId}"))
+
                 }
             )
         }
