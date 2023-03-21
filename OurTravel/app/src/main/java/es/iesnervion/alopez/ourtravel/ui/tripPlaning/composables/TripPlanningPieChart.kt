@@ -6,7 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Square
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -16,26 +16,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Timestamp
-import es.iesnervion.alopez.ourtravel.domain.model.Destination
-import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.repository.Destinations
-import es.iesnervion.alopez.ourtravel.domain.repository.DestinationsResponse
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
-import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import java.text.NumberFormat
 import java.util.*
-import kotlin.math.cos
+
 @Composable
 
-fun TripPlanningPieChart(destinationsResponse: Destinations, tripId: String, viewModel: TripListViewModel = hiltViewModel()) {
+fun TripPlanningPieChart(
+    destinationsResponse: Destinations,
+    tripId: String,
+    tripName: String,
+    tripPhoto: String?,
+    viewModel: TripListViewModel = hiltViewModel(),
+    nameUpdated: MutableState<Boolean>
+) {
     val costs = calculateTotalCosts(destinationsResponse)
     val totalAccomodationCost = costs[0]
     val totalTransportationCost = costs[1]
     val totalFoodCost = costs[2]
     val totalTourismCost = costs[3]
-    updateTripFields(destinationsResponse, tripId, viewModel)
+    updateTripFields(destinationsResponse, tripId, tripName, tripPhoto, viewModel, nameUpdated)
 
     val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
     val symbol = numberFormat.currency?.symbol
@@ -108,7 +111,7 @@ fun calculateTotalCosts(
     return costs
 }
 
-fun updateTripFields(destinations: Destinations?, tripId: String, viewModel: TripListViewModel){
+fun updateTripFields(destinations: Destinations?, tripId: String, tripName:String, tripPhoto: String?, viewModel: TripListViewModel, nameUpdated: MutableState<Boolean>){
     if (destinations != null) {
         if (destinations.isNotEmpty()) {
             val costs = calculateTotalCosts(destinations)
@@ -121,11 +124,20 @@ fun updateTripFields(destinations: Destinations?, tripId: String, viewModel: Tri
             var endDate = destinations[0].endDate
             for (destination in destinations) {
                 startDate =
-                    if (startDate?.before(destination.startDate) == true) destination.startDate else startDate
+                    if (startDate?.before(destination.startDate) == true) startDate else destination.startDate
                 endDate =
-                    if (endDate?.after(destination.endDate) == true) destination.endDate else endDate
+                    if (endDate?.after(destination.endDate) == true) endDate else destination.endDate
             }
-            viewModel.updateTrip(tripId, Timestamp(startDate!!), Timestamp(endDate!!), totalCosts)
+            if(!nameUpdated.value) {
+                viewModel.updateTrip(
+                    tripId,
+                    tripName,
+                    Timestamp(startDate!!),
+                    Timestamp(endDate!!),
+                    totalCosts,
+                    tripPhoto
+                )
+            }
         }
     }
 }

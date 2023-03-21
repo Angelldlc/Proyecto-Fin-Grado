@@ -8,15 +8,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
+import kotlinx.coroutines.Job
 import kotlin.reflect.KFunction1
+import kotlin.reflect.KFunction2
 
 @Composable
 fun TripListFloatingActionButton(
     addTrip: (name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp) -> Unit,
     navigateToTripPlanningScreen: (newTrip: TripPlanning) -> Unit,
+    getTrip: KFunction2<String, (TripPlanning?) -> Unit, Job>,
     getLastTripInsertedId: KFunction1<(String) -> Unit, Unit>,
 ){
     var lastTripInsertedId by remember { mutableStateOf("") }
+    var lastTripInserted by remember { mutableStateOf(TripPlanning("")) }
     FloatingActionButton(onClick = {
         addTrip("New Trip", Timestamp.now(), Timestamp.now(), 0, "", Timestamp.now())
         getLastTripInsertedId { lastTripInsertedId = it }
@@ -24,10 +28,18 @@ fun TripListFloatingActionButton(
         }) {
         Icon(imageVector = Icons.Filled.Add, tint = Color.White , contentDescription = "Add Trip Planning")
     }
-    //Nose
+
     LaunchedEffect(lastTripInsertedId){
         if (lastTripInsertedId.isNotEmpty()) {
-            navigateToTripPlanningScreen(TripPlanning(lastTripInsertedId))
+            getTrip(lastTripInsertedId) {
+                lastTripInserted = it!!
+            }
+        }
+    }
+
+    LaunchedEffect(lastTripInserted){
+        if (!lastTripInserted.id.isNullOrEmpty()){
+            navigateToTripPlanningScreen(lastTripInserted)
         }
     }
 }

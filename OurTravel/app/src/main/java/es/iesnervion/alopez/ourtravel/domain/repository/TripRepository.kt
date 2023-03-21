@@ -22,11 +22,13 @@ typealias LastTripInsertedId =  String
 interface TripRepository {
     fun getTripsFromFirestore(): Flow<TripPlanningResponse>
 
+    suspend fun getTripFromFirestore(id: String): TripPlanning?
+
     suspend fun getLastTripInsertedId(): /*Flow<LastTripInsertedId>*/ String?
 
     suspend fun addTripToFirestore(name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String, creationDate: Timestamp): AddTripPlanningResponse
 
-    suspend fun updateTripFromFirestore(id: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long): UpdateTripPlanningResponse
+    suspend fun updateTripFromFirestore(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String?): UpdateTripPlanningResponse
 
     suspend fun deleteTripFromFirestore(id: String): DeleteTripPlanningResponse
 }

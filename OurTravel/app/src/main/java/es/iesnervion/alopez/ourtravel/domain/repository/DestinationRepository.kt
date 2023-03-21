@@ -20,7 +20,7 @@ typealias DeleteDestinationResponse = Response<Boolean>
 interface DestinationRepository {
     fun getDestinationsFromFirestore(tripId: String): Flow<DestinationsResponse>
 
-    suspend fun getLastDestinationInsertedId(): String?
+    suspend fun getLastDestinationInsertedId(tripId: String): String?
     suspend fun addDestinationToFirestore(tripId: String,
                                           city: City,
                                           description: String,
@@ -31,7 +31,8 @@ interface DestinationRepository {
                                           startDate: Date,
                                           endDate: Date,
                                           travelStay: String,
-                                          tourismAttractions: List<String>): AddDestinationResponse
+                                          tourismAttractions: List<String>,
+                                          creationDate: Date): AddDestinationResponse
 
     suspend fun updateDestinationFromFirestore(tripId: String,
                                                 id: String,

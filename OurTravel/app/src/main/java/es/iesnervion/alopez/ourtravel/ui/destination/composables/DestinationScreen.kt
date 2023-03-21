@@ -1,71 +1,86 @@
 package es.iesnervion.alopez.ourtravel.ui.destination.composables
 
+import android.app.DatePickerDialog
 import android.os.Build
+import android.widget.DatePicker
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
-import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.ui.theme.Navy
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
-import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
-import es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables.DeleteAlertDialog
-import kotlinx.coroutines.delay
-import okhttp3.internal.notify
-import okhttp3.internal.wait
-import java.time.Instant
+import kotlinx.coroutines.Job
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.reflect.KFunction2
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DestinationScreen(
     parentViewModel: TripListViewModel = hiltViewModel(),
     destination: Destination?, tripId: String,
-    navigateToTripPlanningScreen: () -> Unit,
+    navigateToTripPlanningScreen: (TripPlanning) -> Unit,
     viewModel: DestinationViewModel = hiltViewModel(),
 ) {
-    BackHandler(onBack = navigateToTripPlanningScreen)
+    BackHandler(onBack = {
+        parentViewModel.getTrip(tripId){ it?.let { it1 -> navigateToTripPlanningScreen(it1) } }
+    })
     val openDialog = remember { mutableStateOf(false) }
     val edit = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val path = rememberAsyncImagePainter(model = destination?.cityPhoto ?: "")
     val dest = remember { mutableStateOf(destination) }
 
+    val accomodationCostState = remember { mutableStateOf(destination?.accomodationCosts ?: 0) }
+    val transportationCostState = remember { mutableStateOf(destination?.transportationCosts ?: 0) }
+    val foodCostState = remember { mutableStateOf(destination?.foodCosts ?: 0) }
+    val tourismCostState = remember { mutableStateOf(destination?.tourismCosts ?: 0) }
+
+    val tourismAttractionsState = remember { mutableStateOf(destination?.tourismAttractions ?: listOf()) }
+
+    //TODO Cosa
+    val onAddAtracction = { updatedList: List<String?>? ->
+//        dest.value = dest.value?.copy(tourismAttractions = updatedList)
+        tourismAttractionsState.value = updatedList ?: listOf()
+    }
+
     Scaffold(
         topBar = {
             destination?.cityName?.let {
                 DestinationTopBar(
                     it,
-                    navigateToTripPlanningScreen,
-                    openDialog
-                )
+                    tripId,
+                    getTrip = parentViewModel::getTrip,
+                    navigateToTripPlanningScreen = navigateToTripPlanningScreen
+                ) { viewModel.openDialog() }
             }
         },
         floatingActionButton = {
@@ -74,7 +89,18 @@ fun DestinationScreen(
                     Icons.Filled.Save
                 } else {
                     Icons.Filled.Edit
-                }, edit, tripId, dest.value
+                }, edit,
+                tripId,
+                dest.value,
+                updateDestinationFromFirestore = { viewModel::updateDestinationFromFirestore },
+                accomodationCostState = accomodationCostState,
+                transportationCostState = transportationCostState,
+                foodCostState = foodCostState,
+                tourismCostState = tourismCostState,
+                tourismAttractionsState = tourismAttractionsState,
+                /*,
+                updateTrip = parentViewModel::updateTrip,
+                getTrip = parentViewModel::getTrip*/
             )
         }
     ) { padding ->
@@ -86,12 +112,14 @@ fun DestinationScreen(
                 viewModel.openDialog,
                 closeDialog = { viewModel.closeDialog() },
                 deleteDestination = { tripId, id ->  viewModel.deleteDestination(tripId, id) },
+                getTrip = parentViewModel::getTrip,
                 navigateToTripPlanningScreen)
         }
         Column(
             Modifier
                 .verticalScroll(state = scrollState)
                 .padding(padding)
+                .fillMaxWidth()
         ) {
             val height = 220.dp
             Image(
@@ -113,26 +141,56 @@ fun DestinationScreen(
             )
 
             CustomizedText(text = "Estimated Costs:")
-            DestinationPieChart(
+            DestinationPieChart(/*
                 destination?.accomodationCosts ?: 0,
                 destination?.transportationCosts ?: 0,
                 destination?.foodCosts ?: 0,
-                destination?.tourismCosts ?: 0
+                destination?.tourismCosts ?: 0*/
+                accomodationCostState.value,
+                transportationCostState.value,
+                foodCostState.value,
+                tourismCostState.value
             )
             Spacer(modifier = Modifier.height(30.dp))
             CostsFields(
-                destination?.accomodationCosts ?: 0,
+                /*destination?.accomodationCosts ?: 0,
                 destination?.transportationCosts ?: 0,
                 destination?.foodCosts ?: 0,
                 destination?.tourismCosts ?: 0,
-                edit.value, dest
+                edit.value, dest*/
+
+                accomodationCostState.value,
+                transportationCostState.value,
+                foodCostState.value,
+                tourismCostState.value,
+                edit.value,
+                dest,
+                onAccomodationCostChange = { accomodationCostState.value = it },
+                onTransportationCostChange = { transportationCostState.value = it },
+                onFoodCostChange = { foodCostState.value = it },
+                onTourismCostChange = { tourismCostState.value = it }
             )
             CustomizedText(text = "Travel Stay:")
             TravelStay(edit = edit.value, destination?.travelStay, destination?.startDate, destination?.endDate, dest)
             CustomizedText(text = "Description:")
             Description(edit = edit.value, destination?.description, dest)
-            CustomizedText(text = "Interesting Places:")
-            InterestingPlaces(edit = edit.value, destination?.tourismAttractions, dest)
+//            Row() {
+                CustomizedText(text = "Interesting Places:")
+                /*if (edit.value) {
+                    Button(
+                        onClick = {
+                            // Añadir un nuevo elemento a la lista
+                            val updatedList = tourismAttractions.toMutableList().apply {
+                                add(null)
+                            }
+                            dest.value = dest.value?.copy(tourismAttractions = updatedList)
+                        }
+                    ) {
+                        Text(text = "Añadir")
+                    }
+                }*/
+//            }
+            InterestingPlaces(edit = edit.value, tourismAttractionsState/*destination?.tourismAttractions*/, dest, onAddAttraction = onAddAtracction)
 
 
         }
@@ -158,18 +216,19 @@ fun DestinationScreen(
 @Composable
 fun TravelStay(edit: Boolean, travelStay: String?, startDate: Date?, endDate: Date?, dest: MutableState<Destination?>) {
 
-    Row() {
+    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
         val textState = remember() { mutableStateOf(TextFieldValue(travelStay ?: "")) }
+        val textStateText = remember() { mutableStateOf(textState.value.text) }
 
         TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = textState.value,
+            modifier = Modifier.width(300.dp) /*Modifier.fillMaxWidth()*/,
+            value = textStateText.value,
             onValueChange = { value ->
-                textState.value = value
-                dest.value?.travelStay = value.toString()
+                textStateText.value = value
+                dest.value?.travelStay = value
             },
             enabled = edit,
-            placeholder = { Text("Estancia", color = Color.Gray) },
+            label = { Text("Estancia", color = Color.Gray) },
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Navy,
                 cursorColor = Navy,
@@ -181,13 +240,16 @@ fun TravelStay(edit: Boolean, travelStay: String?, startDate: Date?, endDate: Da
                 placeholderColor = Color.Gray
             )
         )
-        IconButton(onClick = { /*TODO*/ }, enabled = edit) {
-            Icon(Icons.Filled.LocationOn, contentDescription = "", tint = Navy)
+        Spacer(modifier = Modifier.size(30.dp))
+        IconButton(onClick = { /*TODO*/ }, enabled = edit, modifier = Modifier.size(24.dp)) {
+            Icon(Icons.Filled.LocationOn, contentDescription = "", tint = if(!edit) Color.LightGray else Navy)
         }
     }
-    Row() {
-        val textState = remember() { mutableStateOf(TextFieldValue(startDate.toString())) }
-        TextField(
+    Row {
+//        val textState = remember() { mutableStateOf(TextFieldValue(startDate.toString())) }
+        DatePickStart(edit, dest)
+
+        /*TextField(
             modifier = Modifier.fillMaxWidth(),
             value = textState.value,
             onValueChange = { value ->
@@ -207,14 +269,16 @@ fun TravelStay(edit: Boolean, travelStay: String?, startDate: Date?, endDate: Da
                 placeholderColor = Color.Gray
             )
         )
-        IconButton(onClick = { /*TODO*/ }, enabled = edit) {
+        IconButton(onClick = { *//*TODO*//* }, enabled = edit) {
             Icon(Icons.Filled.CalendarMonth, contentDescription = "", tint = Navy)
-        }
+        }*/
     }
     Row() {
-        val textState = remember() { mutableStateOf(TextFieldValue(endDate.toString())) }
+//        val textState = remember() { mutableStateOf(TextFieldValue(endDate.toString())) }
 
-        TextField(
+        DatePickEnd(edit, dest)
+
+        /*TextField(
             modifier = Modifier.fillMaxWidth(),
             value = textState.value,
             onValueChange = { value ->
@@ -234,21 +298,22 @@ fun TravelStay(edit: Boolean, travelStay: String?, startDate: Date?, endDate: Da
                 placeholderColor = Color.Gray
             )
         )
-        IconButton(onClick = { /*TODO*/ }, enabled = edit) {
+        IconButton(onClick = { *//*TODO*//* }, enabled = edit) {
             Icon(Icons.Filled.CalendarMonth, contentDescription = "", tint = Navy)
-        }
+        }*/
     }
 }
 
 @Composable
 fun Description(edit: Boolean, description: String?, dest: MutableState<Destination?>) {
     val textState = remember() { mutableStateOf(TextFieldValue(description ?: "")) }
+    val textStateText = remember() { mutableStateOf(textState.value.text) }
 
     TextField(
-        value = textState.value,
+        value = textStateText.value,
         onValueChange = { value ->
-            textState.value = value
-            dest.value?.description = value.toString()
+            textStateText.value = value
+            dest.value?.description = value
         },
         enabled = edit,
         modifier = Modifier
@@ -269,8 +334,104 @@ fun Description(edit: Boolean, description: String?, dest: MutableState<Destinat
 }
 
 @Composable
-fun InterestingPlaces(edit: Boolean, tourismAttractions: List<String?>?, dest: MutableState<Destination?>) {
-    val textState = remember() { mutableStateOf(TextFieldValue(tourismAttractions.toString())) }
+fun InterestingPlaces(edit: Boolean, tourismAttractions: MutableState<List<String?>> /*tourismAttractions: List<String?>?*/, dest: MutableState<Destination?>, onAddAttraction: (List<String?>?) -> Unit) {
+
+    Column {
+        tourismAttractions.value.forEachIndexed { index, attraction ->
+            Card(elevation = 8.dp,
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Row (modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically /*modifier = Modifier.padding(4.dp)*/){
+//                    Column(modifier = Modifier.padding(4.dp)) {
+                        TextField(
+                            modifier = Modifier.width(300.dp) /*Modifier.fillMaxWidth()*/,
+                            enabled = edit,
+                            value = attraction ?: "",
+                            onValueChange = { newValue ->
+                                // Actualizar el valor del elemento en la lista
+                                val updatedList = tourismAttractions.value.toMutableList()
+                                updatedList[index] = newValue
+                                onAddAttraction(updatedList)
+                            }
+                        )
+//                    }
+                    Spacer(modifier = Modifier.size(20.dp))
+                    if (edit) {
+                        IconButton(onClick = {
+                            // Eliminar el elemento de la lista
+                            val updatedList = tourismAttractions.value.toMutableList()
+                            updatedList.removeAt(index)
+                            onAddAttraction(updatedList)
+                        }, Modifier.size(24.dp)) {
+                            Icon(Icons.Outlined.Close, contentDescription = "", tint = Navy)
+                        }
+                    }
+                }
+            }
+        }
+        if (edit) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = {
+                    // Añadir un nuevo elemento vacío a la lista
+                    /*val updatedList = tourismAttractions?.toMutableList()?.apply {
+                        add(null)
+                    }
+                    onAddAttraction(updatedList)*/
+                    val updatedList = tourismAttractions.value.toMutableList()
+                    updatedList.add("")
+                    // Actualizar la lista de atracciones turísticas
+                    onAddAttraction(updatedList)
+                }
+            ) {
+                Text(text = "Añadir")
+            }
+        }
+    }
+
+    /*tourismAttractions?.forEach { attraction ->
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = attraction ?: "",
+                    onValueChange = { newValue ->
+                        // Actualizar el valor del elemento en la lista
+                        val updatedList = tourismAttractions.toMutableList().apply {
+                            val index = tourismAttractions.indexOf(attraction)
+                            set(index, newValue)
+                        }
+                        dest.value = dest.value?.copy(tourismAttractions = updatedList)
+                    },*//*
+                    label = { Text(text = "Nombre") }*//*
+                )
+                *//*if (edit) {
+                    Button(
+                        modifier = Modifier.align(Alignment.End),
+                        onClick = {
+                            // Añadir un nuevo elemento a la lista
+                            val updatedList = tourismAttractions.toMutableList().apply {
+                                add(null)
+                            }
+                            dest.value = dest.value?.copy(tourismAttractions = updatedList)
+                        }
+                    ) {
+                        Text(text = "Añadir")
+                    }
+                }*//*
+            }
+        }
+    }*/
+    /*val textState = remember() { mutableStateOf(TextFieldValue(tourismAttractions.toString())) }
 
     TextField(
         value = textState.value,
@@ -293,7 +454,7 @@ fun InterestingPlaces(edit: Boolean, tourismAttractions: List<String?>?, dest: M
             disabledIndicatorColor = Color.Transparent,
             placeholderColor = Color.Gray
         )
-    )
+    )*/
 }
 
 @Composable
@@ -308,18 +469,31 @@ fun CustomizedText(text: String) {
 }
 
 @Composable
-fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Long, estimatedFoodCost: Long, estimatedTourismCost: Long, edit: Boolean, dest: MutableState<Destination?>) {
+fun CostsFields(
+    estimatedAccomodationCost: Long,
+    estimatedTransportationCost: Long,
+    estimatedFoodCost: Long,
+    estimatedTourismCost: Long,
+    edit: Boolean,
+    dest: MutableState<Destination?>,
+    onAccomodationCostChange: (Long) -> Unit,
+    onTransportationCostChange: (Long) -> Unit,
+    onFoodCostChange: (Long) -> Unit,
+    onTourismCostChange: (Long) -> Unit
+) {
     Row() {
         val textState = remember() { mutableStateOf(TextFieldValue(estimatedAccomodationCost.toString())) }
 
         TextField(
+            modifier = Modifier.fillMaxWidth(),
             value = textState.value,
             onValueChange = { value ->
                 textState.value = value
-                dest.value?.accomodationCosts = try { value.text.toLong() }catch (e: Exception){ 0 }
+//                dest.value?.accomodationCosts = try { value.text.toLong() }catch (e: Exception){ 0 }
+                try { onAccomodationCostChange(value.text.toLong()) } catch (e: Exception) { onAccomodationCostChange(0) }
             },
             enabled = edit,
-            placeholder = { Text("Gastos de estancia", color = Color.Gray) },
+            label = { Text("Gastos de estancia", color = Color.Gray) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
 
             colors = TextFieldDefaults.textFieldColors(
@@ -339,13 +513,15 @@ fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Lo
         val textState = remember() { mutableStateOf(TextFieldValue(estimatedFoodCost.toString())) }
 
         TextField(
+            modifier = Modifier.fillMaxWidth(),
             value = textState.value,
             onValueChange = { value ->
                 textState.value = value
-                dest.value?.foodCosts = try{ value.text.toLong() }catch (e: Exception){ 0 }
+//                dest.value?.foodCosts = try{ value.text.toLong() }catch (e: Exception){ 0 }
+                try { onFoodCostChange(value.text.toLong()) } catch (e: Exception) { onFoodCostChange(0) }
             },
             enabled = edit,
-            placeholder = { Text("Gastos en comida", color = Color.Gray) },
+            label = { Text("Gastos en comida", color = Color.Gray) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Navy,
@@ -364,13 +540,15 @@ fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Lo
         val textState = remember() { mutableStateOf(TextFieldValue(estimatedTransportationCost.toString())) }
 
         TextField(
+            modifier = Modifier.fillMaxWidth(),
             value = textState.value,
             onValueChange = { value ->
                 textState.value = value
-                dest.value?.transportationCosts = try{ value.text.toLong() } catch (e: Exception) { 0 }
+//                dest.value?.transportationCosts = try{ value.text.toLong() } catch (e: Exception) { 0 }
+                try { onTransportationCostChange(value.text.toLong()) } catch (e: Exception) { onTransportationCostChange(0) }
             },
             enabled = edit,
-            placeholder = { Text("Gastos en transporte", color = Color.Gray) },
+            label = { Text("Gastos en transporte", color = Color.Gray) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Navy,
@@ -389,13 +567,15 @@ fun CostsFields(estimatedAccomodationCost: Long, estimatedTransportationCost: Lo
         val textState = remember() { mutableStateOf(TextFieldValue(estimatedTourismCost.toString())) }
 
         TextField(
+            modifier = Modifier.fillMaxWidth(),
             value = textState.value,
             onValueChange = { value ->
                 textState.value = value
-                dest.value?.tourismCosts = try{ value.text.toLong() } catch (e: Exception) { 0 }
+//                dest.value?.tourismCosts = try{ value.text.toLong() } catch (e: Exception) { 0 }
+                try { onTourismCostChange(value.text.toLong()) } catch (e: Exception) { onTourismCostChange(0) }
             },
             enabled = edit,
-            placeholder = { Text("Gastos en turismo", color = Color.Gray) },
+            label = { Text("Gastos en turismo", color = Color.Gray) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Navy,
@@ -419,8 +599,10 @@ fun DeleteDestinationAlertDialog(
     openDialog: Boolean,
     closeDialog: () -> Unit,
     deleteDestination: (tripId: String, id: String) -> Unit,
-    navigateToTripPlanningScreen: () -> Unit
+    getTrip: KFunction2<String, (TripPlanning?) -> Unit, Job>,
+    navigateToTripPlanningScreen: (TripPlanning) -> Unit
 ) {
+    var trip by remember { mutableStateOf(TripPlanning()) }
     if(openDialog) {
         AlertDialog(
             onDismissRequest = { closeDialog() },
@@ -445,7 +627,13 @@ fun DeleteDestinationAlertDialog(
                         onClick = {
                             deleteDestination(tripId, id)
                             closeDialog()
-                            navigateToTripPlanningScreen()
+                            getTrip(tripId) {
+                                trip = it!!
+                                if (!trip.id.isNullOrEmpty()) {
+                                    navigateToTripPlanningScreen(trip)
+                                }
+                            }
+
                             /*if(viewModel.isDestinationDeletedState.value is Response.Success || viewModel.isDestinationDeletedState.value is Response.Loading){
                                 navigateToTripPlanningScreen()
                             }else{
@@ -458,5 +646,137 @@ fun DeleteDestinationAlertDialog(
                 }
             }
         )
+        /*LaunchedEffect(trip){
+            if (!trip.id.isNullOrEmpty()) {
+                navigateToTripPlanningScreen(trip)
+            }
+        }*/
+    }
+}
+/*
+@Preview*/
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun DatePickStart(edit: Boolean, dest: MutableState<Destination?>) {
+    val mContext = LocalContext.current
+
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+
+    val mCalendar = Calendar.getInstance()
+
+    val dateFormatted = remember { mutableStateOf( SimpleDateFormat("dd/MM/yyyy").format(dest.value?.startDate!!)) }
+
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+
+    mCalendar.time = Date()
+
+    val mDate = remember { mutableStateOf(dateFormatted.value) }
+
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+            dest.value?.startDate = try{
+                SimpleDateFormat("dd/MM/yyyy").parse(mDate.value)
+            } catch (e: Exception) {
+                Date()
+            }
+        }, mYear, mMonth, mDay
+    )
+
+    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+
+        TextField(
+            modifier = Modifier.width(300.dp),
+            value = mDate.value,
+            onValueChange = {},
+
+            enabled = false,
+            label = { Text("Fecha Inicio", color = Color.Gray) },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Navy,
+                disabledTextColor = if(!edit) Color.LightGray else Navy,
+                cursorColor = Navy,
+                leadingIconColor = Navy,
+                trailingIconColor = Navy,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = if(!edit) Color.LightGray else Navy,
+                disabledIndicatorColor = Color.Transparent,
+                placeholderColor = Color.Gray
+            )
+        )
+
+        Spacer(modifier = Modifier.size(30.dp))
+
+        IconButton(onClick = { mDatePickerDialog.show() }, enabled = edit, modifier = Modifier.size(24.dp)) {
+            Icon(Icons.Filled.CalendarMonth, contentDescription = "", tint = if(!edit) Color.LightGray else Navy)
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun DatePickEnd(edit: Boolean, dest: MutableState<Destination?>) {
+    val mContext = LocalContext.current
+
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+
+    val mCalendar = Calendar.getInstance()
+
+    val dateFormatted = remember { mutableStateOf( SimpleDateFormat("dd/MM/yyyy").format(dest.value?.endDate!!)) }
+
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+
+    mCalendar.time = Date()
+
+    val mDate = remember { mutableStateOf(dateFormatted.value) }
+
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+            dest.value?.endDate = try{
+                SimpleDateFormat("dd/MM/yyyy").parse(mDate.value)
+            } catch (e: Exception) {
+                Date()
+            }
+        }, mYear, mMonth, mDay
+    )
+
+    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+
+        TextField(
+            modifier = Modifier.width(300.dp),
+            value = mDate.value,
+            onValueChange = {},
+
+            enabled = false,
+            label = { Text("Fecha Fin", color = Color.Gray) },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Navy,
+                disabledTextColor = if(!edit) Color.LightGray else Navy,
+                cursorColor = Navy,
+                leadingIconColor = Navy,
+                trailingIconColor = Navy,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = if(!edit) Color.LightGray else Navy,
+                disabledIndicatorColor = Color.Transparent,
+                placeholderColor = Color.Gray
+            )
+        )
+
+        Spacer(modifier = Modifier.size(30.dp))
+
+        IconButton(onClick = { mDatePickerDialog.show() }, enabled = edit, modifier = Modifier.size(24.dp)) {
+            Icon(Icons.Filled.CalendarMonth, contentDescription = "", tint = if(!edit) Color.LightGray else Navy)
+        }
     }
 }

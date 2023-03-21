@@ -55,7 +55,7 @@ fun DestinationPieChart(accomodationCost: Long?, transportationCost: Long?, food
 fun Legend(accomodationCost: Long?, transportationCost: Long?, foodCost: Long?, tourismCost: Long?, symbol: String?) {
     Row(Modifier.fillMaxWidth(), Arrangement.Center) {
         Column(Modifier.padding(16.dp)) {
-            LegendItem("Accomodation: $accomodationCost $symbol", PaleCerulean)
+            LegendItem("Accommodation: $accomodationCost $symbol", PaleCerulean)
             LegendItem("Transportation: $transportationCost $symbol", PastelPink)
         }
         Column(Modifier.padding(16.dp)) {

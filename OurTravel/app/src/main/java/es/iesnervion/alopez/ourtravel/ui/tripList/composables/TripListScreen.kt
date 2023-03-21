@@ -3,8 +3,10 @@ package es.iesnervion.alopez.ourtravel.ui.tripList.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.login.LoginViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripList.BottomNavState
@@ -34,11 +36,19 @@ fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
         navigateToLoginScreen
     ) { mutableStateOf(TextFieldValue("")) }
     val addTripResponse = remember() { mutableStateOf(viewModelTripList.addTripResponse) }
-    val bottomNavState = remember(
+    /*val bottomNavState = rememberSaveable(
+        navigateToTripPlanningScreen,
+        navigateToNewTripPlanningScreen,
+        navigateToLoginScreen
+    ) { mutableStateOf(BottomNavState.PENDING) }*/
+    val navController = rememberNavController()
+    var bottomNavState = remember(
         navigateToTripPlanningScreen,
         navigateToNewTripPlanningScreen,
         navigateToLoginScreen
     ) { mutableStateOf(BottomNavState.PENDING) }
+
+
     val state = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -49,7 +59,8 @@ fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
         floatingActionButton = { TripListFloatingActionButton(
             addTrip = { name, startDate, endDate, totalCost, photo, creationDate -> viewModelTripList.addTrip(name, startDate, endDate, totalCost, photo, creationDate) },
             navigateToTripPlanningScreen = { newTrip -> navigateToTripPlanningScreen(newTrip) },
-            getLastTripInsertedId = viewModelTripList::getLastTripInsertedId
+            getLastTripInsertedId = viewModelTripList::getLastTripInsertedId,
+            getTrip = viewModelTripList::getTrip
              ) }
     ) { padding ->
         Column() {

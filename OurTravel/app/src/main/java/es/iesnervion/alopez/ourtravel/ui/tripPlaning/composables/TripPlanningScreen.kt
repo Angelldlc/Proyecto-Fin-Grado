@@ -1,23 +1,27 @@
 package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.R
-import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.ui.login.composables.AddDestination
@@ -34,14 +38,17 @@ import kotlin.math.min
 @Composable
 fun TripPlanningScreen(
     parentViewModel: TripListViewModel = hiltViewModel(),
-    tripId: String?, trip: TripPlanning, city: City?,
+    tripId: String?, trip: TripPlanning,/* city: City?,*/
     viewModel: DestinationViewModel = hiltViewModel(),
     /*getDestinations: (String) -> Unit,*/ //TODO Mirar getDestinations() y viewmodel.destinationState.value
     navigateToTripListScreen: () -> Unit,
     navigateToSearchCityScreen: () -> Unit,
     navigateToDestinationScreen: (Destination, String) -> Unit
 ) {
-    var idTrip = trip.id
+    val tripPlanning by remember() { mutableStateOf(trip) }
+
+    val nameUpdated: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val idTrip = /*if (trip == null) tripId else trip.id*/ trip.id ////////////////////////
     BackHandler(onBack = navigateToTripListScreen)
     /*if(idTrip.isNullOrEmpty() || idTrip.isNullOrBlank()) {
         parentViewModel.addTrip(
@@ -72,14 +79,16 @@ fun TripPlanningScreen(
     }
     val destinationsResponse = viewModel.destinationsResponse //TODO cambiar
 
+    var imageUri = remember { mutableStateOf<Uri?>(null) }
     val scrollState = rememberScrollState()
     val path = rememberAsyncImagePainter(
-        model = (if (trip.photo.isNullOrEmpty() || trip.photo!!.isBlank()) {
-            NotImage()
-        } else trip.photo)
+        model = (/*if (trip.photo.isNullOrEmpty() || trip.photo!!.isBlank()) { ///////////////
+            NotImage(onImageSelected = { parentViewModel.updateTrip(trip.id!!, trip.name!!, trip.startDate!!, trip.endDate!!, trip.totalCost!!, it.toString())})
+        } else */trip.photo)
     )
     Scaffold(
-        topBar = { TripPlanningTopBar(trip.name ?: "", navigateToTripListScreen) { parentViewModel.openDialog() } },
+        topBar = { TripPlanningTopBar(trip/*.name ?: ""*/, navigateToTripListScreen,
+            { parentViewModel.openDialog() }, parentViewModel::updateTrip, nameUpdated)  }, /////////
         floatingActionButton = { TripPlanningFloatingActionButton(navigateToSearchCityScreen) }
 
     ) { padding ->
@@ -98,22 +107,36 @@ fun TripPlanningScreen(
                 .fillMaxSize())
         {
             val height = 220.dp
-            Image(path,
-                contentDescription = "Banner Image",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(height)
-                    .graphicsLayer {
-                        alpha = min(
-                            1f,
-                            max(
-                                0.0f,
-                                1 - (scrollState.value / ((height.value * 2) + (height.value / 1.5f)))
+            /*if (trip.photo.isNullOrEmpty() || trip.photo!!.isBlank()) { ///////////////
+                NotImage(onImageSelected = { parentViewModel.updateTrip(trip.id!!, trip.name!!, trip.startDate!!, trip.endDate!!, trip.totalCost!!, it.toString())}, trip, path)
+            } else {
+                Image(path,
+                    contentDescription = "Banner Image",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height)
+                        .graphicsLayer {
+                            alpha = min(
+                                1f,
+                                max(
+                                    0.0f,
+                                    1 - (scrollState.value / ((height.value * 2) + (height.value / 1.5f)))
+                                )
                             )
-                        )
-                    }
-            )
+                        }
+                )
+            }*/
+
+
+            NotImage(onImageSelected = {
+                imageUri.value = it
+                trip.photo = it.toString()
+                parentViewModel.updateTrip(trip.id!!, trip.name!!, trip.startDate!!, trip.endDate!!, trip.totalCost!!, it.toString())
+                                       }, /*trip, path,*/ imageUri ,scrollState)
+
+
+
 
             Spacer(modifier = Modifier.height(30.dp))
             Text(
@@ -124,7 +147,7 @@ fun TripPlanningScreen(
             )
 
             Destinations {
-                TripPlanningPieChart(destinationsResponse = it, tripId = idTrip.toString(), viewModel = parentViewModel)
+                TripPlanningPieChart(destinationsResponse = it, tripId = idTrip.toString(), tripName = trip.name.toString(), tripPhoto = trip.photo, viewModel = parentViewModel, nameUpdated)
             }
             /*TripPlanningPieChart(destinations, idTrip.toString(), parentViewModel)*/
 
@@ -266,19 +289,55 @@ fun TripPlanningScreen(
 }
 
 @Composable
-fun NotImage() {
+fun NotImage(
+    onImageSelected: (Uri) -> Unit,
+    /*trip: TripPlanning,
+    path: AsyncImagePainter,*/
+    imageUri: MutableState<Uri?>,
+    scrollState: ScrollState
+) {
+    val context = LocalContext.current
+    val height = 220.dp
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            imageUri.value = uri
+            onImageSelected(uri)
+        }
+    }
     BoxWithConstraints(
         modifier = Modifier
+            .height(height)
             .fillMaxSize()
-            .background(Color.Gray)
-            .clickable { }
+            .background(if (imageUri.value == null) Color.LightGray else Color.Transparent)
+            .clickable(onClick = { launcher.launch("image/*") })
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_baseline_image_24),
-            contentDescription = "",
-            modifier = Modifier.align(Alignment.TopCenter)
+        if (imageUri.value == null) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_image_24),
+                contentDescription = "",
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(75.dp)
 
-        )
+            )
+        } else {
+            Image(painter = rememberAsyncImagePainter(imageUri),
+                contentDescription = "Banner Image",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(height)
+                    .graphicsLayer {
+                        alpha = min(
+                            1f,
+                            max(
+                                0.0f,
+                                1 - (scrollState.value / ((height.value * 2) + (height.value / 1.5f)))
+                            )
+                        )
+                    }
+            )
+        }
     }
 }
 

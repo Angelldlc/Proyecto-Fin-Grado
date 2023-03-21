@@ -73,17 +73,17 @@ fun NavGraph (
                 },
                 navigateToTripPlanningScreen = {
                     val trip = Gson().toJson(it)
-                    navController.navigate(TripPlanningScreen.route.plus("/${it.id}").plus("?trip=${trip}&city="))
+                    navController.navigate(TripPlanningScreen.route.plus("/${it.id}").plus("?trip=${trip}"/*&city=*/))
                 }
             )
         }
         composable(
-            route = TripPlanningScreen.route.plus("/{tripId}?trip={trip}&city={city}"),
+            route = TripPlanningScreen.route.plus("/{tripId}?trip={trip}"/*&city={city}*/),
             arguments = listOf(
 
                 navArgument("tripId"){ type = NavType.StringType },
-                navArgument("trip"){ type = NavType.StringType },
-                navArgument("city"){ type = NavType.StringType },
+                navArgument("trip"){ type = NavType.StringType },/*
+                navArgument("city"){ type = NavType.StringType },*/
             ))
         { backStackEntry ->
             val parentEntry = remember(backStackEntry){
@@ -94,18 +94,19 @@ fun NavGraph (
             val trip = backStackEntry.arguments?.getString("trip").let { json ->
                 Gson().fromJson(json, TripPlanning::class.java)
             }
-            val id = if(trip.id.isNullOrEmpty()) "" else trip.id
-            val city = backStackEntry.arguments?.getString("city").let { json ->
+//            val id = if(trip.id.isNullOrEmpty()) "" else trip.id
+            val id = if (trip == null) backStackEntry.arguments?.getString("tripId") else if(trip.id.isNullOrEmpty()) "" else trip.id
+            /*val city = backStackEntry.arguments?.getString("city").let { json ->
                 Gson().fromJson(json, City::class.java)
-            }
+            }*/
             requireNotNull(id)
 
-            TripPlanningScreen(parentViewModel, id, trip, (city ?: City("","")),
+            TripPlanningScreen(parentViewModel, id, trip/*, (city ?: City("",""))*/,
                 navigateToTripListScreen = {
                     navController.currentBackStackEntry
                     navController.clearBackStack(SearchCityScreen.route)
                     navController.clearBackStack(DestinationScreen.route)
-                    navController.navigateBack(TripListScreen.route, TripPlanningScreen.route.plus("/{tripId}?trip={trip}&city={city}"))
+                    navController.navigateBack(TripListScreen.route, TripPlanningScreen.route.plus("/{tripId}?trip={trip}"/*&city={city}*/))
                 },
                 navigateToDestinationScreen = { dest, tripId ->
                     val destination = Gson().toJson(dest)
@@ -138,8 +139,9 @@ fun NavGraph (
 
             DestinationScreen(parentViewModel, destination = destination, tripId,
                 navigateToTripPlanningScreen = {
+                    val trip = Gson().toJson(it)
                     navController.clearBackStack(SearchCityScreen.route.plus("/?tripId=${tripId}"))
-                    navController.navigateBack(TripListScreen.route, DestinationScreen.route.plus("/{${destination.id}}?destination=${destination}&tripId=${tripId}"))
+                    navController.navigateBack(TripPlanningScreen.route.plus("/${tripId}?trip=${trip}"/*&city=*/), DestinationScreen.route.plus("/{${destination.id}}?destination=${destination}&tripId=${tripId}"))
 
                 }
             )
@@ -160,7 +162,7 @@ fun NavGraph (
                     val city = Gson().toJson(it)
                     val trip = TripPlanning()
                     navController.popBackStack()
-                    navController.navigate(TripPlanningScreen.route.plus("/{$tripId}?trip={$trip}&city=${city}"))
+                    navController.navigate(TripPlanningScreen.route.plus("/{$tripId}?trip={$trip}"/*&city=${city}*/))
                 },
                 navigateToDestinationScreenFromSearchCity = { dest, tripId ->
                     val destination = Gson().toJson(dest)

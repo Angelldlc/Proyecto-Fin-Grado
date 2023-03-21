@@ -19,6 +19,7 @@ import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.ui.searchCity.SearchCityViewModel
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.reflect.KFunction2
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -38,9 +39,11 @@ fun SearchCityList(
                      startDate: Date,
                      endDate: Date,
                      travelStay: String,
-                     tourismAttractions: List<String>) -> Unit,
+                     tourismAttractions: List<String>,
+                     creationDate: Date) -> Unit,
     navigateToTripPlanningScreenFromSearchCity: (City, String?) -> Unit,
-    navigateToDestinationScreenFromSearchCity: (Destination, String?) -> Unit
+    navigateToDestinationScreenFromSearchCity: (Destination, String?) -> Unit,
+    getLastDestinationInsertedId: KFunction2<(String) -> Unit, String, Unit>
 ) {
     val cities by viewModel.citiesState.observeAsState(Response.Loading)
     viewModel.getCities()
@@ -69,7 +72,7 @@ fun SearchCityList(
                 filteredCities?.size?.let {
                     items(it) { city ->
                         BoxWithConstraints {
-                            SearchCityCard(tripId, filteredCities[city], addDestination, navigateToTripPlanningScreenFromSearchCity, navigateToDestinationScreenFromSearchCity)
+                            SearchCityCard(tripId, filteredCities[city], addDestination, navigateToTripPlanningScreenFromSearchCity, getLastDestinationInsertedId, navigateToDestinationScreenFromSearchCity)
                         }
                     }
                 }

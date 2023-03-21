@@ -13,7 +13,6 @@ import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.ui.searchCity.SearchCityViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
-import java.util.*
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -29,7 +28,7 @@ fun SearchCityScreen(parentViewModel: TripListViewModel = hiltViewModel(),
     Scaffold(
         topBar = { SearchCitySearchView(textState) },
     ) { padding ->
-        SearchCityList(tripId, textState, viewModel, padding, addDestination = { city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions -> destinationViewModel.addDestination(tripId!!, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions) }, navigateToTripPlanningScreenFromSearchCity, navigateToDestinationScreenFromSearchCity)
+        SearchCityList(tripId, textState, viewModel, padding, addDestination = { city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions, creationDate -> destinationViewModel.addDestination(tripId!!, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions, creationDate) }, navigateToTripPlanningScreenFromSearchCity, navigateToDestinationScreenFromSearchCity, getLastDestinationInsertedId = destinationViewModel::getLastDestinationInsertedId)
     }
 
 }

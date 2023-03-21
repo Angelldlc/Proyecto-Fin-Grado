@@ -10,6 +10,7 @@ import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Success
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Loading
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
 import es.iesnervion.alopez.ourtravel.domain.repository.AddTripPlanningResponse
 import es.iesnervion.alopez.ourtravel.domain.repository.UpdateTripPlanningResponse
 import es.iesnervion.alopez.ourtravel.domain.repository.DeleteTripPlanningResponse
@@ -78,6 +79,12 @@ class TripListViewModel @Inject constructor(
             }
         }
 
+
+    fun getTrip(id: String, callback: (TripPlanning?) -> Unit) =
+        viewModelScope.launch {
+            val trip = useCases.getTrip(id)
+            callback(trip)
+        }
    /* fun getLastTripInsertedId() {
         viewModelScope.launch {
             _lastTripInsertedId.value = useCases.getLastTripInsertedId().toString()
@@ -129,10 +136,10 @@ class TripListViewModel @Inject constructor(
         addTripResponse = useCases.addTrip(name, startDate, endDate, totalCost, photo, creationDate)
     }
 
-    fun updateTrip(id: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long) =
+    fun updateTrip(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String?) =
         viewModelScope.launch {
             updateTripResponse = Loading
-            updateTripResponse = useCases.updateTrip(id, startDate, endDate, totalCost)
+            updateTripResponse = useCases.updateTrip(id, name, startDate, endDate, totalCost, photo)
         }
 
 
@@ -148,5 +155,12 @@ class TripListViewModel @Inject constructor(
     fun closeDialog() {
         openDialog = false
     }
+
+    /*fun updateTripName(tripId: String, newName: String, tripsResponse: TripPlanningResponse) {
+        updateTripResponse = Loading
+        viewModelScope.launch {
+            updateTripResponse = useCases.updateTrip(tripId, newName, tripsResponse.data[tripId]!!.startDate, tripsResponse.data[tripId]!!.endDate, tripsResponse.data[tripId]!!.totalCost)
+        }
+    }*/
 
 }

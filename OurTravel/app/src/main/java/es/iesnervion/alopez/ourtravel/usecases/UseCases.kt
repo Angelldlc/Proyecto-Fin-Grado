@@ -6,6 +6,7 @@ import es.iesnervion.alopez.ourtravel.usecases.triplist.*
 
 data class UseCases(
     val getTrips: GetTrips,
+    val getTrip: GetTrip,
     val getLastTripInsertedId: GetLastTripInsertedId,
     val addTrip: AddTrip,
     val updateTrip: UpdateTrip,

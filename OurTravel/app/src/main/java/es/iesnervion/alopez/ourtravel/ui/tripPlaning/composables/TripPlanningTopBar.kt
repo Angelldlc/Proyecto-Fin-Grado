@@ -6,18 +6,33 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.firebase.Timestamp
+import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
+import kotlinx.coroutines.Job
+import kotlin.reflect.KFunction6
 
 @Composable
 fun TripPlanningTopBar(
-    name: String,
+    trip: TripPlanning,
     navigateToTripListScreen: () -> Unit,
-    openDialog: () -> Unit
+    openDialog: () -> Unit,
+    updateTripPlanning: KFunction6<String, String, Timestamp, Timestamp, Long, String?, Job>,
+    nameUpdated: MutableState<Boolean>,
+
     ){
+    var nameState by remember { mutableStateOf(trip.name) }
     TopAppBar(
-        title = { Text(text = name) },
+        title = { /*Text(text = name)*/
+                TextField(
+                    value = nameState!!,
+                    onValueChange = { nameState = it },
+                    singleLine = true,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                },
         navigationIcon = {
             IconButton(onClick = { navigateToTripListScreen() })
             {
@@ -31,6 +46,13 @@ fun TripPlanningTopBar(
         actions = { TripPlanningTopBarActions(openDialog) },
 
         )
+
+    LaunchedEffect(nameState){
+        if(nameState != trip.name){
+            updateTripPlanning(trip.id.toString(), nameState.toString(), trip.startDate!!, trip.endDate!!, trip.totalCost ?: 0, trip.photo)
+            nameUpdated.value = true
+        }
+    }
 }
 
 @Composable

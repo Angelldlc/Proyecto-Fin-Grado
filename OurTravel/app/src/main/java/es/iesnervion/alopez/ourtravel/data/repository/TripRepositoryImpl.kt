@@ -6,18 +6,13 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
-import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Error
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Success
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Failure
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
-import es.iesnervion.alopez.ourtravel.domain.repository.AddTripPlanningResponse
-import es.iesnervion.alopez.ourtravel.domain.repository.DeleteTripPlanningResponse
-import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
-import es.iesnervion.alopez.ourtravel.domain.repository.UpdateTripPlanningResponse
+import es.iesnervion.alopez.ourtravel.domain.repository.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Named
@@ -57,22 +52,49 @@ class TripRepositoryImpl @Inject constructor(
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
         val snapshotListener = userRef?.collection(tripPlanningRef.path)
             ?.orderBy("Name", Query.Direction.ASCENDING)?.addSnapshotListener { snapshot, e ->
-            val response = if (snapshot != null) {
-                val trips = /*try {*/
-                    snapshot.toObjects(TripPlanning::class.java)
-                /*} catch (e: Exception) {
-                    emptyList()
-                }*/
-                Success(trips,"")
-            } else {
-                Failure(e)
+                val response = if (snapshot != null) {
+                    val trips = /*try {*/
+                        snapshot.toObjects(TripPlanning::class.java)
+                    /*} catch (e: Exception) {
+                        emptyList()
+                    }*/
+                    Success(trips, "")
+                } else {
+                    Failure(e)
+                }
+                trySend(response)
             }
-            trySend(response)
-        }
         awaitClose {
             snapshotListener?.remove()
         }
     }
+
+
+    ///////////////////////////////////
+    override suspend fun getTripFromFirestore(id: String): TripPlanning? {
+
+        val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
+        val tripsCollection = userRef?.collection(tripPlanningRef.path)?.document(id)
+
+        val trip = try {
+            tripsCollection?.get()?.await()?.toObject(TripPlanning::class.java)
+        } catch (e: Exception) {
+            null
+        }
+
+        return trip
+
+    }/*val documentSnapshot =
+            userRef?.collection(tripPlanningRef.path)?.document(id)?.get()?.await()
+        if (documentSnapshot != null) {
+            if (documentSnapshot.exists()) {
+                val trip = documentSnapshot.toObject(TripPlanning::class.java)
+                Success(trip, "")
+            } else {
+                Error("Trip not found")
+            }
+        }*/
+
 
     /**
      * Método público implementado getLastTripInserted
@@ -90,27 +112,28 @@ class TripRepositoryImpl @Inject constructor(
      * Comentario: Este método acaba ejecutandose antes de tiempo por un problema con el ámbito de
      * las corrutinas, no he podido solucionarlo por falta de tiempo.
      */
-    override suspend fun getLastTripInsertedId(): String?  {
+    override suspend fun getLastTripInsertedId(): String? {
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
         val tripsCollection = userRef
             ?.collection(tripPlanningRef.path)
             ?.orderBy("CreationDate", Query.Direction.DESCENDING)
             ?.limit(1)
 
-        /*return */val lastTrip = try{
-             tripsCollection?.get()
+        /*return */
+        val lastTrip = try {
+            tripsCollection?.get()
                 ?.await()
                 ?.documents
                 ?.firstOrNull()
                 ?.id
-        } catch (e:Exception) {
+        } catch (e: Exception) {
             null
         }
         return lastTrip
 
-            /*?.addSnapshotListener { snapshot, e ->
-                val response = if (snapshot != null) {
-                    val tripId = *//*try {*//*
+        /*?.addSnapshotListener { snapshot, e ->
+            val response = if (snapshot != null) {
+                val tripId = *//*try {*//*
                         snapshot.toObjects(TripPlanning::class.java)[0].id
                     *//*} catch (e: Exception) {
                         null
@@ -155,7 +178,7 @@ class TripRepositoryImpl @Inject constructor(
     ): AddTripPlanningResponse {
         return try {
             val user = Firebase.auth.currentUser?.uid
-                    /*emit(Response.Loading)*/
+            /*emit(Response.Loading)*/
             val uniqueid =
                 usersRef.document(user!!).collection("TripPlannings").document().id
             val trip = TripPlanning(
@@ -190,22 +213,26 @@ class TripRepositoryImpl @Inject constructor(
      */
     override suspend fun updateTripFromFirestore(
         id: String,
+        name: String,
         startDate: Timestamp,
         endDate: Timestamp,
-        totalCost: Long
+        totalCost: Long,
+        photo: String?
     ): UpdateTripPlanningResponse {
         return try {
             val user = Firebase.auth.currentUser?.uid
-            if (user != null){
+            if (user != null) {
                 usersRef.document(user).collection("TripPlannings").document(id)
                     .update(
                         mapOf(
+                            "Name" to name,
                             "StartDate" to startDate,
                             "EndDate" to endDate,
-                            "TotalCost" to totalCost
+                            "TotalCost" to totalCost,
+                            "Photo" to photo
                         )
                     ).await()
-                Success(true,"")
+                Success(true, "")
             } else {
                 Error("User is null")
             }

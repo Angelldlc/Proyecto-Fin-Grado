@@ -64,6 +64,13 @@ class DestinationViewModel @Inject constructor(
             }
         }
 
+    fun getLastDestinationInsertedId(callback: (String) -> Unit, tripId: String){
+        viewModelScope.launch {
+            val lastDestinationInsertedId = useCases.getLastDestinationInsertedId(tripId)
+            callback(lastDestinationInsertedId.toString())
+        }
+    }
+
     fun addDestination(
         tripId: String,
         city: City,
@@ -75,10 +82,11 @@ class DestinationViewModel @Inject constructor(
         startDate: Date,
         endDate: Date,
         travelStay: String,
-        tourismAttractions: List<String>
+        tourismAttractions: List<String>,
+        creationDate: Date
     ) = viewModelScope.launch {
         addDestinationResponse = Loading
-        addDestinationResponse = useCases.addDestination(tripId, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
+        addDestinationResponse = useCases.addDestination(tripId, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions, creationDate)
     }
 
 

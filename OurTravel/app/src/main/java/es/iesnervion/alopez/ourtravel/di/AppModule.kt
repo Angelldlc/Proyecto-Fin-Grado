@@ -88,6 +88,7 @@ object AppModule {
         citiesRepo : CitiesRepository
     ) = UseCases(
         getTrips = GetTrips(tripRepo),
+        getTrip = GetTrip(tripRepo),
         getLastTripInsertedId = GetLastTripInsertedId(tripRepo),
         addTrip = AddTrip(tripRepo),
         updateTrip = UpdateTrip(tripRepo),

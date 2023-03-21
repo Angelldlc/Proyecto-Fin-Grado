@@ -76,15 +76,19 @@ class DestinationRepositoryImpl @Inject constructor(
         }
     }
 
-    suspend fun getLastDestinationInsertedId(tripId: String): String? {
+
+    /**
+     * Método público implementado asíncrono getLastDestinationInsertedId.
+     *
+     * Método público que recoge el id del último destino insertado en una base de datos Firebase
+     */
+    override suspend fun getLastDestinationInsertedId(tripId: String): String? {
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
         val snapshot = userRef?.collection("TripPlannings")?.document(tripId)
-            ?.collection(destinationRef.path)?.orderBy("StartDate", Query.Direction.DESCENDING)
+            ?.collection(destinationRef.path)?.orderBy("CreationDate", Query.Direction.DESCENDING)
             ?.limit(1)?.get()?.await()
         return snapshot?.documents?.firstOrNull()?.id
     }
-
-
 
     /**
      * Método público implementado asíncrono addDestinationToFirestore.
@@ -117,7 +121,8 @@ class DestinationRepositoryImpl @Inject constructor(
         startDate: Date,
         endDate: Date,
         travelStay: String,
-        tourismAttractions: List<String>
+        tourismAttractions: List<String>,
+        creationDate: Date
     ): AddDestinationResponse /*= flow*/ {
         return try {
             val user = Firebase.auth.currentUser?.uid
@@ -139,7 +144,8 @@ class DestinationRepositoryImpl @Inject constructor(
                 startDate,
                 endDate,
                 travelStay,
-                tourismAttractions
+                tourismAttractions,
+                creationDate
             )
             usersRef.document(user)
                 .collection("TripPlannings")
