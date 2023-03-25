@@ -17,18 +17,53 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun SearchCityScreen(parentViewModel: TripListViewModel = hiltViewModel(),
+fun SearchCityScreen(
+    parentViewModel: TripListViewModel = hiltViewModel(),
     tripId: String?,
     destinationViewModel: DestinationViewModel = hiltViewModel(),
     viewModel: SearchCityViewModel = hiltViewModel(),
     navigateToTripPlanningScreenFromSearchCity: (City, String?) -> Unit,
     navigateToDestinationScreenFromSearchCity: (Destination, String?) -> Unit
-){
+) {
     val textState = remember() { mutableStateOf(TextFieldValue("")) }
     Scaffold(
         topBar = { SearchCitySearchView(textState) },
     ) { padding ->
-        SearchCityList(tripId, textState, viewModel, padding, addDestination = { city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions, creationDate -> destinationViewModel.addDestination(tripId!!, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions, creationDate) }, navigateToTripPlanningScreenFromSearchCity, navigateToDestinationScreenFromSearchCity, getLastDestinationInsertedId = destinationViewModel::getLastDestinationInsertedId)
+        SearchCityList(
+            tripId,
+            textState,
+            viewModel,
+            padding,
+            addDestination = { city,
+                               description,
+                               accomodationCosts,
+                               transportationCosts,
+                               foodCosts,
+                               tourismCosts,
+                               startDate,
+                               endDate,
+                               travelStay,
+                               tourismAttractions,
+                               creationDate ->
+                destinationViewModel.addDestination(
+                    tripId!!,
+                    city,
+                    description,
+                    accomodationCosts,
+                    transportationCosts,
+                    foodCosts,
+                    tourismCosts,
+                    startDate,
+                    endDate,
+                    travelStay,
+                    tourismAttractions,
+                    creationDate
+                )
+            },
+            navigateToTripPlanningScreenFromSearchCity,
+            navigateToDestinationScreenFromSearchCity,
+            getLastDestinationInsertedId = destinationViewModel::getLastDestinationInsertedId
+        )
     }
 
 }

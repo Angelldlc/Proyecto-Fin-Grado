@@ -1,5 +1,6 @@
 package es.iesnervion.alopez.ourtravel.ui.searchCity.composables
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,10 +13,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.ui.login.composables.ProgressBar
 import es.iesnervion.alopez.ourtravel.ui.searchCity.SearchCityViewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -49,7 +52,7 @@ fun SearchCityList(
     viewModel.getCities()
     val filteredCities: List<City>?
     when (cities) {
-        is Response.Loading -> {}
+        is Response.Loading -> { ProgressBar() }
         is Response.Success -> {
             val searchedText = textState.value.text
             filteredCities = if (searchedText.isNotEmpty()) {
@@ -78,5 +81,6 @@ fun SearchCityList(
                 }
             }
         }
+        else -> { Toast.makeText(LocalContext.current, "Ha ocurrido un error inesperado, inténtelo de nuevo más tarde.", Toast.LENGTH_LONG).show() }
     }
 }

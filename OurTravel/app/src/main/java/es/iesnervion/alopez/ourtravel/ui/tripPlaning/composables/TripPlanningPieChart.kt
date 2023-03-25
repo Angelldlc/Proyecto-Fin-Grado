@@ -73,13 +73,13 @@ fun TripPlanningPieChart(
 fun Legend(totalAccomodationCost: Long?, totalTransportationCost: Long?, totalFoodCost: Long?, totalTourismCost: Long?, symbol: String?) {
     Row(Modifier.fillMaxWidth(), Arrangement.Center) {
         Column(Modifier.padding(16.dp)) {
-            LegendItem("Accomodation: $totalAccomodationCost $symbol", PaleCerulean)
-            LegendItem("Transportation: $totalTransportationCost $symbol", PastelPink)
+            LegendItem("Alojamiento: $totalAccomodationCost $symbol", PaleCerulean)
+            LegendItem("Transporte: $totalTransportationCost $symbol", PastelPink)
         }
         Column(Modifier.padding(16.dp)) {
 
-            LegendItem("Food: $totalFoodCost $symbol", DeepChampagne)
-            LegendItem("Tourism: $totalTourismCost $symbol", MediumSpringBud)
+            LegendItem("Comida: $totalFoodCost $symbol", DeepChampagne)
+            LegendItem("Turismo: $totalTourismCost $symbol", MediumSpringBud)
         }
     }
 }

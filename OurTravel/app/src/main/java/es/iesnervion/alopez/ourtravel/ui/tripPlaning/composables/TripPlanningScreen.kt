@@ -1,10 +1,7 @@
 package es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -14,22 +11,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.Timestamp
 import es.iesnervion.alopez.ourtravel.R
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
+import es.iesnervion.alopez.ourtravel.domain.repository.Destinations
 import es.iesnervion.alopez.ourtravel.ui.login.composables.AddDestination
 import es.iesnervion.alopez.ourtravel.ui.destination.composables.Destinations
 import es.iesnervion.alopez.ourtravel.ui.destination.composables.DestinationsContent
 import es.iesnervion.alopez.ourtravel.ui.theme.Navy
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
+import kotlinx.coroutines.Job
 import kotlin.math.max
 import kotlin.math.min
 
@@ -48,6 +47,7 @@ fun TripPlanningScreen(
     val tripPlanning by remember() { mutableStateOf(trip) }
 
     val nameUpdated: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val photoUpdated: MutableState<Boolean> = remember { mutableStateOf(false) }
     val idTrip = /*if (trip == null) tripId else trip.id*/ trip.id ////////////////////////
     BackHandler(onBack = navigateToTripListScreen)
     /*if(idTrip.isNullOrEmpty() || idTrip.isNullOrBlank()) {
@@ -79,7 +79,7 @@ fun TripPlanningScreen(
     }
     val destinationsResponse = viewModel.destinationsResponse //TODO cambiar
 
-    var imageUri = remember { mutableStateOf<Uri?>(null) }
+    val imageUri = remember { mutableStateOf/*<Uri?>*/(trip.photo?.toUri()) }//TODO He cambiado remember por saveable
     val scrollState = rememberScrollState()
     val path = rememberAsyncImagePainter(
         model = (/*if (trip.photo.isNullOrEmpty() || trip.photo!!.isBlank()) { ///////////////
@@ -87,8 +87,8 @@ fun TripPlanningScreen(
         } else */trip.photo)
     )
     Scaffold(
-        topBar = { TripPlanningTopBar(trip/*.name ?: ""*/, navigateToTripListScreen,
-            { parentViewModel.openDialog() }, parentViewModel::updateTrip, nameUpdated)  }, /////////
+        topBar = { Destinations { TripPlanningTopBar(trip/*.name ?: ""*/, navigateToTripListScreen,
+            { parentViewModel.openDialog() }, parentViewModel::updateTrip, nameUpdated, it) }  }, /////////
         floatingActionButton = { TripPlanningFloatingActionButton(navigateToSearchCityScreen) }
 
     ) { padding ->
@@ -129,31 +129,55 @@ fun TripPlanningScreen(
             }*/
 
 
-            NotImage(onImageSelected = {
-                imageUri.value = it
-                trip.photo = it.toString()
-                parentViewModel.updateTrip(trip.id!!, trip.name!!, trip.startDate!!, trip.endDate!!, trip.totalCost!!, it.toString())
-                                       }, /*trip, path,*/ imageUri ,scrollState)
-
+            Destinations {
+                NotImage(
+                    /*onImageSelected = {
+                        imageUri.value = it
+                        trip.photo = it.toString()
+                        parentViewModel.updateTrip(
+                            trip.id!!,
+                            trip.name!!,
+                            trip.startDate!!,
+                            trip.endDate!!,
+                            trip.totalCost!!,
+                            it.toString()
+                        )
+                    }, *//*trip, path,*//*
+                    imageUri,*/
+                    scrollState,
+                    it,
+                    trip,
+                    parentViewModel::updateTrip
+                )
+                if(it.isNotEmpty()){
+                    photoUpdated.value = true
+                }
+            }
 
 
 
             Spacer(modifier = Modifier.height(30.dp))
             Text(
-                text = "Costs:",
+                text = "Costes:",
                 modifier = Modifier.padding(16.dp),
                 fontSize = 24.sp,
                 color = Navy
             )
 
             Destinations {
-                TripPlanningPieChart(destinationsResponse = it, tripId = idTrip.toString(), tripName = trip.name.toString(), tripPhoto = trip.photo, viewModel = parentViewModel, nameUpdated)
+                TripPlanningPieChart(
+                    destinationsResponse = it,
+                    tripId = idTrip.toString(),
+                    tripName = trip.name.toString(),
+                    tripPhoto = trip.photo,
+                    viewModel = parentViewModel,
+                    nameUpdated)
             }
             /*TripPlanningPieChart(destinations, idTrip.toString(), parentViewModel)*/
 
             Spacer(modifier = Modifier.height(30.dp))
             Text(
-                text = "Destinations:",
+                text = "Destinos:",
                 modifier = Modifier.padding(16.dp),
                 fontSize = 24.sp,
                 color = Navy
@@ -290,28 +314,26 @@ fun TripPlanningScreen(
 
 @Composable
 fun NotImage(
-    onImageSelected: (Uri) -> Unit,
-    /*trip: TripPlanning,
-    path: AsyncImagePainter,*/
-    imageUri: MutableState<Uri?>,
-    scrollState: ScrollState
-) {
-    val context = LocalContext.current
+    scrollState: ScrollState,
+    destinations: Destinations,
+    trip: TripPlanning,
+    updateTrip: (String, String, Timestamp, Timestamp, Long, String?) -> Job,
+){
+
+    val painterModel = try {
+        trip.photo = destinations.firstOrNull()?.cityPhoto
+        trip.photo
+    } catch (e: Exception) {""}
+
+    val painter = rememberAsyncImagePainter(model = painterModel)
     val height = 220.dp
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        if (uri != null) {
-            imageUri.value = uri
-            onImageSelected(uri)
-        }
-    }
     BoxWithConstraints(
         modifier = Modifier
             .height(height)
             .fillMaxSize()
-            .background(if (imageUri.value == null) Color.LightGray else Color.Transparent)
-            .clickable(onClick = { launcher.launch("image/*") })
+            .background(if (destinations.isEmpty()) Color.LightGray else Color.Transparent)
     ) {
-        if (imageUri.value == null) {
+        if (destinations.isEmpty()) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_image_24),
                 contentDescription = "",
@@ -321,7 +343,8 @@ fun NotImage(
 
             )
         } else {
-            Image(painter = rememberAsyncImagePainter(imageUri),
+
+            Image(painter = painter,
                 contentDescription = "Banner Image",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
@@ -339,7 +362,75 @@ fun NotImage(
             )
         }
     }
+    LaunchedEffect(painterModel){
+        if (!trip.photo.isNullOrEmpty()) {
+            updateTrip(
+                trip.id!!,
+                trip.name!!,
+                trip.startDate!!,
+                trip.endDate!!,
+                trip.totalCost!!,
+                trip.photo
+            )
+        }
+    }
 }
+
+//@Composable
+//fun NotImage(
+//    onImageSelected: (Uri) -> Unit,
+//    /*trip: TripPlanning,
+//    path: AsyncImagePainter,*/
+//    imageUri: MutableState<Uri?>,
+//    scrollState: ScrollState
+//) {
+//    val context = LocalContext.current
+//    val height = 220.dp
+//    val painter = rememberAsyncImagePainter(imageUri.value)//TODO Probar sin el Async
+////    val painter = remember(imageUri.value){ rememberAsyncImagePainter(imageUri.value) }
+//    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+//        if (uri != null) {
+//            imageUri.value = uri
+//            onImageSelected(uri)
+//        }
+//    }
+//    BoxWithConstraints(
+//        modifier = Modifier
+//            .height(height)
+//            .fillMaxSize()
+//            .background(if (imageUri.value == null) Color.LightGray else Color.Transparent)
+//            .clickable(onClick = { launcher.launch("image/*") })
+//    ) {
+//        if (imageUri.value == null) {
+//            Icon(
+//                painter = painterResource(id = R.drawable.ic_baseline_image_24),
+//                contentDescription = "",
+//                modifier = Modifier
+//                    .align(Alignment.Center)
+//                    .size(75.dp)
+//
+//            )
+//        } else {
+//
+//            Image(painter = painter,
+//                contentDescription = "Banner Image",
+//                contentScale = ContentScale.FillWidth,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(height)
+//                    .graphicsLayer {
+//                        alpha = min(
+//                            1f,
+//                            max(
+//                                0.0f,
+//                                1 - (scrollState.value / ((height.value * 2) + (height.value / 1.5f)))
+//                            )
+//                        )
+//                    }
+//            )
+//        }
+//    }
+//}
 
 @Composable
 fun DeleteAlertDialog(
@@ -353,7 +444,7 @@ fun DeleteAlertDialog(
     if(openDialog) {
         AlertDialog(
             onDismissRequest = { closeDialog() },
-            title = { Text(text = "Are you sure you want to delete this trip?") },
+            title = { Text(text = "¿Está seguro de que desea eliminar este viaje?"/*"Are you sure you want to delete this trip?"*/) },
             buttons = {
                 Row(
                     modifier = Modifier
@@ -365,7 +456,7 @@ fun DeleteAlertDialog(
                         modifier = Modifier.padding(16.dp),
                         onClick = { closeDialog() }
                     ) {
-                        Text("Cancel")
+                        Text("Cancelar")
                     }
                     Button(
                         modifier = Modifier
@@ -382,7 +473,7 @@ fun DeleteAlertDialog(
                             }*/
                         }
                     ) {
-                        Text("Delete")
+                        Text("Eliminar")
                     }
                 }
             }
