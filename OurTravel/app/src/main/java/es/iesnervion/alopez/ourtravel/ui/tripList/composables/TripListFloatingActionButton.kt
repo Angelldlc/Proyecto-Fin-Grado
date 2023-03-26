@@ -18,18 +18,21 @@ fun TripListFloatingActionButton(
     navigateToTripPlanningScreen: (newTrip: TripPlanning) -> Unit,
     getTrip: KFunction2<String, (TripPlanning?) -> Unit, Job>,
     getLastTripInsertedId: KFunction1<(String) -> Unit, Unit>,
-){
+) {
     var lastTripInsertedId by remember { mutableStateOf("") }
     var lastTripInserted by remember { mutableStateOf(TripPlanning("")) }
     FloatingActionButton(onClick = {
         addTrip("New Trip", Timestamp.now(), Timestamp.now(), 0, "", Timestamp.now())
         getLastTripInsertedId { lastTripInsertedId = it }
-        //navigateToTripPlanningScreen(TripPlanning(lastTripInsertedId))
-        }) {
-        Icon(imageVector = Icons.Filled.Add, tint = Color.White , contentDescription = "Add Trip Planning")
+    }) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            tint = Color.White,
+            contentDescription = "Add Trip Planning"
+        )
     }
 
-    LaunchedEffect(lastTripInsertedId){
+    LaunchedEffect(lastTripInsertedId) {
         if (lastTripInsertedId.isNotEmpty()) {
             getTrip(lastTripInsertedId) {
                 lastTripInserted = it!!
@@ -37,8 +40,8 @@ fun TripListFloatingActionButton(
         }
     }
 
-    LaunchedEffect(lastTripInserted){
-        if (!lastTripInserted.id.isNullOrEmpty()){
+    LaunchedEffect(lastTripInserted) {
+        if (!lastTripInserted.id.isNullOrEmpty()) {
             navigateToTripPlanningScreen(lastTripInserted)
         }
     }

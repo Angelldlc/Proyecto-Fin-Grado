@@ -13,9 +13,17 @@ import es.iesnervion.alopez.ourtravel.ui.tripList.BottomNavState
 @Composable
 fun TripListBottomNavBar(
     bottomNavState: MutableState<BottomNavState>
-){
+) {
     BottomNavigation() {
-        BottomNavigationItem(icon = { Icon(Icons.Filled.Event, contentDescription = "") }, selected = (bottomNavState.value == BottomNavState.PENDING) , onClick = { bottomNavState.value = BottomNavState.PENDING }, label = { Text(text = "Próximos Viajes")})
-        BottomNavigationItem(icon = { Icon(Icons.Filled.History, contentDescription = "") },selected = (bottomNavState.value == BottomNavState.FINALIZED), onClick = { bottomNavState.value = BottomNavState.FINALIZED }, label = { Text(text = "Viajes Finalizados")})
+        BottomNavigationItem(
+            icon = { Icon(Icons.Filled.Event, contentDescription = "") },
+            selected = (bottomNavState.value == BottomNavState.PENDING),
+            onClick = { bottomNavState.value = BottomNavState.PENDING },
+            label = { Text(text = "Próximos Viajes") })
+        BottomNavigationItem(
+            icon = { Icon(Icons.Filled.History, contentDescription = "") },
+            selected = (bottomNavState.value == BottomNavState.FINALIZED),
+            onClick = { bottomNavState.value = BottomNavState.FINALIZED },
+            label = { Text(text = "Viajes Finalizados") })
     }
 }

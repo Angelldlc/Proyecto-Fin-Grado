@@ -8,12 +8,12 @@ package es.iesnervion.alopez.ourtravel.ui.tripList
  *
  */
 data class BottomNavState constructor(val status: BottomNavStatus) {
-    companion object{
+    companion object {
         val PENDING = BottomNavState(BottomNavStatus.PENDING)
         val FINALIZED = BottomNavState(BottomNavStatus.FINALIZED)
     }
 
-    enum class BottomNavStatus{
+    enum class BottomNavStatus {
         PENDING,
         FINALIZED
     }

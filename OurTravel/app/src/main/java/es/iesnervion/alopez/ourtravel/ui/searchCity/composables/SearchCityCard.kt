@@ -54,9 +54,6 @@ fun SearchCityCard(tripId: String?,
         onClick = {
             addDestination(city, "", 0, 0, 0, 0, Date(), Date(), "", listOf(), Date())
             getLastDestinationInsertedId({ lastDestinationInsertedId = it }, tripId!!)
-
-            //navigateToTripPlanningScreenFromSearchCity(city, tripId) // TODO cambiar a navigateToDestinationScreenFromSearchCity
-                                                                     // TODO añadir destino
         }
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {

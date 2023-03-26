@@ -12,11 +12,12 @@ fun TripPlannings(
     viewModel: TripListViewModel = hiltViewModel(),
     tripPlanningsContent: @Composable (tripPlannings: TripPlannings) -> Unit
 ) {
-    when(val tripPlanningsResponse = viewModel.tripsResponse){
+    when (val tripPlanningsResponse = viewModel.tripsResponse) {
         is Loading -> ProgressBar()
         is Success -> tripPlanningsResponse.data?.let { tripPlanningsContent(it) }
         is Failure -> print(tripPlanningsResponse.e)
         else -> {
-            print("Error")}
+            print("Error")
+        }
     }
 }

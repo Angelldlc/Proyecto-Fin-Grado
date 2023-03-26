@@ -22,7 +22,7 @@ fun DestinationTopBar(
     name: String,
     tripId: String,
     navigateToTripPlanningScreen: (TripPlanning) -> Unit,
-    getTrip: KFunction2< String, (TripPlanning?) -> Unit, Job>,
+    getTrip: KFunction2<String, (TripPlanning?) -> Unit, Job>,
     openDialog: () -> Unit
 ) {
     var trip by remember { mutableStateOf(TripPlanning("")) }
@@ -31,7 +31,7 @@ fun DestinationTopBar(
         title = { Text(text = name) },
         navigationIcon = {
             IconButton(onClick = {
-                getTrip(tripId){ trip = it!! }
+                getTrip(tripId) { trip = it!! }
             })
             {
                 Icon(
@@ -42,19 +42,17 @@ fun DestinationTopBar(
             }
         },
         actions = { DestinationTopBarActions(openDialog) },
+    )
 
-        )
-
-    LaunchedEffect(trip){
+    LaunchedEffect(trip) {
         if (!trip.id.isNullOrEmpty()) {
             navigateToTripPlanningScreen(trip)
         }
-
     }
 }
 
 @Composable
-fun DestinationTopBarActions(openDialog: () -> Unit){
+fun DestinationTopBarActions(openDialog: () -> Unit) {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
@@ -64,7 +62,8 @@ fun DestinationTopBarActions(openDialog: () -> Unit){
             Icon(
                 Icons.Filled.Delete,
                 contentDescription = "Delete",
-                modifier = Modifier.size(24.dp))
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }

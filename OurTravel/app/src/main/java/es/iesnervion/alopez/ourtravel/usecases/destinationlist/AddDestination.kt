@@ -21,5 +21,18 @@ class AddDestination(
         travelStay: String,
         tourismAttractions: List<String>,
         creationDate: Date
-    ) = destinationRepo.addDestinationToFirestore(tripId, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions, creationDate)
+    ) = destinationRepo.addDestinationToFirestore(
+        tripId,
+        city,
+        description,
+        accomodationCosts,
+        transportationCosts,
+        foodCosts,
+        tourismCosts,
+        startDate,
+        endDate,
+        travelStay,
+        tourismAttractions,
+        creationDate
+    )
 }

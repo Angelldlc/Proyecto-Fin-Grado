@@ -33,20 +33,21 @@ class MainActivity : ComponentActivity() {
     private lateinit var navController: NavHostController
     private val viewModel by viewModels<LoginViewModel>()
 
-    @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class,
+    @OptIn(
+        ExperimentalMaterialApi::class, ExperimentalAnimationApi::class,
         ExperimentalFoundationApi::class
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent{
+        setContent {
             OurTravelTheme {
 
                 navController = rememberAnimatedNavController()
                 NavGraph(
                     navController = navController
                 )
-                if(viewModel.isUserAuthenticated) {
+                if (viewModel.isUserAuthenticated) {
                     navController.navigate(TripListScreen.route)
                 }
                 viewModel.getAuthState()
@@ -55,12 +56,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
-
 
 @Preview(showBackground = true)
 @Composable

@@ -18,6 +18,7 @@ import es.iesnervion.alopez.ourtravel.usecases.UseCases
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+
 /**
  * Clase pública DestinationViewModel.
  *
@@ -27,35 +28,22 @@ import javax.inject.Inject
 @HiltViewModel
 class DestinationViewModel @Inject constructor(
     private val useCases: UseCases
-): ViewModel() {
+) : ViewModel() {
 
     var destinationsResponse by mutableStateOf<DestinationsResponse>(Loading)
         private set
 
-    var addDestinationResponse by mutableStateOf<AddDestinationResponse>(Success(false,""))
+    var addDestinationResponse by mutableStateOf<AddDestinationResponse>(Success(false, ""))
         private set
 
-    var updateDestinationResponse by mutableStateOf<UpdateDestinationResponse>(Success(false,""))
+    var updateDestinationResponse by mutableStateOf<UpdateDestinationResponse>(Success(false, ""))
         private set
 
-    var deleteDestinationResponse by mutableStateOf<DeleteDestinationResponse>(Success(false,""))
+    var deleteDestinationResponse by mutableStateOf<DeleteDestinationResponse>(Success(false, ""))
         private set
 
     var openDialog by mutableStateOf(false)
         private set
-
-    /*private val _destinationsState = mutableStateOf<Response<List<Destination>>>(Response.Loading)
-    val destinationsState: State<Response<List<Destination>>> = _destinationsState
-
-    private val _isDestinationAddedState = mutableStateOf<Response<Boolean>>(Response.Success(false,""))
-    val isDestinationAddedState: State<Response<Boolean>> = _isDestinationAddedState
-
-    private val _isDestinationUpdatedState = mutableStateOf<Response<Boolean>>(Response.Success(false,""))
-    val isDestinationUpdatedState: State<Response<Boolean>> = _isDestinationUpdatedState
-
-    private val _isDestinationDeletedState = mutableStateOf<Response<Boolean>>(Response.Success(null,""))
-    val isDestinationDeletedState: State<Response<Boolean>> = _isDestinationDeletedState*/
-
 
     fun getDestinations(tripId: String) =
         viewModelScope.launch {
@@ -64,7 +52,7 @@ class DestinationViewModel @Inject constructor(
             }
         }
 
-    fun getLastDestinationInsertedId(callback: (String) -> Unit, tripId: String){
+    fun getLastDestinationInsertedId(callback: (String) -> Unit, tripId: String) {
         viewModelScope.launch {
             val lastDestinationInsertedId = useCases.getLastDestinationInsertedId(tripId)
             callback(lastDestinationInsertedId.toString())
@@ -86,9 +74,21 @@ class DestinationViewModel @Inject constructor(
         creationDate: Date
     ) = viewModelScope.launch {
         addDestinationResponse = Loading
-        addDestinationResponse = useCases.addDestination(tripId, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions, creationDate)
+        addDestinationResponse = useCases.addDestination(
+            tripId,
+            city,
+            description,
+            accomodationCosts,
+            transportationCosts,
+            foodCosts,
+            tourismCosts,
+            startDate,
+            endDate,
+            travelStay,
+            tourismAttractions,
+            creationDate
+        )
     }
-
 
     fun updateDestinationFromFirestore(
         tripId: String,
@@ -105,20 +105,33 @@ class DestinationViewModel @Inject constructor(
         tourismAttractions: List<String>
     ) = viewModelScope.launch {
         updateDestinationResponse = Loading
-        updateDestinationResponse = useCases.updateDestination(tripId, id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
+        updateDestinationResponse = useCases.updateDestination(
+            tripId,
+            id,
+            city,
+            description,
+            accomodationCosts,
+            transportationCosts,
+            foodCosts,
+            tourismCosts,
+            startDate,
+            endDate,
+            travelStay,
+            tourismAttractions
+        )
     }
 
     fun deleteDestination(tripId: String, id: String) =
         viewModelScope.launch {
             deleteDestinationResponse = Loading
-            deleteDestinationResponse = useCases.deleteDestination(tripId,id)
+            deleteDestinationResponse = useCases.deleteDestination(tripId, id)
         }
 
-    fun openDialog(){
+    fun openDialog() {
         openDialog = true
     }
 
-    fun closeDialog(){
+    fun closeDialog() {
         openDialog = false
     }
 }

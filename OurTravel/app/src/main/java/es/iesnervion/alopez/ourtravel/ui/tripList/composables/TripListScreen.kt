@@ -15,20 +15,15 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.composables.AddTrip
 
 @ExperimentalMaterialApi
 @Composable
-fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
+fun TripListScreen(
+    parentViewModel: LoginViewModel = hiltViewModel(),
     viewModel: LoginViewModel = hiltViewModel(),
     viewModelTripList: TripListViewModel = hiltViewModel(),
     navigateToLoginScreen: () -> Unit,
     navigateToNewTripPlanningScreen: () -> Unit,
     navigateToTripPlanningScreen: (TripPlanning) -> Unit
 ) {
-//    val lastTripInsertedId = remember() { mutableStateOf(viewModelTripList.lastTripInsertedId) }
-    /*val lastTripId = remember { mutableStateOf("") }
-    LaunchedEffect(Unit) {
-        viewModelTripList.getLastTripInsertedId { tripId ->
-            lastTripId.value = tripId
-        }
-    }*/
+
 
     val textState = remember(
         navigateToTripPlanningScreen,
@@ -36,13 +31,8 @@ fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
         navigateToLoginScreen
     ) { mutableStateOf(TextFieldValue("")) }
     val addTripResponse = remember() { mutableStateOf(viewModelTripList.addTripResponse) }
-    /*val bottomNavState = rememberSaveable(
-        navigateToTripPlanningScreen,
-        navigateToNewTripPlanningScreen,
-        navigateToLoginScreen
-    ) { mutableStateOf(BottomNavState.PENDING) }*/
     val navController = rememberNavController()
-    var bottomNavState = remember(
+    val bottomNavState = remember(
         navigateToTripPlanningScreen,
         navigateToNewTripPlanningScreen,
         navigateToLoginScreen
@@ -56,12 +46,23 @@ fun TripListScreen(parentViewModel: LoginViewModel = hiltViewModel(),
         topBar = { TripListSearchView(textState = textState, scope, state) },
         bottomBar = { TripListBottomNavBar(bottomNavState) },
         drawerContent = { TripListDrawer(viewModel, navigateToLoginScreen) },
-        floatingActionButton = { TripListFloatingActionButton(
-            addTrip = { name, startDate, endDate, totalCost, photo, creationDate -> viewModelTripList.addTrip(name, startDate, endDate, totalCost, photo, creationDate) },
-            navigateToTripPlanningScreen = { newTrip -> navigateToTripPlanningScreen(newTrip) },
-            getLastTripInsertedId = viewModelTripList::getLastTripInsertedId,
-            getTrip = viewModelTripList::getTrip
-             ) }
+        floatingActionButton = {
+            TripListFloatingActionButton(
+                addTrip = { name, startDate, endDate, totalCost, photo, creationDate ->
+                    viewModelTripList.addTrip(
+                        name,
+                        startDate,
+                        endDate,
+                        totalCost,
+                        photo,
+                        creationDate
+                    )
+                },
+                navigateToTripPlanningScreen = { newTrip -> navigateToTripPlanningScreen(newTrip) },
+                getLastTripInsertedId = viewModelTripList::getLastTripInsertedId,
+                getTrip = viewModelTripList::getTrip
+            )
+        }
     ) { padding ->
         Column() {
             TripList(

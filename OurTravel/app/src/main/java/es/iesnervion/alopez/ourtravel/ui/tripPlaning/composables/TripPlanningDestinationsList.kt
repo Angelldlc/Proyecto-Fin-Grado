@@ -20,10 +20,9 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 fun TripPlanningDestinationsList(
     tripId: String,
     paddingValues: PaddingValues,
-    /*viewModel: DestinationViewModel,*/
     navigateToDestinationScreen: (Destination, String) -> Unit,
     destinations: Destinations,
-    destinationsResponse: DestinationsResponse /*Response.Success<List<Destination>>*/
+    destinationsResponse: DestinationsResponse
 ) {
     LazyColumn(
         modifier = Modifier
@@ -40,12 +39,5 @@ fun TripPlanningDestinationsList(
                 navigateToDestinationScreen = navigateToDestinationScreen
             )
         }
-
-        /*for (destination in destinationsResponse.data!!) { //TODO Mirar que pasa
-            TripPlanningDestinationCard(
-                destination = destination, tripId,
-                navigateToDestinationScreen = navigateToDestinationScreen
-            )
-        }*/
     }
 }

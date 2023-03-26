@@ -104,11 +104,6 @@ class DestinationRepositoryImpl @Inject constructor(
      * representa el destino.
      * Salidas: Response<Boolean>.
      *
-     * ******************************************************************************************
-     * ******************************************************************************************
-     * Comentario: Este método acaba ejecutandose varias veces por un problema con el ámbito de las
-     * corrutinas, no he podido solucionarlo por falta de tiempo.
-     *
      */
     override suspend fun addDestinationToFirestore(
         tripId: String,
@@ -123,7 +118,7 @@ class DestinationRepositoryImpl @Inject constructor(
         travelStay: String,
         tourismAttractions: List<String>,
         creationDate: Date
-    ): AddDestinationResponse /*= flow*/ {
+    ): AddDestinationResponse {
         return try {
             val user = Firebase.auth.currentUser?.uid
             val uniqueid = usersRef.document(user!!)

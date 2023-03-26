@@ -53,11 +53,8 @@ class TripRepositoryImpl @Inject constructor(
         val snapshotListener = userRef?.collection(tripPlanningRef.path)
             ?.orderBy("Name", Query.Direction.ASCENDING)?.addSnapshotListener { snapshot, e ->
                 val response = if (snapshot != null) {
-                    val trips = /*try {*/
+                    val trips =
                         snapshot.toObjects(TripPlanning::class.java)
-                    /*} catch (e: Exception) {
-                        emptyList()
-                    }*/
                     Success(trips, "")
                 } else {
                     Failure(e)
@@ -70,7 +67,18 @@ class TripRepositoryImpl @Inject constructor(
     }
 
 
-    ///////////////////////////////////
+    /**
+     * Método público implementado getTripFromFirestore.
+     *
+     * Método público que recoge un viaje de una base de datos Firebase.
+     * El método realiza la búsqueda del viaje y devuelve una respuesta satisfactoria con el viaje
+     * si la consulta se ejecuta sin problemas, una respuesta satisfactoria con una valor nulo si
+     * la consulta se ha ejecutado correctamente pero no ha encontrado ningún viaje o una respuesta
+     * de error en caso de que falle la consulta.
+     *
+     * Entradas: id: String. Representa el id del viaje a buscar.
+     * Salidas: Response<List<TripPlanning>>.
+     */
     override suspend fun getTripFromFirestore(id: String): TripPlanning? {
 
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
@@ -83,17 +91,7 @@ class TripRepositoryImpl @Inject constructor(
         }
 
         return trip
-
-    }/*val documentSnapshot =
-            userRef?.collection(tripPlanningRef.path)?.document(id)?.get()?.await()
-        if (documentSnapshot != null) {
-            if (documentSnapshot.exists()) {
-                val trip = documentSnapshot.toObject(TripPlanning::class.java)
-                Success(trip, "")
-            } else {
-                Error("Trip not found")
-            }
-        }*/
+    }
 
 
     /**
@@ -107,10 +105,6 @@ class TripRepositoryImpl @Inject constructor(
      * Entradas: void.
      * Salidas: Response<String>
      *
-     * ******************************************************************************************
-     * ******************************************************************************************
-     * Comentario: Este método acaba ejecutandose antes de tiempo por un problema con el ámbito de
-     * las corrutinas, no he podido solucionarlo por falta de tiempo.
      */
     override suspend fun getLastTripInsertedId(): String? {
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
@@ -119,7 +113,6 @@ class TripRepositoryImpl @Inject constructor(
             ?.orderBy("CreationDate", Query.Direction.DESCENDING)
             ?.limit(1)
 
-        /*return */
         val lastTrip = try {
             tripsCollection?.get()
                 ?.await()
@@ -130,23 +123,6 @@ class TripRepositoryImpl @Inject constructor(
             null
         }
         return lastTrip
-
-        /*?.addSnapshotListener { snapshot, e ->
-            val response = if (snapshot != null) {
-                val tripId = *//*try {*//*
-                        snapshot.toObjects(TripPlanning::class.java)[0].id
-                    *//*} catch (e: Exception) {
-                        null
-                    }*//*
-                    tripId.toString()
-                } else {
-                    ""
-                }
-                trySend(response)
-            }*/
-        /*awaitClose {
-            snapshotListener?.remove()
-        }*/
     }
 
     /**
@@ -162,11 +138,6 @@ class TripRepositoryImpl @Inject constructor(
      * momento de su creación.
      * Salidas: Response<Boolean>.
      *
-     * ******************************************************************************************
-     * ******************************************************************************************
-     * Comentario: Este método acaba ejecutandose varias veces por un problema con el ámbito de las
-     * corrutinas, no he podido solucionarlo por falta de tiempo.
-     *
      */
     override suspend fun addTripToFirestore(
         name: String,
@@ -178,7 +149,6 @@ class TripRepositoryImpl @Inject constructor(
     ): AddTripPlanningResponse {
         return try {
             val user = Firebase.auth.currentUser?.uid
-            /*emit(Response.Loading)*/
             val uniqueid =
                 usersRef.document(user!!).collection("TripPlannings").document().id
             val trip = TripPlanning(

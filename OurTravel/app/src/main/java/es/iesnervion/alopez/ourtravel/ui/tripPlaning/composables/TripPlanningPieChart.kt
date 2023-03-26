@@ -47,8 +47,14 @@ fun TripPlanningPieChart(
             PieChart(
                 pieChartData = PieChartData(
                     slices = listOf(
-                        PieChartData.Slice(totalAccomodationCost.toString().toFloat(), PaleCerulean),
-                        PieChartData.Slice(totalTransportationCost.toString().toFloat(), PastelPink),
+                        PieChartData.Slice(
+                            totalAccomodationCost.toString().toFloat(),
+                            PaleCerulean
+                        ),
+                        PieChartData.Slice(
+                            totalTransportationCost.toString().toFloat(),
+                            PastelPink
+                        ),
                         PieChartData.Slice(totalFoodCost.toString().toFloat(), DeepChampagne),
                         PieChartData.Slice(totalTourismCost.toString().toFloat(), MediumSpringBud)
                     )
@@ -57,20 +63,31 @@ fun TripPlanningPieChart(
                     .size(400.dp, 272.dp)
                     .align(Center)
             )
-            Text(text = "Total: "+"\n"+((totalAccomodationCost?:0)+(totalTransportationCost?:0)+(totalFoodCost?:0)+(totalTourismCost?:0)).toString()+" $symbol",
+            Text(
+                text = "Total: " + "\n" + ((totalAccomodationCost ?: 0) + (totalTransportationCost
+                    ?: 0) + (totalFoodCost ?: 0) + (totalTourismCost ?: 0)).toString() + " $symbol",
                 modifier = Modifier.align(Center),
                 fontSize = 24.sp
-                )
+            )
         }
-        Legend(totalAccomodationCost, totalTransportationCost, totalFoodCost, totalTourismCost, symbol)
-
+        Legend(
+            totalAccomodationCost,
+            totalTransportationCost,
+            totalFoodCost,
+            totalTourismCost,
+            symbol
+        )
     }
-
-
 }
 
 @Composable
-fun Legend(totalAccomodationCost: Long?, totalTransportationCost: Long?, totalFoodCost: Long?, totalTourismCost: Long?, symbol: String?) {
+fun Legend(
+    totalAccomodationCost: Long?,
+    totalTransportationCost: Long?,
+    totalFoodCost: Long?,
+    totalTourismCost: Long?,
+    symbol: String?
+) {
     Row(Modifier.fillMaxWidth(), Arrangement.Center) {
         Column(Modifier.padding(16.dp)) {
             LegendItem("Alojamiento: $totalAccomodationCost $symbol", PaleCerulean)
@@ -87,9 +104,12 @@ fun Legend(totalAccomodationCost: Long?, totalTransportationCost: Long?, totalFo
 @Composable
 fun LegendItem(text: String, color: Color) {
     Row() {
-        Icon(Icons.Filled.Square, contentDescription = "", tint = color
-, modifier = Modifier.size(25.dp)
-)
+        Icon(
+            Icons.Filled.Square,
+            contentDescription = "",
+            tint = color,
+            modifier = Modifier.size(25.dp)
+        )
         Text(text = text, fontSize = 16.sp)
     }
 }
@@ -97,9 +117,9 @@ fun LegendItem(text: String, color: Color) {
 fun calculateTotalCosts(
     destinationsList: Destinations?
 ): MutableList<Long?> {
-    var costs = mutableListOf<Long?>(0,0,0,0)
+    val costs = mutableListOf<Long?>(0, 0, 0, 0)
     if (destinationsList != null) {
-        for (destination in destinationsList){
+        for (destination in destinationsList) {
             costs[0] = destination.accomodationCosts?.let { costs[0]?.plus(it) }
             costs[1] = destination.transportationCosts?.let { costs[1]?.plus(it) }
             costs[2] = destination.foodCosts?.let { costs[2]?.plus(it) }
@@ -111,7 +131,14 @@ fun calculateTotalCosts(
     return costs
 }
 
-fun updateTripFields(destinations: Destinations?, tripId: String, tripName:String, tripPhoto: String?, viewModel: TripListViewModel, nameUpdated: MutableState<Boolean>){
+fun updateTripFields(
+    destinations: Destinations?,
+    tripId: String,
+    tripName: String,
+    tripPhoto: String?,
+    viewModel: TripListViewModel,
+    nameUpdated: MutableState<Boolean>
+) {
     if (destinations != null) {
         if (destinations.isNotEmpty()) {
             val costs = calculateTotalCosts(destinations)
@@ -128,7 +155,7 @@ fun updateTripFields(destinations: Destinations?, tripId: String, tripName:Strin
                 endDate =
                     if (endDate?.after(destination.endDate) == true) endDate else destination.endDate
             }
-            if(!nameUpdated.value) {
+            if (!nameUpdated.value) {
                 viewModel.updateTrip(
                     tripId,
                     tripName,

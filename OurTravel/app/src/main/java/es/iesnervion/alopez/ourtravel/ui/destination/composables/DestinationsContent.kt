@@ -1,7 +1,6 @@
 package es.iesnervion.alopez.ourtravel.ui.destination.composables
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,7 +24,6 @@ fun DestinationsContent(
     LazyColumn(
         modifier = Modifier
             .height((destinations.size * 200).dp)
-            /*.fillMaxSize()*/
             .padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

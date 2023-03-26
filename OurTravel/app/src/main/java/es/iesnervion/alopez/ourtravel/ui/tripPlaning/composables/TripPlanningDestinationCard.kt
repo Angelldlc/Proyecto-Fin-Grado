@@ -30,17 +30,24 @@ fun TripPlanningDestinationCard(
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
-        .padding(16.dp), elevation = 8.dp ,shape = RoundedCornerShape(8.dp),
+        .padding(16.dp), elevation = 8.dp, shape = RoundedCornerShape(8.dp),
         onClick = {
-        navigateToDestinationScreen(destination, tripId)
+            navigateToDestinationScreen(destination, tripId)
         }) {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()){
-            Image(path, contentDescription = "", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth)
-            Box(modifier = Modifier
-                .size(240.dp, 60.dp)
-                .clip(RoundedCornerShape(35.dp, 0.dp, 0.dp, 0.dp))
-                .background(Color.White)
-                .align(Alignment.BottomEnd)){
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            Image(
+                path,
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillWidth
+            )
+            Box(
+                modifier = Modifier
+                    .size(240.dp, 60.dp)
+                    .clip(RoundedCornerShape(35.dp, 0.dp, 0.dp, 0.dp))
+                    .background(Color.White)
+                    .align(Alignment.BottomEnd)
+            ) {
                 destination.cityName?.let {
                     Text(
                         modifier = Modifier

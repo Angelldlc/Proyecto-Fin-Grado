@@ -48,25 +48,6 @@ class TripListViewModel @Inject constructor(
 
     var openDialog by mutableStateOf(false)
         private set
-/*
-    private val _lastTripInsertedId = mutableStateOf("")
-    val lastTripInsertedId: State<String> = _lastTripInsertedId*/
-
-    /*private val _tripsState = mutableStateOf<Response<List<TripPlanning>>>(Response.Loading)
-    val tripsState: State<Response<List<TripPlanning>>> = _tripsState
-
-    private val _lastTripInsertedId = mutableStateOf<Response<Boolean>>(Success(null,""))
-    val lastTripInsertedId: State<Response<Boolean>> = _lastTripInsertedId
-
-    private val _isTripAddedState = mutableStateOf<Response<Boolean>>(Success(null,""))
-    val isTripAddedState: State<Response<Boolean>> = _isTripAddedState
-
-    private val _isTripUpdatedState = mutableStateOf<Response<Boolean>>(Success(null,""))
-    val isTripUpdatedState: State<Response<Boolean>> = _isTripUpdatedState
-
-
-    private val _isTripDeletedState = mutableStateOf<Response<Boolean>>(Success(null,""))
-    val isTripDeletedState: State<Response<Boolean>> = _isTripDeletedState*/
 
     init {
         getTrips()
@@ -79,42 +60,11 @@ class TripListViewModel @Inject constructor(
             }
         }
 
-
     fun getTrip(id: String, callback: (TripPlanning?) -> Unit) =
         viewModelScope.launch {
             val trip = useCases.getTrip(id)
             callback(trip)
         }
-   /* fun getLastTripInsertedId() {
-        viewModelScope.launch {
-            _lastTripInsertedId.value = useCases.getLastTripInsertedId().toString()
-        }
-    }*/
-
-    /*fun getLastTripInsertedId(): String {
-        viewModelScope.launch {
-            useCases.getLastTripInsertedId().collect { response ->
-                _lastTripInsertedId.value = response
-            }
-        }
-        return _lastTripInsertedId.value.toString() //TODO corregir
-    }*/
-
-    /*fun getLastTripInsertedId(): String {
-        var lastTripInsertedId = ""
-        viewModelScope.launch {
-            lastTripInsertedId = useCases.getLastTripInsertedId().toString()*//*.collect { response ->
-            lastTripInsertedId = response
-        }.toString()*//*
-        }
-        return lastTripInsertedId //TODO Comprobar si esta bien
-    }*/
-
-    /*fun getLastTripInsertedId() {
-        viewModelScope.launch {
-            lastTripInsertedId.value = useCases.getLastTripInsertedId().toString()
-        }
-    }*/
 
     fun getLastTripInsertedId(callback: (String) -> Unit) {
         viewModelScope.launch {
@@ -136,7 +86,14 @@ class TripListViewModel @Inject constructor(
         addTripResponse = useCases.addTrip(name, startDate, endDate, totalCost, photo, creationDate)
     }
 
-    fun updateTrip(id: String, name: String, startDate: Timestamp, endDate: Timestamp, totalCost: Long, photo: String?) =
+    fun updateTrip(
+        id: String,
+        name: String,
+        startDate: Timestamp,
+        endDate: Timestamp,
+        totalCost: Long,
+        photo: String?
+    ) =
         viewModelScope.launch {
             updateTripResponse = Loading
             updateTripResponse = useCases.updateTrip(id, name, startDate, endDate, totalCost, photo)
@@ -155,12 +112,5 @@ class TripListViewModel @Inject constructor(
     fun closeDialog() {
         openDialog = false
     }
-
-    /*fun updateTripName(tripId: String, newName: String, tripsResponse: TripPlanningResponse) {
-        updateTripResponse = Loading
-        viewModelScope.launch {
-            updateTripResponse = useCases.updateTrip(tripId, newName, tripsResponse.data[tripId]!!.startDate, tripsResponse.data[tripId]!!.endDate, tripsResponse.data[tripId]!!.totalCost)
-        }
-    }*/
 
 }

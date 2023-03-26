@@ -45,10 +45,7 @@ fun DestinationPieChart(accomodationCost: Long?, transportationCost: Long?, food
             )
         }
         Legend(accomodationCost, transportationCost, foodCost, tourismCost, symbol)
-
     }
-
-
 }
 
 @Composable
@@ -65,7 +62,6 @@ fun Legend(accomodationCost: Long?, transportationCost: Long?, foodCost: Long?, 
         }
     }
 }
-
 
 @Composable
 fun LegendItem(text: String, color: Color) {

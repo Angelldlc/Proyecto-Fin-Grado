@@ -65,6 +65,7 @@ fun SearchCityList(
                 }
                 resultList
             } else {
+//                Toast.makeText(LocalContext.current, "Ha ocurrido un error inesperado, inténtelo de nuevo más tarde.", Toast.LENGTH_LONG).show()
                 (cities as Response.Success<List<City>>).data ?: emptyList()
             }
 

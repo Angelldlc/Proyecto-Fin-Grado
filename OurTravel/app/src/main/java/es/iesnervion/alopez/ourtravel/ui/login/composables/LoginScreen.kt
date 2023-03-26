@@ -17,7 +17,6 @@ import es.iesnervion.alopez.ourtravel.ui.login.LoginViewModel
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),

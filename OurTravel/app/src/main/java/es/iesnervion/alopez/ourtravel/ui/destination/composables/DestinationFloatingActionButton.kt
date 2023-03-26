@@ -23,10 +23,7 @@ fun DestinationFloatingActionButton(
     transportationCostState: MutableState<Long>,
     foodCostState: MutableState<Long>,
     tourismCostState: MutableState<Long>,
-    tourismAttractionsState: MutableState<List<String?>>,
-    /*updateTrip: KFunction6<String, String, Timestamp, Timestamp, Long, String?, Job>,
-    getTrip: KFunction2<String, (TripPlanning?) -> Unit, Job>,*/
-
+    tourismAttractionsState: MutableState<List<String?>>
     ) {
     FloatingActionButton(onClick = {
         edit.value = !edit.value
@@ -36,10 +33,6 @@ fun DestinationFloatingActionButton(
                 destination?.id.toString(),
                 City(destination?.cityName, destination?.cityPhoto),
                 destination?.description.toString(),
-//                destination?.accomodationCosts ?: 0,
-//                destination?.transportationCosts ?: 0,
-//                destination?.foodCosts ?: 0,
-//                destination?.tourismCosts ?: 0,
                 accomodationCostState.value,
                 transportationCostState.value,
                 foodCostState.value,
@@ -48,23 +41,7 @@ fun DestinationFloatingActionButton(
                 destination?.endDate ?: Date(),
                 destination?.travelStay.toString(),
                 tourismAttractionsState.value as List<String>
-//                (destination?.tourismAttractions ?: emptyList<String>()) as List<String>
             )
-
-            /*getTrip(tripId) { trip ->
-                updateTrip(
-                    tripId,
-                    trip?.name.toString(),
-                    (if (trip?.startDate!! < Timestamp(destination?.startDate!!)) trip.startDate else Timestamp(
-                        destination.startDate!!
-                    ))!!,
-                    (if (trip.endDate!! > Timestamp(destination.endDate!!)) trip.endDate else Timestamp(
-                        destination.endDate!!
-                    ))!!,
-                    trip.totalCost ?: 0,
-                    trip.photo.toString()
-                )
-            }*/
         }
 
     }) {
