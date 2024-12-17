@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
@@ -28,7 +29,7 @@ fun TripCard(
     navigateToTripPlanningScreen: (TripPlanning) -> Unit
 ) {
     val path =
-        rememberAsyncImagePainter(model = trip.photo) //TODO cambiar img por defecto por llamada a API
+        rememberAsyncImagePainter(model = trip.photo?.toUri())
     Card(elevation = 8.dp,
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -40,9 +41,7 @@ fun TripCard(
                 onClick = {
                           navigateToTripPlanningScreen(trip)
                 },
-                onLongClick = { //TODO DELETE
-
-                }
+                onLongClick = { }
             )
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {

@@ -4,12 +4,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
 import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.domain.repository.Destinations
+import es.iesnervion.alopez.ourtravel.domain.repository.DestinationsResponse
 import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 
 @ExperimentalMaterialApi
@@ -17,19 +20,22 @@ import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 fun TripPlanningDestinationsList(
     tripId: String,
     paddingValues: PaddingValues,
-    viewModel: DestinationViewModel,
     navigateToDestinationScreen: (Destination, String) -> Unit,
-    destinationsResponse: Response.Success<List<Destination>>
+    destinations: Destinations,
+    destinationsResponse: DestinationsResponse
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        for (destination in destinationsResponse.data!!) {
+        items(
+            count = destinations.size
+        ) { destination ->
             TripPlanningDestinationCard(
-                destination = destination, tripId,
+                destination = destinations[destination],
+                tripId = tripId,
                 navigateToDestinationScreen = navigateToDestinationScreen
             )
         }

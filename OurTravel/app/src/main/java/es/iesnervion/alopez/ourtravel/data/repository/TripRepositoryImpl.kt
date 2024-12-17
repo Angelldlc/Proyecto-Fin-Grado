@@ -6,18 +6,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
-import es.iesnervion.alopez.ourtravel.domain.model.Response
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Error
 import es.iesnervion.alopez.ourtravel.domain.model.Response.Success
+import es.iesnervion.alopez.ourtravel.domain.model.Response.Failure
 import es.iesnervion.alopez.ourtravel.domain.model.TripPlanning
-import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
+import es.iesnervion.alopez.ourtravel.domain.repository.*
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import okhttp3.internal.notifyAll
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -56,22 +52,47 @@ class TripRepositoryImpl @Inject constructor(
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
         val snapshotListener = userRef?.collection(tripPlanningRef.path)
             ?.orderBy("Name", Query.Direction.ASCENDING)?.addSnapshotListener { snapshot, e ->
-            val response = if (snapshot != null) {
-                val trips = try {
-                    snapshot.toObjects(TripPlanning::class.java)
-                } catch (e: Exception) {
-                    emptyList()
+                val response = if (snapshot != null) {
+                    val trips =
+                        snapshot.toObjects(TripPlanning::class.java)
+                    Success(trips, "")
+                } else {
+                    Failure(e)
                 }
-                Success(trips,"")
-            } else {
-                Error(e?.message ?: e.toString())
+                trySend(response)
             }
-            trySend(response).isSuccess
-        }
         awaitClose {
             snapshotListener?.remove()
         }
     }
+
+
+    /**
+     * Método público implementado getTripFromFirestore.
+     *
+     * Método público que recoge un viaje de una base de datos Firebase.
+     * El método realiza la búsqueda del viaje y devuelve una respuesta satisfactoria con el viaje
+     * si la consulta se ejecuta sin problemas, una respuesta satisfactoria con una valor nulo si
+     * la consulta se ha ejecutado correctamente pero no ha encontrado ningún viaje o una respuesta
+     * de error en caso de que falle la consulta.
+     *
+     * Entradas: id: String. Representa el id del viaje a buscar.
+     * Salidas: Response<List<TripPlanning>>.
+     */
+    override suspend fun getTripFromFirestore(id: String): TripPlanning? {
+
+        val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
+        val tripsCollection = userRef?.collection(tripPlanningRef.path)?.document(id)
+
+        val trip = try {
+            tripsCollection?.get()?.await()?.toObject(TripPlanning::class.java)
+        } catch (e: Exception) {
+            null
+        }
+
+        return trip
+    }
+
 
     /**
      * Método público implementado getLastTripInserted
@@ -84,34 +105,25 @@ class TripRepositoryImpl @Inject constructor(
      * Entradas: void.
      * Salidas: Response<String>
      *
-     * ******************************************************************************************
-     * ******************************************************************************************
-     * Comentario: Este método acaba ejecutandose antes de tiempo por un problema con el ámbito de
-     * las corrutinas, no he podido solucionarlo por falta de tiempo.
      */
-    /*override fun getLastTripInsertedId() = callbackFlow {
+    override suspend fun getLastTripInsertedId(): String? {
         val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
-        val snapshotListener = userRef
+        val tripsCollection = userRef
             ?.collection(tripPlanningRef.path)
             ?.orderBy("CreationDate", Query.Direction.DESCENDING)
             ?.limit(1)
-            ?.addSnapshotListener { snapshot, e ->
-                val response = if (snapshot != null) {
-                    val tripId = try {
-                        snapshot.toObjects(TripPlanning::class.java)[0].id
-                    } catch (e: Exception) {
-                        null
-                    }
-                    Success(tripId)
-                } else {
-                    Error(e?.message ?: e.toString())
-                }
-                trySend(response).isSuccess
-            }
-        awaitClose {
-            snapshotListener?.remove()
+
+        val lastTrip = try {
+            tripsCollection?.get()
+                ?.await()
+                ?.documents
+                ?.firstOrNull()
+                ?.id
+        } catch (e: Exception) {
+            null
         }
-    }*/
+        return lastTrip
+    }
 
     /**
      * Método público implementado asíncrono addTripToFirestore.
@@ -126,11 +138,6 @@ class TripRepositoryImpl @Inject constructor(
      * momento de su creación.
      * Salidas: Response<Boolean>.
      *
-     * ******************************************************************************************
-     * ******************************************************************************************
-     * Comentario: Este método acaba ejecutandose varias veces por un problema con el ámbito de las
-     * corrutinas, no he podido solucionarlo por falta de tiempo.
-     *
      */
     override suspend fun addTripToFirestore(
         name: String,
@@ -139,35 +146,25 @@ class TripRepositoryImpl @Inject constructor(
         totalCost: Long,
         photo: String,
         creationDate: Timestamp
-    ) = flow {
-        val user = Firebase.auth.currentUser?.uid
-        if (user != null) {
-            try {
-                /*emit(Response.Loading)*/
-                auth.currentUser?.apply {
-                    val uniqueid = usersRef.document(uid).collection("TripPlannings").document().id
-                    try {
-                        usersRef.document(uid).collection("TripPlannings").document(uniqueid).set(
-                            mapOf(
-                                "Id" to uniqueid,
-                                "Name" to name,
-                                "StartDate" to startDate,
-                                "EndDate" to endDate,
-                                "TotalCost" to totalCost,
-                                "Photo" to photo,
-                                "CreationDate" to creationDate
-                            )
-                        ).await()
-                        emit(Success(true, id = uniqueid))
-                    } catch (e: Exception){
-                        emit(Response.Failure(e))
-                    }
-                }
-            } catch (e: Exception) {
-                emit(Response.Failure(e))
-            }
-        } else {
-
+    ): AddTripPlanningResponse {
+        return try {
+            val user = Firebase.auth.currentUser?.uid
+            val uniqueid =
+                usersRef.document(user!!).collection("TripPlannings").document().id
+            val trip = TripPlanning(
+                uniqueid,
+                name,
+                startDate,
+                endDate,
+                totalCost,
+                photo,
+                creationDate
+            )
+            usersRef.document(user).collection("TripPlannings").document(uniqueid)
+                .set(trip).await()
+            Success(true, id = uniqueid)
+        } catch (e: Exception) {
+            Failure(e)
         }
     }
 
@@ -186,34 +183,31 @@ class TripRepositoryImpl @Inject constructor(
      */
     override suspend fun updateTripFromFirestore(
         id: String,
+        name: String,
         startDate: Timestamp,
         endDate: Timestamp,
-        totalCost: Long
-    ) = flow {
-        val user = Firebase.auth.currentUser?.uid
-        if (user != null){
-            try {
-                emit(Response.Loading)
-                auth.currentUser?.apply {
-                    try{
-                        usersRef.document(uid)
-                            .collection("TripPlannings")
-                            .document(id)
-                            .update(
-                                mapOf(
-                                    "StartDate" to startDate,
-                                    "EndDate" to endDate,
-                                    "TotalCost" to totalCost
-                                )
-                            ).await()
-                        emit(Success(true,""))
-                    } catch (e: Exception) {
-                        emit(Response.Failure(e))
-                    }
-                }
-            } catch (e: Exception) {
-                emit(Response.Failure(e))
+        totalCost: Long,
+        photo: String?
+    ): UpdateTripPlanningResponse {
+        return try {
+            val user = Firebase.auth.currentUser?.uid
+            if (user != null) {
+                usersRef.document(user).collection("TripPlannings").document(id)
+                    .update(
+                        mapOf(
+                            "Name" to name,
+                            "StartDate" to startDate,
+                            "EndDate" to endDate,
+                            "TotalCost" to totalCost,
+                            "Photo" to photo
+                        )
+                    ).await()
+                Success(true, "")
+            } else {
+                Error("User is null")
             }
+        } catch (e: Exception) {
+            Failure(e)
         }
     }
 
@@ -229,27 +223,17 @@ class TripRepositoryImpl @Inject constructor(
      * Salidas: Response<Boolean>.
      *
      */
-    override suspend fun deleteTripFromFirestore(id: String) = flow {
-        val user = Firebase.auth.currentUser?.uid
-        if (user != null) {
-            try {
-                emit(Response.Loading)
-                auth.currentUser?.apply {
-                    try {
-                        usersRef.document(uid)
-                            .collection("TripPlannings")
-                            .document(id)
-                            .delete().await()
-                        emit(Success(true,""))
-                    } catch (e: Exception) {
-                        emit(Response.Failure(e))
-                    }
-                }
-            }catch (e: Exception){
-                emit(Response.Failure(e))
-            }
-        }else{
+    override suspend fun deleteTripFromFirestore(id: String): DeleteTripPlanningResponse {
+        return try {
+            val user = Firebase.auth.currentUser?.uid
+            usersRef.document(user!!)
+                .collection("TripPlannings")
+                .document(id)
+                .delete().await()
+            Success(true, "")
 
+        } catch (e: Exception) {
+            Failure(e)
         }
     }
 }

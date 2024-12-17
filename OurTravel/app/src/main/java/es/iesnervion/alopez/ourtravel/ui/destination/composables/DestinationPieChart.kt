@@ -45,27 +45,23 @@ fun DestinationPieChart(accomodationCost: Long?, transportationCost: Long?, food
             )
         }
         Legend(accomodationCost, transportationCost, foodCost, tourismCost, symbol)
-
     }
-
-
 }
 
 @Composable
 fun Legend(accomodationCost: Long?, transportationCost: Long?, foodCost: Long?, tourismCost: Long?, symbol: String?) {
     Row(Modifier.fillMaxWidth(), Arrangement.Center) {
         Column(Modifier.padding(16.dp)) {
-            LegendItem("Accomodation: $accomodationCost $symbol", PaleCerulean)
-            LegendItem("Transportation: $transportationCost $symbol", PastelPink)
+            LegendItem("Alojamiento: $accomodationCost $symbol", PaleCerulean)
+            LegendItem("Transporte: $transportationCost $symbol", PastelPink)
         }
         Column(Modifier.padding(16.dp)) {
 
-            LegendItem("Food: $foodCost $symbol", DeepChampagne)
-            LegendItem("Tourism: $tourismCost $symbol", MediumSpringBud)
+            LegendItem("Comida: $foodCost $symbol", DeepChampagne)
+            LegendItem("Turismo: $tourismCost $symbol", MediumSpringBud)
         }
     }
 }
-
 
 @Composable
 fun LegendItem(text: String, color: Color) {

@@ -5,7 +5,5 @@ import es.iesnervion.alopez.ourtravel.domain.repository.TripRepository
 class GetLastTripInsertedId(
     private val repo: TripRepository
 ) {
-/*
-    operator fun invoke() = repo.getLastTripInsertedId()
-*/
+    suspend operator fun invoke() = repo.getLastTripInsertedId()
 }

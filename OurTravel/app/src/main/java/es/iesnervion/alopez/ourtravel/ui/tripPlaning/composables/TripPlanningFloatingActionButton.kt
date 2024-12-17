@@ -10,8 +10,12 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun TripPlanningFloatingActionButton(
     navigateToSearchCityScreen: () -> Unit
-){
+) {
     FloatingActionButton(onClick = { navigateToSearchCityScreen() }) {
-        Icon(imageVector = Icons.Filled.Add, tint = Color.White , contentDescription = "Add Trip Planning")
+        Icon(
+            imageVector = Icons.Filled.Add,
+            tint = Color.White,
+            contentDescription = "Add Trip Planning"
+        )
     }
 }

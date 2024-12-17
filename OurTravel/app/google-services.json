@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "909390542002",
     "project_id": "ourtravel-b7b4e",
-    "storage_bucket": "ourtravel-b7b4e.appspot.com"
+    "storage_bucket": "ourtravel-b7b4e.firebasestorage.app"
   },
   "client": [
     {
@@ -13,6 +13,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "909390542002-7enkittktt0reom85aj640tih29hlrka.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.iesnervion.alopez.ourtravel",
+            "certificate_hash": "e84d988e792ac0333d410b96cd462948271678e8"
+          }
+        },
         {
           "client_id": "909390542002-6p8cqqmcussvqu93mefhm0cqmce6ib7u.apps.googleusercontent.com",
           "client_type": 3

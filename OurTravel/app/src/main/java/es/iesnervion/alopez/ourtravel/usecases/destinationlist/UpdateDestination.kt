@@ -20,5 +20,18 @@ class UpdateDestination(
         endDate: Date,
         travelStay: String,
         tourismAttractions: List<String>
-    ) = destinationRepo.updateDestinationFromFirestore(tripId, id, city, description, accomodationCosts, transportationCosts, foodCosts, tourismCosts, startDate, endDate, travelStay, tourismAttractions)
+    ) = destinationRepo.updateDestinationFromFirestore(
+        tripId,
+        id,
+        city,
+        description,
+        accomodationCosts,
+        transportationCosts,
+        foodCosts,
+        tourismCosts,
+        startDate,
+        endDate,
+        travelStay,
+        tourismAttractions
+    )
 }

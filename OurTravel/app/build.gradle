@@ -120,6 +120,9 @@ dependencies {
     //Accompanist
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
 
+    //Maps
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
+
     //Serialization
     implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0'
@@ -129,5 +132,7 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.13.0"
     implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
 
+    //iText
+    implementation "com.itextpdf:itextpdf:5.5.13.2"
 
 }

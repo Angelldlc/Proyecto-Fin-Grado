@@ -6,7 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Square
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -16,24 +16,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Timestamp
-import es.iesnervion.alopez.ourtravel.domain.model.Destination
-import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.domain.repository.Destinations
 import es.iesnervion.alopez.ourtravel.ui.tripList.TripListViewModel
-import es.iesnervion.alopez.ourtravel.ui.tripPlaning.DestinationViewModel
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import java.text.NumberFormat
 import java.util.*
-import kotlin.math.cos
 
 @Composable
-fun TripPlanningPieChart(destinationsResponse: Response.Success<List<Destination>>, tripId: String, viewModel: TripListViewModel = hiltViewModel()) {
-    val costs = calculateTotalCosts(destinationsResponse.data)
+
+fun TripPlanningPieChart(
+    destinationsResponse: Destinations,
+    tripId: String,
+    tripName: String,
+    tripPhoto: String?,
+    viewModel: TripListViewModel = hiltViewModel(),
+    nameUpdated: MutableState<Boolean>
+) {
+    val costs = calculateTotalCosts(destinationsResponse)
     val totalAccomodationCost = costs[0]
     val totalTransportationCost = costs[1]
     val totalFoodCost = costs[2]
     val totalTourismCost = costs[3]
-    updateTripFields(destinationsResponse.data, tripId, viewModel)
+    updateTripFields(destinationsResponse, tripId, tripName, tripPhoto, viewModel, nameUpdated)
 
     val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
     val symbol = numberFormat.currency?.symbol
@@ -42,8 +47,14 @@ fun TripPlanningPieChart(destinationsResponse: Response.Success<List<Destination
             PieChart(
                 pieChartData = PieChartData(
                     slices = listOf(
-                        PieChartData.Slice(totalAccomodationCost.toString().toFloat(), PaleCerulean),
-                        PieChartData.Slice(totalTransportationCost.toString().toFloat(), PastelPink),
+                        PieChartData.Slice(
+                            totalAccomodationCost.toString().toFloat(),
+                            PaleCerulean
+                        ),
+                        PieChartData.Slice(
+                            totalTransportationCost.toString().toFloat(),
+                            PastelPink
+                        ),
                         PieChartData.Slice(totalFoodCost.toString().toFloat(), DeepChampagne),
                         PieChartData.Slice(totalTourismCost.toString().toFloat(), MediumSpringBud)
                     )
@@ -52,29 +63,40 @@ fun TripPlanningPieChart(destinationsResponse: Response.Success<List<Destination
                     .size(400.dp, 272.dp)
                     .align(Center)
             )
-            Text(text = "Total: "+"\n"+((totalAccomodationCost?:0)+(totalTransportationCost?:0)+(totalFoodCost?:0)+(totalTourismCost?:0)).toString()+" $symbol",
+            Text(
+                text = "Total: " + "\n" + ((totalAccomodationCost ?: 0) + (totalTransportationCost
+                    ?: 0) + (totalFoodCost ?: 0) + (totalTourismCost ?: 0)).toString() + " $symbol",
                 modifier = Modifier.align(Center),
                 fontSize = 24.sp
-                )
+            )
         }
-        Legend(totalAccomodationCost, totalTransportationCost, totalFoodCost, totalTourismCost, symbol)
-
+        Legend(
+            totalAccomodationCost,
+            totalTransportationCost,
+            totalFoodCost,
+            totalTourismCost,
+            symbol
+        )
     }
-
-
 }
 
 @Composable
-fun Legend(totalAccomodationCost: Long?, totalTransportationCost: Long?, totalFoodCost: Long?, totalTourismCost: Long?, symbol: String?) {
+fun Legend(
+    totalAccomodationCost: Long?,
+    totalTransportationCost: Long?,
+    totalFoodCost: Long?,
+    totalTourismCost: Long?,
+    symbol: String?
+) {
     Row(Modifier.fillMaxWidth(), Arrangement.Center) {
         Column(Modifier.padding(16.dp)) {
-            LegendItem("Accomodation: $totalAccomodationCost $symbol", PaleCerulean)
-            LegendItem("Transportation: $totalTransportationCost $symbol", PastelPink)
+            LegendItem("Alojamiento: $totalAccomodationCost $symbol", PaleCerulean)
+            LegendItem("Transporte: $totalTransportationCost $symbol", PastelPink)
         }
         Column(Modifier.padding(16.dp)) {
 
-            LegendItem("Food: $totalFoodCost $symbol", DeepChampagne)
-            LegendItem("Tourism: $totalTourismCost $symbol", MediumSpringBud)
+            LegendItem("Comida: $totalFoodCost $symbol", DeepChampagne)
+            LegendItem("Turismo: $totalTourismCost $symbol", MediumSpringBud)
         }
     }
 }
@@ -82,17 +104,22 @@ fun Legend(totalAccomodationCost: Long?, totalTransportationCost: Long?, totalFo
 @Composable
 fun LegendItem(text: String, color: Color) {
     Row() {
-        Icon(Icons.Filled.Square, contentDescription = "", tint = color/*, modifier = Modifier.size(25.dp)*/)
+        Icon(
+            Icons.Filled.Square,
+            contentDescription = "",
+            tint = color,
+            modifier = Modifier.size(25.dp)
+        )
         Text(text = text, fontSize = 16.sp)
     }
 }
 
 fun calculateTotalCosts(
-    destinationsList: List<Destination>?
+    destinationsList: Destinations?
 ): MutableList<Long?> {
-    var costs = mutableListOf<Long?>(0,0,0,0)
+    val costs = mutableListOf<Long?>(0, 0, 0, 0)
     if (destinationsList != null) {
-        for (destination in destinationsList){
+        for (destination in destinationsList) {
             costs[0] = destination.accomodationCosts?.let { costs[0]?.plus(it) }
             costs[1] = destination.transportationCosts?.let { costs[1]?.plus(it) }
             costs[2] = destination.foodCosts?.let { costs[2]?.plus(it) }
@@ -104,7 +131,14 @@ fun calculateTotalCosts(
     return costs
 }
 
-fun updateTripFields(destinations: List<Destination>?, tripId: String, viewModel: TripListViewModel){
+fun updateTripFields(
+    destinations: Destinations?,
+    tripId: String,
+    tripName: String,
+    tripPhoto: String?,
+    viewModel: TripListViewModel,
+    nameUpdated: MutableState<Boolean>
+) {
     if (destinations != null) {
         if (destinations.isNotEmpty()) {
             val costs = calculateTotalCosts(destinations)
@@ -117,11 +151,20 @@ fun updateTripFields(destinations: List<Destination>?, tripId: String, viewModel
             var endDate = destinations[0].endDate
             for (destination in destinations) {
                 startDate =
-                    if (startDate?.before(destination.startDate) == true) destination.startDate else startDate
+                    if (startDate?.before(destination.startDate) == true) startDate else destination.startDate
                 endDate =
-                    if (endDate?.after(destination.endDate) == true) destination.endDate else endDate
+                    if (endDate?.after(destination.endDate) == true) endDate else destination.endDate
             }
-            viewModel.updateTrip(tripId, Timestamp(startDate!!), Timestamp(endDate!!), totalCosts)
+            if (!nameUpdated.value) {
+                viewModel.updateTrip(
+                    tripId,
+                    tripName,
+                    Timestamp(startDate!!),
+                    Timestamp(endDate!!),
+                    totalCosts,
+                    tripPhoto
+                )
+            }
         }
     }
 }

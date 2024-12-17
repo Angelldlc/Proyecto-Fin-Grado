@@ -7,8 +7,11 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import es.iesnervion.alopez.ourtravel.domain.model.City
 import es.iesnervion.alopez.ourtravel.domain.model.Destination
-import es.iesnervion.alopez.ourtravel.domain.model.Response
+import es.iesnervion.alopez.ourtravel.domain.model.Response.*
+import es.iesnervion.alopez.ourtravel.domain.repository.AddDestinationResponse
+import es.iesnervion.alopez.ourtravel.domain.repository.DeleteDestinationResponse
 import es.iesnervion.alopez.ourtravel.domain.repository.DestinationRepository
+import es.iesnervion.alopez.ourtravel.domain.repository.UpdateDestinationResponse
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -62,15 +65,29 @@ class DestinationRepositoryImpl @Inject constructor(
                     } catch (e: Exception) {
                         emptyList()
                     }
-                    Response.Success(destinations, "")
+                    Success(destinations, "")
                 } else {
-                    Response.Error(e?.message ?: e.toString())
+                    Error(e?.message ?: e.toString())
                 }
                 trySend(response).isSuccess
             }
         awaitClose {
             snapshotListener?.remove()
         }
+    }
+
+
+    /**
+     * Método público implementado asíncrono getLastDestinationInsertedId.
+     *
+     * Método público que recoge el id del último destino insertado en una base de datos Firebase
+     */
+    override suspend fun getLastDestinationInsertedId(tripId: String): String? {
+        val userRef = auth.currentUser?.let { usersRef.document(it.uid) }
+        val snapshot = userRef?.collection("TripPlannings")?.document(tripId)
+            ?.collection(destinationRef.path)?.orderBy("CreationDate", Query.Direction.DESCENDING)
+            ?.limit(1)?.get()?.await()
+        return snapshot?.documents?.firstOrNull()?.id
     }
 
     /**
@@ -87,15 +104,9 @@ class DestinationRepositoryImpl @Inject constructor(
      * representa el destino.
      * Salidas: Response<Boolean>.
      *
-     * ******************************************************************************************
-     * ******************************************************************************************
-     * Comentario: Este método acaba ejecutandose varias veces por un problema con el ámbito de las
-     * corrutinas, no he podido solucionarlo por falta de tiempo.
-     *
      */
     override suspend fun addDestinationToFirestore(
         tripId: String,
-        id: String,
         city: City,
         description: String,
         accomodationCosts: Long,
@@ -105,51 +116,42 @@ class DestinationRepositoryImpl @Inject constructor(
         startDate: Date,
         endDate: Date,
         travelStay: String,
-        tourismAttractions: List<String>
-    ) = flow {
-        val user = Firebase.auth.currentUser?.uid
-        if (user != null) {
-            try {
-                emit(Response.Loading)
-                auth.currentUser?.apply {
-                    val uniqueid = usersRef.document(uid)
-                        .collection("TripPlannings")
-                        .document(tripId)
-                        .collection("Destinations")
-                        .document()
-                        .id
-                    try {
-                        usersRef.document(uid)
-                            .collection("TripPlannings")
-                            .document(tripId)
-                            .collection("Destinations")
-                            .document(uniqueid)
-                            .set(
-                                mapOf(
-                                    "Id" to uniqueid,
-                                    "CityName" to city.name,
-                                    "CityPhoto" to city.photo,
-                                    "Description" to description,
-                                    "AccomodationCosts" to accomodationCosts,
-                                    "TransportationCosts" to transportationCosts,
-                                    "FoodCosts" to foodCosts,
-                                    "TourismCosts" to tourismCosts,
-                                    "StartDate" to startDate,
-                                    "EndDate" to endDate,
-                                    "TravelStay" to travelStay,
-                                    "TourismAttractions" to tourismAttractions,
-                                )
-                            ).await()
-                        emit(Response.Success(true, ""))
-                    } catch (e: Exception) {
-                        emit(Response.Failure(e))
-                    }
-                }
-            } catch (e: Exception) {
-                emit(Response.Failure(e))
-            }
-        } else {
-
+        tourismAttractions: List<String>,
+        creationDate: Date
+    ): AddDestinationResponse {
+        return try {
+            val user = Firebase.auth.currentUser?.uid
+            val uniqueid = usersRef.document(user!!)
+                .collection("TripPlannings")
+                .document(tripId)
+                .collection("Destinations")
+                .document()
+                .id
+            val destination = Destination(
+                uniqueid,
+                city.name,
+                city.photo,
+                description,
+                accomodationCosts,
+                transportationCosts,
+                foodCosts,
+                tourismCosts,
+                startDate,
+                endDate,
+                travelStay,
+                tourismAttractions,
+                creationDate
+            )
+            usersRef.document(user)
+                .collection("TripPlannings")
+                .document(tripId)
+                .collection("Destinations")
+                .document(uniqueid)
+                .set(destination)
+                .await()
+            Success(true, "")
+        } catch (e: Exception) {
+            Error(e.message ?: e.toString())
         }
     }
 
@@ -182,41 +184,36 @@ class DestinationRepositoryImpl @Inject constructor(
         endDate: Date,
         travelStay: String,
         tourismAttractions: List<String>
-    ) = flow {
-        val user = Firebase.auth.currentUser?.uid
-        if (user != null){
-            try {
-                emit(Response.Loading)
-                auth.currentUser?.apply {
-                    try {
-                        usersRef.document(uid)
-                            .collection("TripPlannings")
-                            .document(tripId)
-                            .collection("Destinations")
-                            .document(id)
-                            .update(
-                                mapOf(
-                                    "CityName" to city.name,
-                                    "CityPhoto" to city.photo,
-                                    "Description" to description,
-                                    "AccomodationCosts" to accomodationCosts,
-                                    "TransportationCosts" to transportationCosts,
-                                    "FoodCosts" to foodCosts,
-                                    "TourismCosts" to tourismCosts,
-                                    "StartDate" to startDate,
-                                    "EndDate" to endDate,
-                                    "TravelStay" to travelStay,
-                                    "TourismAttractions" to tourismAttractions,
-                                )
-                            ).await()
-                        emit(Response.Success(true, ""))
-                    } catch (e: Exception) {
-                        emit(Response.Failure(e))
-                    }
-                }
-            } catch (e: Exception) {
-                emit(Response.Failure(e))
+    ): UpdateDestinationResponse {
+        return try{
+            val user = Firebase.auth.currentUser?.uid
+            if (user != null){
+                usersRef.document(user)
+                    .collection("TripPlannings")
+                    .document(tripId)
+                    .collection("Destinations")
+                    .document(id)
+                    .update(
+                        mapOf(
+                            "CityName" to city.name,
+                            "CityPhoto" to city.photo,
+                            "Description" to description,
+                            "AccomodationCosts" to accomodationCosts,
+                            "TransportationCosts" to transportationCosts,
+                            "FoodCosts" to foodCosts,
+                            "TourismCosts" to tourismCosts,
+                            "StartDate" to startDate,
+                            "EndDate" to endDate,
+                            "TravelStay" to travelStay,
+                            "TourismAttractions" to tourismAttractions,
+                        )
+                    ).await()
+                Success(true, "")
+            } else {
+                Error("User is null")
             }
+        } catch (e: Exception) {
+            Error(e.message ?: e.toString())
         }
     }
 
@@ -232,30 +229,23 @@ class DestinationRepositoryImpl @Inject constructor(
      * Salidas: Response<Boolean>.
      *
      */
-    override suspend fun deleteDestinationFromFirestore(tripId: String, id: String) = flow {
-        val user = Firebase.auth.currentUser?.uid
-        if (user != null){
-            try {
-                emit(Response.Loading)
-                auth.currentUser?.apply {
-                    try {
-                        usersRef.document(uid)
-                            .collection("TripPlannings")
-                            .document(tripId)
-                            .collection("Destinations")
-                            .document(id)
-                            .delete().await()
-                        emit(Response.Success(true, ""))
-                    } catch (e: Exception) {
-                        emit(Response.Failure(e))
-                    }
-                }
-            }catch (e: Exception){
-                emit(Response.Failure(e))
+    override suspend fun deleteDestinationFromFirestore(tripId: String, id: String): DeleteDestinationResponse {
+        return try{
+            val user = Firebase.auth.currentUser?.uid
+            if (user != null){
+                usersRef.document(user)
+                    .collection("TripPlannings")
+                    .document(tripId)
+                    .collection("Destinations")
+                    .document(id)
+                    .delete()
+                    .await()
+                Success(true, "")
+            } else {
+                Error("User is null")
             }
-        }else{
-
+        } catch (e: Exception) {
+            Error(e.message ?: e.toString())
         }
     }
-
 }

@@ -39,7 +39,10 @@ fun TripListSearchView(
         color = LightBlue
     ) {
         Row() {
-            IconButton(onClick = { scope.launch { state.drawerState.open() } }, modifier = Modifier.padding(8.dp)) {
+            IconButton(
+                onClick = { scope.launch { state.drawerState.open() } },
+                modifier = Modifier.padding(8.dp)
+            ) {
                 Icon(
                     Icons.Filled.Menu,
                     contentDescription = "Menu",

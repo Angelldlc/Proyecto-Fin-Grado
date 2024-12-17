@@ -7,14 +7,15 @@ package es.iesnervion.alopez.ourtravel.ui.tripList
  * TripListBottomNavBar de TripListScreen.
  *
  */
-data class BottomNavState private constructor(val status: BottomNavStatus) {
-    companion object{
+data class BottomNavState constructor(val status: BottomNavStatus) {
+    companion object {
         val PENDING = BottomNavState(BottomNavStatus.PENDING)
         val FINALIZED = BottomNavState(BottomNavStatus.FINALIZED)
     }
 
-    enum class BottomNavStatus{
+    enum class BottomNavStatus {
         PENDING,
         FINALIZED
     }
+
 }

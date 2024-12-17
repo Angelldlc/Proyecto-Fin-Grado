@@ -5,8 +5,8 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 
 @Composable
-fun LoginTopBar(){
-    TopAppBar (
+fun LoginTopBar() {
+    TopAppBar(
         title = {
             Text(
                 text = "Login"

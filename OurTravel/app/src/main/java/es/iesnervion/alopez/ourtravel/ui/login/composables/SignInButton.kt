@@ -33,7 +33,7 @@ fun SignInButton(
             contentDescription = null
         )
         Text(
-            text = "Sign In with Google",
+            text = "Iniciar sesión con Google",
             modifier = Modifier.padding(6.dp),
             fontSize = 18.sp
         )

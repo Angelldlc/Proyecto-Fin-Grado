@@ -30,14 +30,14 @@ fun TripList(
     bottomNavState: MutableState<BottomNavState>
 ) {
     val filteredTrips: List<TripPlanning>?
-    when (val tripsResponse = viewModel.tripsState.value) {
+    when (val tripsResponse = viewModel.tripsResponse) {
         is Response.Loading -> {}
         is Response.Success -> {
             val searchedText = textState.value.text
             filteredTrips = if (searchedText.isEmpty()) {
-                if(bottomNavState.value == BottomNavState.FINALIZED){
+                if (bottomNavState.value == BottomNavState.FINALIZED) {
                     tripsResponse.data?.filter { !(it.endDate == null || it.endDate!! > Timestamp.now()) }
-                }else {
+                } else {
                     tripsResponse.data?.filter { it.endDate == null || it.endDate!! > Timestamp.now() }
                 }
             } else {
@@ -49,9 +49,9 @@ fun TripList(
                         resultList.add(trip)
                     }
                 }
-                if(bottomNavState.value == BottomNavState.FINALIZED){
+                if (bottomNavState.value == BottomNavState.FINALIZED) {
                     resultList.filter { !(it.endDate == null || it.endDate!! > Timestamp.now()) }
-                }else {
+                } else {
                     resultList.filter { it.endDate == null || it.endDate!! > Timestamp.now() }
                 }
             }
@@ -61,7 +61,11 @@ fun TripList(
                     .padding(padding)
             ) {
                 items(filteredTrips!!) { trip ->
-                    TripCard(trip = trip, viewmodel = viewModel, navigateToTripPlanningScreen = navigateToTripPlanningScreen)
+                    TripCard(
+                        trip = trip,
+                        viewmodel = viewModel,
+                        navigateToTripPlanningScreen = navigateToTripPlanningScreen
+                    )
                 }
             }
         }

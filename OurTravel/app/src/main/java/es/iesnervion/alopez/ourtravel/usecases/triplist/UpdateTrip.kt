@@ -8,8 +8,10 @@ class UpdateTrip(
 ) {
     suspend operator fun invoke(
         id: String,
+        name: String,
         startDate: Timestamp,
         endDate: Timestamp,
-        totalCost: Long
-    ) = repo.updateTripFromFirestore(id, startDate, endDate, totalCost)
+        totalCost: Long,
+        photo: String?
+    ) = repo.updateTripFromFirestore(id, name, startDate, endDate, totalCost, photo)
 }

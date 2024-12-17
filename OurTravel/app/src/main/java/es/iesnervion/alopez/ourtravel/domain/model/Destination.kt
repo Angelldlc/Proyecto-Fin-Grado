@@ -45,5 +45,8 @@ data class Destination (
     var travelStay: String? = null,
     @get:PropertyName("TourismAttractions")
     @set:PropertyName("TourismAttractions")
-    var tourismAttractions: List<String?>? = null
+    var tourismAttractions: List<String?>? = null,
+    @get:PropertyName("CreationDate")
+    @set:PropertyName("CreationDate")
+    var creationDate: Date? = null
 )
