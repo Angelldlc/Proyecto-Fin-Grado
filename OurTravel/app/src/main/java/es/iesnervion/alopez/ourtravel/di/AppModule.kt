@@ -130,7 +130,7 @@ object AppModule {
             BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                 .setSupported(true)
                 .setServerClientId(app.getString(R.string.your_web_client_id))
-                .setFilterByAuthorizedAccounts(true)
+                .setFilterByAuthorizedAccounts(false) //Little mistake fixed :)
                 .build())
         .setAutoSelectEnabled(true)
         .build()

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">OurTravel</string>
-    <string name="your_web_client_id">909390542002-6p8cqqmcussvqu93mefhm0cqmce6ib7u.apps.googleusercontent.com</string>
+    <string name="your_web_client_id">909390542002-7enkittktt0reom85aj640tih29hlrka.apps.googleusercontent.com</string>
+    <!--string name="your_web_client_id">909390542002-6p8cqqmcussvqu93mefhm0cqmce6ib7u.apps.googleusercontent.com</string-->
     <!--string name="default_web_client_id">\"909390542002-6p8cqqmcussvqu93mefhm0cqmce6ib7u.apps.googleusercontent.com\"</string-->
 
 </resources>
